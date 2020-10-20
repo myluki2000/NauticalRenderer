@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>07bcf78e-ec56-4f03-a4e3-bc4e9374fa8d</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>NauticalRenderer</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Data\MapPack.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ResourceManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Screens\MapScreen.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Screens\Screen.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Screens\ScreenHandler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SlippyMap\Data\Buoy.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SlippyMap\Data\Landmark.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SlippyMap\Layers\MapGeoLayer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Mesh.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SlippyMap\Data\RestrictedArea.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SlippyMap\Data\Way.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SlippyMap\Layers\PlacenameLayer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SlippyMap\Layers\SeparationSchemeLayer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Globals.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Main.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SlippyMap\Camera.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SlippyMap\Layers\GribLayer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SlippyMap\Layers\LandmarkLayer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SlippyMap\Layers\MapLayer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SlippyMap\Layers\HarbourLayer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SlippyMap\Layers\NavigationLineLayer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SlippyMap\Layers\ImportantAreaLayer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SlippyMap\Layers\StreetLayer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SlippyMap\SlippyMap.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Fonts.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Icons.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SlippyMap\SourceLayers\SimplifiedCoastSourceLayer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SlippyMap\SourceLayers\SourceLayer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utility\LineRenderer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utility\LineStyle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utility\OsmHelpers.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utility\RectangleF.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utility\Utility.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utility\ExtensionMethods.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <MonoGameContentReference Include="$(MSBuildThisFileDirectory)Content\Content.mgcb" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)Content\Content.mgcb" />
+  </ItemGroup>
+</Project>
