@@ -7,7 +7,7 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "NauticalRenderer", "Nautica
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AndroidRenderer", "AndroidRenderer\AndroidRenderer.csproj", "{37FF3DE4-8E5C-44A1-94B5-9CDE29B52247}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowsRenderer", "WindowsRenderer\WindowsRenderer.csproj", "{4234A9B4-91CC-416D-892D-03251777F20E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WindowsRenderer", "WindowsRenderer\WindowsRenderer.csproj", "{4234A9B4-91CC-416D-892D-03251777F20E}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution

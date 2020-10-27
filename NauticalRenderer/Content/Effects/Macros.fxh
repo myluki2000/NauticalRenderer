@@ -24,3 +24,13 @@
 #define SAMPLE_TEXTURE(Name, texCoord)  Name.Sample(Name##Sampler, texCoord)
 #define SAMPLE_CUBEMAP(Name, texCoord)  Name.Sample(Name##Sampler, texCoord)
 
+float map(float value, float min1, float max1, float min2, float max2)
+{
+    // Convert the current value to a percentage
+    // 0% - min1, 100% - max1
+    float perc = (value - min1) / (max1 - min1);
+
+    // Do the same operation backwards with min2 and max2
+    return perc * (max2 - min2) + min2;
+}
+

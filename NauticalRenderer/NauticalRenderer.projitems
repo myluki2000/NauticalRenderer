@@ -16,6 +16,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Screens\ScreenHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SlippyMap\Data\Buoy.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SlippyMap\Data\Landmark.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SlippyMap\Layers\BuoyLayer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SlippyMap\Layers\MapGeoLayer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Mesh.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SlippyMap\Data\RestrictedArea.cs" />

@@ -187,6 +187,7 @@ namespace NauticalRenderer.SlippyMap.Layers
             {
                 // handle single color seamark light blob
                 color = OsmHelpers.GetColorFromSeamarkColor(lightColor);
+                if(color == Color.White) color = Color.Yellow;
             }
             else
             {
@@ -194,6 +195,7 @@ namespace NauticalRenderer.SlippyMap.Layers
                 if (colourKeyValuePairs.Count > 0)
                 {
                     if (colourKeyValuePairs.Count == 1) color = OsmHelpers.GetColorFromSeamarkColor(colourKeyValuePairs[0].Value);
+                    if (color == Color.White) color = Color.Yellow;
 
                     // draw sector lights
                     if (drawSectorLights) DrawSectorLights(sb, o, camera);
@@ -277,6 +279,7 @@ namespace NauticalRenderer.SlippyMap.Layers
                 Vector2 pos = OsmHelpers.GetCoordinateOfOsmGeo(o).Transform(camera.GetMatrix());
 
                 Color color = OsmHelpers.GetColorFromSeamarkColor(tags["colour"].Value);
+                if (color == Color.White) color = Color.Yellow;
 
                 // draw dashed sector boundaries if light is sector light. If it is directional light draw dashed line in the middle
                 if (float.IsNaN(orientation))

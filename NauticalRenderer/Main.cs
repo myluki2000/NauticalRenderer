@@ -2,6 +2,7 @@
 
 using System.Diagnostics;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Myra;
 using NauticalRenderer.Screens;
@@ -22,6 +23,7 @@ namespace NauticalRenderer
         public Main(ResourceManager resourceManager)
         {
             Globals.Graphics = new GraphicsDeviceManager(this);
+            Globals.Graphics.GraphicsProfile = GraphicsProfile.HiDef;
             Globals.ResourceManager = resourceManager;
             Content.RootDirectory = "Content";
             Globals.Graphics.IsFullScreen = false;

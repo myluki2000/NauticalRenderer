@@ -35,6 +35,8 @@ namespace NauticalRenderer.SlippyMap.Layers
         private readonly List<Mesh> coastMeshes = new List<Mesh>();
         private List<Mesh> waterMeshes = new List<Mesh>();
         private List<Mesh> innerIslandMeshes = new List<Mesh>();
+        private List<Mesh> tidalFlats = new List<Mesh>();
+        private List<Mesh> tidalFlatHoles = new List<Mesh>();
         private Mesh boundingMesh = new Mesh();
 
 
@@ -44,7 +46,7 @@ namespace NauticalRenderer.SlippyMap.Layers
 
             foreach (Mesh coastMesh in coastMeshes)
             {
-                if(coastMesh.BoundingRectangle.Intersects(camera.DrawBounds))
+                if (coastMesh.BoundingRectangle.Intersects(camera.DrawBounds))
                     coastMesh.Draw(mapSb, camera.GetMatrix());
             }
 
@@ -52,6 +54,18 @@ namespace NauticalRenderer.SlippyMap.Layers
             {
                 if (waterMesh.BoundingRectangle.Intersects(camera.DrawBounds))
                     waterMesh.Draw(mapSb, camera.GetMatrix());
+            }
+
+            foreach (Mesh tidalFlat in tidalFlats)
+            {
+                if(tidalFlat.BoundingRectangle.Intersects(camera.DrawBounds))
+                    tidalFlat.Draw(mapSb, camera.GetMatrix());
+            }
+
+            foreach (Mesh tidalFlatHole in tidalFlatHoles)
+            {
+                if(tidalFlatHole.BoundingRectangle.Intersects(camera.DrawBounds))
+                    tidalFlatHole.Draw(mapSb, camera.GetMatrix());
             }
 
             foreach (Mesh mesh in innerIslandMeshes)
@@ -92,6 +106,74 @@ namespace NauticalRenderer.SlippyMap.Layers
                                                  where osmGeo.Type == OsmGeoType.Way && osmGeo.Tags.Contains("man_made", "pier")
                                                  select osmGeo;
             this.piers = OsmHelpers.WaysToListOfVector2Arr(piers);
+
+            IEnumerable<ICompleteOsmGeo> tidalFlats = from osmGeo in source
+                                                      where (osmGeo.Type == OsmGeoType.Way || osmGeo.Type == OsmGeoType.Relation) &&
+                                                            osmGeo.Tags.Contains("wetland", "tidalflat")
+                                                      select osmGeo;
+            List<Vector2[]> wetlandWays = new List<Vector2[]>();
+            List<Vector2[]> holes = new List<Vector2[]>();
+            foreach (ICompleteOsmGeo osmGeo in tidalFlats)
+            {
+                if (osmGeo is CompleteWay way) wetlandWays.Add(OsmHelpers.WayToVector2Arr(way));
+                else if (osmGeo is CompleteRelation relation)
+                {
+
+                    List<Vector2[]> relationOuterWays = relation.Members
+                        .Where(x => x.Member.Type == OsmGeoType.Way && x.Role == "outer")
+                        .Select(x => OsmHelpers.WayToVector2Arr((CompleteWay)x.Member))
+                        .ToList();
+
+                    relationOuterWays.RemoveAll(x =>
+                    {
+                        if (x[0] == x[x.Length - 1])
+                        {
+                            wetlandWays.Add(x);
+                            return true;
+                        }
+
+                        return false;
+                    });
+                    ConnectWays(relationOuterWays);
+                    wetlandWays.AddRange(relationOuterWays);
+
+                    List<Vector2[]> relationInnerWays = relation.Members
+                        .Where(x => x.Member.Type == OsmGeoType.Way && x.Role == "inner")
+                        .Select(x => OsmHelpers.WayToVector2Arr((CompleteWay)x.Member))
+                        .ToList();
+
+                    relationInnerWays.RemoveAll(x =>
+                    {
+                        if (x[0] == x[x.Length - 1])
+                        {
+                            holes.Add(x);
+                            return true;
+                        }
+
+                        return false;
+                    });
+                    ConnectWays(relationInnerWays);
+                    holes.AddRange(relationInnerWays);
+                }
+
+            }
+
+            foreach (Vector2[] way in wetlandWays)
+            {
+                if (way[0] == way[way.Length - 1])
+                {
+                    this.tidalFlats.Add(new Mesh(Utility.Utility.Triangulate(way), Color.FromNonPremultiplied(112, 148, 174, 255)));
+                }
+            }
+
+            foreach (Vector2[] hole in holes)
+            {
+                if (hole[0] == hole[hole.Length - 1])
+                {
+                    tidalFlatHoles.Add(new Mesh(Utility.Utility.Triangulate(hole), Color.FromNonPremultiplied(58, 147, 214, 255)));
+                }
+            }
+            
 
             IEnumerable<ICompleteOsmGeo> waters = from osmGeo in source
                                                   where (osmGeo.Type == OsmGeoType.Way || osmGeo.Type == OsmGeoType.Relation) && osmGeo.Tags.Contains("natural", "water")
@@ -197,7 +279,7 @@ namespace NauticalRenderer.SlippyMap.Layers
             for (int i = 0; i < ways.Count; i++)
             {
                 // if coastline is closed to itself we can go to the next one
-                 if (ways[i][0] == ways[i][ways[i].Length - 1]) continue;
+                if (ways[i][0] == ways[i][ways[i].Length - 1]) continue;
 
                 // check for connection to other coastline pieces
                 bool connectionFound = false;
@@ -341,7 +423,7 @@ namespace NauticalRenderer.SlippyMap.Layers
 
             ConnectWays(Coastlines, true, true);
 
-            
+
             foreach (Vector2[] coastline in Coastlines)
             {
                 if (coastline[0] == coastline[coastline.Length - 1])

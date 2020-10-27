@@ -13,6 +13,12 @@
 
 #---------------------------------- Content ---------------------------------#
 
+#begin Effects/BuoyEffect.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Effects/BuoyEffect.fx
+
 #begin Effects/SquigglyLineEffect.fx
 /importer:EffectImporter
 /processor:EffectProcessor
@@ -24,6 +30,18 @@
 
 #begin German-Baltic-Coast-And-South-Denmark.mappack
 /copy:German-Baltic-Coast-And-South-Denmark.mappack
+
+#begin Icons/buoys.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Icons/buoys.png
 
 #begin Icons/Harbours/fishing_harbour.png
 /importer:TextureImporter

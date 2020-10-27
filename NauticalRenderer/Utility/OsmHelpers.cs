@@ -31,7 +31,7 @@ namespace NauticalRenderer.Utility
             switch (color.ToLower())
             {
                 case "white":
-                    return Color.Yellow;
+                    return Color.White;
                 case "black":
                     return Color.Black;
                 case "red":

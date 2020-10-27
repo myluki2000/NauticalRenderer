@@ -1,13 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Microsoft.Xna.Framework;
 
 namespace NauticalRenderer.SlippyMap.Data
 {
     struct Buoy
     {
-        public BuoyType Type { get; set; }
-        public BuoyShape Shape { get; set; }
+        public Vector2 Coordinates { get; }
+        public BuoyType Type { get; }
+        public BuoyShape Shape { get; }
+        public BuoyColorPattern ColorPattern { get; set; }
+        public Color[] Colors { get; }
+
+        public Buoy(Vector2 coordinates, BuoyType type, BuoyShape shape, BuoyColorPattern colorPattern, Color[] colors)
+        {
+            Coordinates = coordinates;
+            Type = type;
+            Shape = shape;
+            ColorPattern = colorPattern;
+            Colors = colors;
+        }
 
         public enum BuoyType
         {
@@ -30,6 +43,19 @@ namespace NauticalRenderer.SlippyMap.Data
             BARREL,
             SUPER_BUOY,
             ICE_BUOY
+        }
+
+        public enum BuoyColorPattern
+        {
+            NONE,
+            HORIZONTAL,
+            VERTICAL,
+            DIAGONAL,
+            SQUARED,
+            STRIPES,
+            BORDER,
+            CROSS,
+            SALTIRE,
         }
     }
 }

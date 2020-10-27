@@ -16,6 +16,11 @@ namespace NauticalRenderer.Utility
         public static Texture2D RestrictedFishing { get; private set; }
         public static Texture2D WindFarm { get; private set; }
         public static Texture2D NoAnchoring { get; private set; }
+        /// <summary>
+        /// Texture containing all buoy shapes. Note that the coordinates for the different sprites in the atlas are
+        /// defined in the BuoyEffect shader.
+        /// </summary>
+        public static Texture2D Buoys { get; set; }
 
         public static class Landmarks
         {
@@ -62,11 +67,10 @@ namespace NauticalRenderer.Utility
             RestrictedFishing = content.Load<Texture2D>("Icons/restricted_fishing");
             WindFarm = content.Load<Texture2D>("Icons/wind_farm");
             NoAnchoring = content.Load<Texture2D>("Icons/no_anchoring");
+            Buoys = content.Load<Texture2D>("Icons/buoys");
 
             Landmarks.LoadContent(content);
             Harbours.LoadContent(content);
-
-
         }
     }
 }

@@ -22,6 +22,7 @@ namespace NauticalRenderer.SlippyMap.Layers
     {
         private List<RestrictedArea> restrictedAreas;
         private List<Vector2[]> seacables;
+        private List<Vector2[]> borders;
 
         private VertexPositionTexture[] seacablesVerts;
 
@@ -36,6 +37,12 @@ namespace NauticalRenderer.SlippyMap.Layers
             squigglyLineEffect = Globals.Content.Load<Effect>("Effects/SquigglyLineEffect");
 
             OsmCompleteStreamSource source = new PBFOsmStreamSource(mapPack.OpenFile("base.osm.pbf")).ToComplete();
+
+            borders = OsmHelpers.WaysToListOfVector2Arr(source
+                .Where(osmGeo =>
+                    osmGeo.Tags.Contains("admin_level", "2") && osmGeo.Tags.Contains("boundary", "administrative"))
+                .ToArray());
+            
             restrictedAreas = source
                     .Where(osmGeo => osmGeo.Tags.Contains("seamark:type", "restricted_area"))
                     .Where(x => x is CompleteWay).Select(x => new RestrictedArea
@@ -93,6 +100,11 @@ namespace NauticalRenderer.SlippyMap.Layers
         /// <inheritdoc />
         public override void Draw(SpriteBatch sb, SpriteBatch mapSb, Camera camera)
         {
+            foreach (Vector2[] line in borders)
+            {
+                LineRenderer.DrawDashedLine(mapSb, line, Color.Purple, new []{0.001f, 0.001f, 0.0001f, 0.001f}, camera.GetMatrix());
+            }
+
             foreach (RestrictedArea restrictedArea in restrictedAreas)
             {
                 if(restrictedArea.BoundingRectangle.Intersects(camera.DrawBounds))
