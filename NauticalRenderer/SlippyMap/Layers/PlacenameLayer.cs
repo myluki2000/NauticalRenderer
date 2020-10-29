@@ -37,10 +37,10 @@ namespace NauticalRenderer.SlippyMap.Layers
         {
             foreach ((Vector2 coords, string name) in places)
             {
-                SpriteFont font = Fonts.Arial.Regular;
+                SpriteFont font = Myra.DefaultAssets.FontSmall;
                 string formattedLabel = Utility.Utility.WrapText(font, name, 100);
                 Vector2 labelSize = font.MeasureString(formattedLabel);
-                sb.DrawString(font, formattedLabel, coords.Transform(camera.GetMatrix()), Color.Black, 0, labelSize / 2, Vector2.One, SpriteEffects.None, 0);
+                sb.DrawString(font, formattedLabel, coords.Transform(camera.GetMatrix()).Rounded(), Color.Black, 0, (labelSize / 2).Rounded(), Vector2.One, SpriteEffects.None, 0);
             }
         }
     }

@@ -210,5 +210,11 @@ namespace NauticalRenderer.Utility
             Vector2 diff = other - value;
             return Math.Abs(diff.X) <= delta && Math.Abs(diff.Y) <= delta;
         }
+
+        public static Vector2 Rounded(this Vector2 value)
+        {
+            value.Round();
+            return value;
+        }
     }
 }

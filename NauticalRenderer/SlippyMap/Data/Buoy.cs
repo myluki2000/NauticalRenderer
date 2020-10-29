@@ -42,7 +42,12 @@ namespace NauticalRenderer.SlippyMap.Data
             SPAR,
             BARREL,
             SUPER_BUOY,
-            ICE_BUOY
+            ICE_BUOY,
+            BEACON_TOWER,
+            BEACON_PILE,
+            BEACON_LATTICE,
+            BEACON_CAIRN,
+            BEACON_BUOYANT
         }
 
         public enum BuoyColorPattern

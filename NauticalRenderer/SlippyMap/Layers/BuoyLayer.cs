@@ -40,6 +40,16 @@ namespace NauticalRenderer.SlippyMap.Layers
         public override void LoadContent(MapPack mapPack)
         {
             buoyEffect = Globals.Content.Load<Effect>("Effects/BuoyEffect");
+            buoyEffect.Parameters["Size"].SetValue(24.0f);
+            buoyEffect.Parameters["ViewportMatrix"].SetValue(Matrix.CreateOrthographicOffCenter(
+                0,
+                Globals.Graphics.GraphicsDevice.Viewport.Width,
+                Globals.Graphics.GraphicsDevice.Viewport.Height,
+                0,
+                0,
+                1));
+            buoyEffect.CurrentTechnique = buoyEffect.Techniques[0];
+            buoyEffect.Parameters["Texture"].SetValue(Icons.Buoys);
 
             instanceVertexDeclaration = new VertexDeclaration(new VertexElement[]
             {
@@ -136,18 +146,8 @@ namespace NauticalRenderer.SlippyMap.Layers
         /// <inheritdoc />
         public override void Draw(SpriteBatch sb, SpriteBatch mapSb, Camera camera)
         {
-            buoyEffect.CurrentTechnique = buoyEffect.Techniques[0];
-            buoyEffect.Parameters["Size"].SetValue(24.0f);
             buoyEffect.Parameters["WorldMatrix"].SetValue(camera.GetMatrix());
-            buoyEffect.Parameters["ViewportMatrix"].SetValue(Matrix.CreateOrthographicOffCenter(
-                0,
-                Globals.Graphics.GraphicsDevice.Viewport.Width,
-                Globals.Graphics.GraphicsDevice.Viewport.Height,
-                0,
-                0,
-                1));
             Globals.Graphics.GraphicsDevice.Indices = indexBuffer;
-            buoyEffect.Parameters["Texture"].SetValue(Icons.Buoys);
             buoyEffect.CurrentTechnique.Passes[0].Apply();
             Globals.Graphics.GraphicsDevice.SetVertexBuffers(bindings);
             Globals.Graphics.GraphicsDevice.DrawInstancedPrimitives(PrimitiveType.TriangleList, 0, 0, 2, 0, instances.Length);

@@ -102,7 +102,7 @@ namespace NauticalRenderer.SlippyMap.Data
                 SpriteFont font = DefaultAssets.FontSmall;
                 string formattedLabel = Utility.Utility.WrapText(font, Label, 100);
                 Vector2 labelSize = font.MeasureString(formattedLabel);
-                sb.DrawString(font, formattedLabel, BoundingRectangle.Center.Transform(camera.GetMatrix()), Color.Black, 0, labelSize / 2, Vector2.One, SpriteEffects.None, 0);
+                sb.DrawString(font, formattedLabel, BoundingRectangle.Center.Transform(camera.GetMatrix()).Rounded(), Color.Black, 0, (labelSize / 2).Rounded(), Vector2.One, SpriteEffects.None, 0);
             }
         }
 

@@ -166,15 +166,10 @@ namespace NauticalRenderer.SlippyMap.Layers
             Vector2 pos = OsmHelpers.GetCoordinateOfOsmGeo(o);
 
 
-            sb.DrawString(Fonts.Arial.Regular,
+            sb.DrawString(Myra.DefaultAssets.FontSmall,
                 o.Tags["seamark:name"],
-                pos.Transform(camera.GetMatrix()),
-                Color.Black,
-                0,
-                Vector2.Zero,
-                0.8f,
-                SpriteEffects.None,
-                0f);
+                pos.Transform(camera.GetMatrix()).Rounded(),
+                Color.Black);
         }
 
         private void DrawLight(SpriteBatch sb, ICompleteOsmGeo o, bool drawSectorLights, Camera camera)

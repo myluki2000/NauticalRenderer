@@ -45,7 +45,7 @@ namespace NauticalRenderer.SlippyMap.Layers
         {
             foreach (Harbour harbour in harbours)
             {
-                Vector2 iconPos = OsmHelpers.GetCoordinateOfOsmGeo(harbour.OsmData).Transform(camera.GetMatrix());
+                Vector2 iconPos = OsmHelpers.GetCoordinateOfOsmGeo(harbour.OsmData).Transform(camera.GetMatrix()).Rounded();
 
                 // draw icon
                 Texture2D icon;
