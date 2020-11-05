@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using NauticalRenderer.Data;
+using NauticalRenderer.SlippyMap.Data;
 using NauticalRenderer.Utility;
 using NetTopologySuite.Geometries;
 using OsmSharp;
@@ -58,13 +59,13 @@ namespace NauticalRenderer.SlippyMap.Layers
 
             foreach (Mesh tidalFlat in tidalFlats)
             {
-                if(tidalFlat.BoundingRectangle.Intersects(camera.DrawBounds))
+                if (tidalFlat.BoundingRectangle.Intersects(camera.DrawBounds))
                     tidalFlat.Draw(mapSb, camera.GetMatrix());
             }
 
             foreach (Mesh tidalFlatHole in tidalFlatHoles)
             {
-                if(tidalFlatHole.BoundingRectangle.Intersects(camera.DrawBounds))
+                if (tidalFlatHole.BoundingRectangle.Intersects(camera.DrawBounds))
                     tidalFlatHole.Draw(mapSb, camera.GetMatrix());
             }
 
@@ -162,7 +163,7 @@ namespace NauticalRenderer.SlippyMap.Layers
             {
                 if (way[0] == way[way.Length - 1])
                 {
-                    this.tidalFlats.Add(new Mesh(Utility.Utility.Triangulate(way), Color.FromNonPremultiplied(112, 148, 174, 255)));
+                    this.tidalFlats.Add(new Mesh(Utility.Utility.Triangulate(way), MapStyle.COLOR_TIDAL_FLATS));
                 }
             }
 
@@ -170,10 +171,10 @@ namespace NauticalRenderer.SlippyMap.Layers
             {
                 if (hole[0] == hole[hole.Length - 1])
                 {
-                    tidalFlatHoles.Add(new Mesh(Utility.Utility.Triangulate(hole), Color.FromNonPremultiplied(58, 147, 214, 255)));
+                    tidalFlatHoles.Add(new Mesh(Utility.Utility.Triangulate(hole), MapStyle.COLOR_WATER));
                 }
             }
-            
+
 
             IEnumerable<ICompleteOsmGeo> waters = from osmGeo in source
                                                   where (osmGeo.Type == OsmGeoType.Way || osmGeo.Type == OsmGeoType.Relation) && osmGeo.Tags.Contains("natural", "water")
@@ -231,7 +232,7 @@ namespace NauticalRenderer.SlippyMap.Layers
             {
                 if (waterWay[0] == waterWay[waterWay.Length - 1])
                 {
-                    waterMeshes.Add(new Mesh(Utility.Utility.Triangulate(waterWay), Color.FromNonPremultiplied(58, 147, 214, 255)));
+                    waterMeshes.Add(new Mesh(Utility.Utility.Triangulate(waterWay), MapStyle.COLOR_WATER));
                 }
             }
 
@@ -239,7 +240,7 @@ namespace NauticalRenderer.SlippyMap.Layers
             {
                 if (innerIsland[0] == innerIsland[innerIsland.Length - 1])
                 {
-                    innerIslandMeshes.Add(new Mesh(Utility.Utility.Triangulate(innerIsland), Color.FromNonPremultiplied(213, 203, 161, 255)));
+                    innerIslandMeshes.Add(new Mesh(Utility.Utility.Triangulate(innerIsland), MapStyle.COLOR_LAND));
                 }
             }
 
@@ -428,7 +429,7 @@ namespace NauticalRenderer.SlippyMap.Layers
             {
                 if (coastline[0] == coastline[coastline.Length - 1])
                 {
-                    coastMeshes.Add(new Mesh(Utility.Utility.Triangulate(coastline), Color.FromNonPremultiplied(213, 203, 161, 255)));
+                    coastMeshes.Add(new Mesh(Utility.Utility.Triangulate(coastline), MapStyle.COLOR_LAND));
                     //coastMeshes.Add(new Mesh(coastline, /*Utility.Utility.TriangulateOld(coastline)*/ new int[] { }, Color.FromNonPremultiplied(213, 203, 161, 255)));
                 }
             }
@@ -471,7 +472,7 @@ namespace NauticalRenderer.SlippyMap.Layers
 
             boundingPolygon = newBoundingPoly.ToArray();
             Vector2[] boundingPoints = boundingPolygon.Select(x => x.point).ToArray();
-            boundingMesh = new Mesh(boundingPoints, Utility.Utility.TriangulateOld(boundingPoints), Color.FromNonPremultiplied(58, 147, 214, 255));
+            boundingMesh = new Mesh(boundingPoints, Utility.Utility.TriangulateOld(boundingPoints), MapStyle.COLOR_WATER);
         }
     }
 }

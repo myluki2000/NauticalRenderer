@@ -71,7 +71,7 @@ float4 MainPS(VSOutput input) : COLOR
 	[unroll]
 	for (int i = 0; i < 4; ++i)
 	{
-		if (input.Colors[i].a > 0.0f) ++colorCount;
+        colorCount += input.Colors[i].a > 0.0f;
 	}
 
 	float colorAngle = 0.0f;

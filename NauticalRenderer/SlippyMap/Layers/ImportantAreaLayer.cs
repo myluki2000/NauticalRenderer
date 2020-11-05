@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -78,8 +79,8 @@ namespace NauticalRenderer.SlippyMap.Layers
                     Vector2 end = seacable[i + 1];
 
                     Vector2 halfWidthVector = (end - start);
-                    float length = halfWidthVector.Length();
-
+                    float length = (float)Math.Ceiling((halfWidthVector.Length() * 1000) / MathHelper.TwoPi) * MathHelper.TwoPi;
+                    
                     halfWidthVector = halfWidthVector.PerpendicularClockwise();
                     halfWidthVector.Normalize();
                     halfWidthVector *= 0.001f;
