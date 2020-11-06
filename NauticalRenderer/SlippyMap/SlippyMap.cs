@@ -34,6 +34,7 @@ namespace NauticalRenderer.SlippyMap
         private readonly MapGeoLayer mapGeoLayer = new MapGeoLayer();
         private readonly PlacenameLayer placenameLayer = new PlacenameLayer();
         private readonly BuoyLayer buoyLayer = new BuoyLayer();
+        private readonly StreetLayer streetLayer = new StreetLayer();
         #endregion
 
 
@@ -173,6 +174,7 @@ namespace NauticalRenderer.SlippyMap
             if(Settings.VisibleLayers.SeparationSchemeLayer) separationSchemeLayer.Draw(sb, mapSb, Camera);
             placenameLayer.Draw(sb, mapSb, Camera);
             buoyLayer.Draw(sb, mapSb, Camera);
+            streetLayer.Draw(sb, mapSb, Camera);
 
             /*if (first)
                 Camera.FocusOnPosition(MapGeo.BoundingPolygon[0].point);*/
@@ -223,6 +225,7 @@ namespace NauticalRenderer.SlippyMap
             gribLayer.LoadContent(MapPack);
             separationSchemeLayer.LoadContent(MapPack);
             buoyLayer.LoadContent(MapPack);
+            streetLayer.LoadContent(MapPack);
 
             Settings.LandmarkLayerSettings = landmarkLayer.LayerSettings;
             Settings.HarbourLayerSettings = harbourLayer.LayerSettings;

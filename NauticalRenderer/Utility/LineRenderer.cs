@@ -32,7 +32,6 @@ namespace NauticalRenderer.Utility
 
         public static void DrawLineList(SpriteBatch sb, Vector2[] points, Color color, Matrix viewMatrix)
         {
-            Utility.basicEffect.View = viewMatrix;
             VertexPositionColor[] verts = new VertexPositionColor[points.Length];
 
             for (int i = 0; i < points.Length; i++)
@@ -40,6 +39,12 @@ namespace NauticalRenderer.Utility
                 verts[i] = new VertexPositionColor(new Vector3(points[i], 0), color);
             }
 
+            DrawLineList(sb, verts, viewMatrix);
+        }
+
+        public static void DrawLineList(SpriteBatch sb, VertexPositionColor[] verts, Matrix viewMatrix)
+        {
+            Utility.basicEffect.View = viewMatrix;
             Utility.basicEffect.CurrentTechnique.Passes[0].Apply();
             sb.GraphicsDevice.DrawUserPrimitives(PrimitiveType.LineList, verts, 0, verts.Length / 2);
         }
