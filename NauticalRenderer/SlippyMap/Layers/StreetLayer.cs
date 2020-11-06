@@ -16,6 +16,7 @@ namespace NauticalRenderer.SlippyMap.Layers
     class StreetLayer : MapLayer
     {
         private VertexPositionColor[] streets;
+        private VertexPositionColor[] smallStreets;
 
         /// <inheritdoc />
         public override ILayerSettings LayerSettings { get; }
@@ -26,6 +27,7 @@ namespace NauticalRenderer.SlippyMap.Layers
             OsmCompleteStreamSource source = new PBFOsmStreamSource(mapPack.OpenFile("streets.osm.pbf")).ToComplete();
 
             List<VertexPositionColor> streetsList = new List<VertexPositionColor>();
+            List<VertexPositionColor> smallStreetsList = new List<VertexPositionColor>();
 
             foreach (ICompleteOsmGeo geo in source)
             {
@@ -34,21 +36,31 @@ namespace NauticalRenderer.SlippyMap.Layers
                 if(!way.Tags.TryGetValue("highway", out string type)) continue;
                 Color color = GetColorForHighwayType(type);
 
-                streetsList.Add(new VertexPositionColor(new Vector3(OsmHelpers.GetCoordinateOfOsmGeo(way.Nodes[0]), 0), color));
-                for (int i = 1; i < way.Nodes.Length - 1; i++)
+                if (type == "track" || type == "path" || type == "footway")
                 {
-                    streetsList.Add(new VertexPositionColor(new Vector3(OsmHelpers.GetCoordinateOfOsmGeo(way.Nodes[i]), 0), color));
-                    streetsList.Add(new VertexPositionColor(new Vector3(OsmHelpers.GetCoordinateOfOsmGeo(way.Nodes[i]), 0), color));
+                    smallStreetsList.AddRange(LineRenderer.GenerateDashedLineVerts(OsmHelpers.WayToVector2Arr(way), color, new []{0.0001f, 0.0001f}));
                 }
-                streetsList.Add(new VertexPositionColor(new Vector3(OsmHelpers.GetCoordinateOfOsmGeo(way.Nodes[^1]), 0), color));
+                else
+                {
+                    streetsList.Add(new VertexPositionColor(new Vector3(OsmHelpers.GetCoordinateOfOsmGeo(way.Nodes[0]), 0), color));
+                    for (int i = 1; i < way.Nodes.Length - 1; i++)
+                    {
+                        streetsList.Add(new VertexPositionColor(new Vector3(OsmHelpers.GetCoordinateOfOsmGeo(way.Nodes[i]), 0), color));
+                        streetsList.Add(new VertexPositionColor(new Vector3(OsmHelpers.GetCoordinateOfOsmGeo(way.Nodes[i]), 0), color));
+                    }
+                    streetsList.Add(new VertexPositionColor(new Vector3(OsmHelpers.GetCoordinateOfOsmGeo(way.Nodes[^1]), 0), color));
+                }
             }
 
             streets = streetsList.ToArray();
+            smallStreets = smallStreetsList.ToArray();
         }
 
         /// <inheritdoc />
         public override void Draw(SpriteBatch sb, SpriteBatch mapSb, Camera camera)
         {
+            if(camera.Scale.Y > 10000)
+                LineRenderer.DrawLineList(mapSb, smallStreets, camera.GetMatrix());
             LineRenderer.DrawLineList(mapSb, streets, camera.GetMatrix());
         }
 
@@ -71,6 +83,11 @@ namespace NauticalRenderer.SlippyMap.Layers
                 case "tertiary":
                 case "tertiary_link":
                     return Color.White;
+                case "track":
+                    return Color.Brown;
+                case "path":
+                case "footway":
+                    return Color.Red;
                 default:
                     return Color.Gray;
             }

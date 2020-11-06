@@ -49,9 +49,11 @@ namespace NauticalRenderer.Utility
             sb.GraphicsDevice.DrawUserPrimitives(PrimitiveType.LineList, verts, 0, verts.Length / 2);
         }
 
-        public static void DrawDashedLine(SpriteBatch sb, Vector2[] points, Color color, float[] lineAndGapLengths, Matrix viewMatrix)
+        public static VertexPositionColor[] GenerateDashedLineVerts(Vector2[] points,
+            Color color,
+            float[] lineAndGapLengths)
         {
-            List<Vector2> drawPoints = new List<Vector2>();
+            List<VertexPositionColor> drawPoints = new List<VertexPositionColor>();
 
             float segmentLength = lineAndGapLengths.Sum();
 
@@ -78,8 +80,13 @@ namespace NauticalRenderer.Utility
                 {
                     if (segmentIndex % 2 == 0)
                     {
-                        drawPoints.Add(startPoint + normal * (length - lengthToGo));
-                        drawPoints.Add(startPoint + normal * (length - lengthToGo + Math.Min(lengthToGo, thisSegmentPartLength)));
+                        drawPoints.Add(
+                            new VertexPositionColor(new Vector3(startPoint + normal * (length - lengthToGo), 0),
+                                color));
+                        drawPoints.Add(new VertexPositionColor(
+                            new Vector3(
+                                startPoint + normal *
+                                (length - lengthToGo + Math.Min(lengthToGo, thisSegmentPartLength)), 0), color));
                     }
 
                     lengthToGo -= thisSegmentPartLength;
@@ -90,8 +97,15 @@ namespace NauticalRenderer.Utility
                 passedDistance += length;
             }
 
-            if(drawPoints.Count > 0)
-                DrawLineList(sb, drawPoints.ToArray(), color, viewMatrix);
+            return drawPoints.ToArray();
+        }
+
+        public static void DrawDashedLine(SpriteBatch sb, Vector2[] points, Color color, float[] lineAndGapLengths, Matrix viewMatrix)
+        {
+            VertexPositionColor[] verts = GenerateDashedLineVerts(points, color, lineAndGapLengths);
+
+            if (verts.Length > 0)
+                DrawLineList(sb, verts, viewMatrix);
         }
 
         public static void DrawStyledLine(SpriteBatch sb, Vector2[] points, Color color, LineStyle lineStyle, Matrix viewMatrix)
@@ -144,11 +158,11 @@ namespace NauticalRenderer.Utility
                             }
                             break;
                         default:
-                            if(lineStyle.Segments[segmentIndex].style != LineStyle.SegmentStyle.SPACE)
+                            if (lineStyle.Segments[segmentIndex].style != LineStyle.SegmentStyle.SPACE)
                                 throw new Exception("Missing rendering code for line segment style.");
                             break;
                     }
-                        
+
                     lengthToGo -= thisSegmentPartLength;
                     segmentIndex = ++segmentIndex % lineStyle.Segments.Length;
                     thisSegmentPartLength = lineStyle.Segments[segmentIndex].length;
