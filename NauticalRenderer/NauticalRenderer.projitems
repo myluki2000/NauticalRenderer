@@ -17,6 +17,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)SlippyMap\Data\Buoy.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SlippyMap\Data\Landmark.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SlippyMap\Data\MapStyle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SlippyMap\Data\SectorLight.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SlippyMap\Layers\FacilitiesLayer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SlippyMap\Layers\BuoyLayer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SlippyMap\Layers\MapGeoLayer.cs" />
