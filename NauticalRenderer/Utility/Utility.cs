@@ -43,7 +43,7 @@ namespace NauticalRenderer.Utility
                                    float endAngle,
                                    Color color,
                                    Matrix? viewMatrix = null,
-                                   int resolution = 30)
+                                   int resolution = 20)
         {
             if (viewMatrix == null) viewMatrix = Matrix.Identity;
             basicEffect.View = (Matrix)viewMatrix;

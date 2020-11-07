@@ -16,6 +16,7 @@ namespace NauticalRenderer.SlippyMap.Data
         public void Draw(SpriteBatch sb, Camera camera, float rangeMultiplier = 1.0f)
         {
             Vector2 screenPos = Coordinates.Transform(camera.GetMatrix());
+
             foreach (SectorLight.Sector s in Sectors)
             {
                 // draw dashed sector boundaries if light is sector light. If it is directional light draw dashed line in the middle

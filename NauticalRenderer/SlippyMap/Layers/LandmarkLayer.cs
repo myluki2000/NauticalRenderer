@@ -220,9 +220,7 @@ namespace NauticalRenderer.SlippyMap.Layers
                     sb.Draw(Icons.Star, new Rectangle(pos.ToPoint(), !minor ? new Point(12, 12) : new Point(7, 7)), null, Color.White, 0,
                         new Vector2(Icons.Star.Width / 2, Icons.Star.Height / 2), SpriteEffects.None, 0);
 
-                    bool drawSectorLights = (!minor && camera.Scale.Y > 3000) || camera.Scale.Y > 15000;
-
-                    DrawLight(sb, o, drawSectorLights, camera);
+                    DrawLight(sb, o, camera);
 
                     // draw name if zoomed in far enough
                     if (camera.Scale.Y > 5000)
@@ -246,7 +244,7 @@ namespace NauticalRenderer.SlippyMap.Layers
                 Color.Black);
         }
 
-        private void DrawLight(SpriteBatch sb, ICompleteOsmGeo o, bool drawSectorLights, Camera camera)
+        private void DrawLight(SpriteBatch sb, ICompleteOsmGeo o, Camera camera)
         {
             Color color = Color.DarkViolet; // default color for multi-color lights
 
@@ -282,8 +280,11 @@ namespace NauticalRenderer.SlippyMap.Layers
                 foreach (SectorLight sl in sectorLights)
                 {
                     // skip minor lights at zoom levels below 15000
-                    if(!sl.Major && camera.Scale.Y < 15000) continue;
-                    
+                    if (!sl.Major && camera.Scale.Y < 15000) continue;
+
+                    // skip if outside draw bounds
+                    if (!camera.DrawBounds.Contains(sl.Coordinates)) continue;
+
                     sl.Draw(sb, camera, rangeMultiplier);
                 }
             }
