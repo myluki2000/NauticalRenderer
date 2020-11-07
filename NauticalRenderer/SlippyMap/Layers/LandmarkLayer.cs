@@ -267,138 +267,24 @@ namespace NauticalRenderer.SlippyMap.Layers
 
         private void DrawSectorLights(SpriteBatch sb, Camera camera)
         {
-            /*int i = 1;
-            while (true)
+            float rangeMultiplier = 1.0f;
+            if (camera.Scale.Y > 10000)
             {
-                float startAngle;
-                float endAngle;
-                float range = 30;
-                if (camera.Scale.Y > 10000)
-                {
-                    range = 80;
-                } 
-                else if (camera.Scale.Y > 6500)
-                {
-                    range = 55;
-                }
-
-                float orientation = float.NaN;
-
-                // split up the tags of the different lights in separate lists
-                Dictionary<string, Tag> tags = o.Tags.Where(x => x.Key.StartsWith("seamark:light:" + i + ":")).ToDictionary(x => x.Key.Replace("seamark:light:" + i + ":", ""));
-                i++;
-
-                if (tags.Count == 0) break;
-
-                if (!tags.ContainsKey("colour")) continue;
-
-                if (tags.TryGetValue("range", out Tag rangeTag))
-                {
-                    range = float.Parse(rangeTag.Value, CultureInfo.InvariantCulture) * (range / 10);
-                }
-
-                if (tags.ContainsKey("sector_start") && tags.ContainsKey("sector_end") && tags["sector_start"].Value != tags["sector_end"].Value)
-                {
-                    startAngle = Utility.Utility.NormalizeAngleRad(
-                        MathHelper.ToRadians(float.Parse(tags["sector_start"].Value, CultureInfo.InvariantCulture)) - MathHelper.Pi);
-                    endAngle = Utility.Utility.NormalizeAngleRad(
-                        MathHelper.ToRadians(float.Parse(tags["sector_end"].Value, CultureInfo.InvariantCulture)) - MathHelper.Pi);
-                }
-                else
-                {
-                    // check if light has orientation instead
-                    if (!tags.ContainsKey("orientation"))
-                    {
-                        if (tags.ContainsKey("sector_start") && tags.ContainsKey("sector_end"))
-                        {
-                            orientation = float.Parse(tags["sector_start"].Value, CultureInfo.InvariantCulture);
-                        }
-                        else
-                        {
-                            continue;
-                        }
-
-                    }
-                    else
-                    {
-                        orientation = MathHelper.ToRadians(float.Parse(tags["orientation"].Value, CultureInfo.InvariantCulture)) - MathHelper.Pi;
-                    }
-
-
-                    startAngle = Utility.Utility.NormalizeAngleRad(orientation - 0.05f);
-                    endAngle = Utility.Utility.NormalizeAngleRad(orientation + 0.05f);
-                }
-
-                Vector2 pos = OsmHelpers.GetCoordinateOfOsmGeo(o).Transform(camera.GetMatrix());
-
-                Color color = OsmHelpers.GetColorFromSeamarkColor(tags["colour"].Value);
-                if (color == Color.White) color = Color.Yellow;
-
-                // draw dashed sector boundaries if light is sector light. If it is directional light draw dashed line in the middle
-                if (float.IsNaN(orientation))
-                {
-                    if (startAngle == endAngle)
-                        continue;
-
-                    Vector2 startAnglePoint = new Vector2(
-                        pos.X + (float)(Math.Sin(startAngle) * (range + 5)),
-                        pos.Y - (float)(Math.Cos(startAngle) * (range + 5))
-                    );
-
-                    Vector2 endAnglePoint = new Vector2(
-                        pos.X + (float)(Math.Sin(endAngle) * (range + 5)),
-                        pos.Y - (float)(Math.Cos(endAngle) * (range + 5))
-                    );
-
-                    LineRenderer.DrawDashedLine(sb, new[] { pos, startAnglePoint }, Color.DimGray, new[] { 7f, 3f }, Matrix.Identity);
-                    LineRenderer.DrawDashedLine(sb, new[] { pos, endAnglePoint }, Color.DimGray, new[] { 7f, 3f }, Matrix.Identity);
-                }
-                else
-                {
-                    Vector2 orientationAnglePoint = new Vector2(
-                        pos.X + (float)(Math.Sin(orientation) * (range + 5)),
-                        pos.Y - (float)(Math.Cos(orientation) * (range + 5))
-                    );
-                    LineRenderer.DrawDashedLine(sb, new[] { pos, orientationAnglePoint }, Color.DimGray, new[] { 7f, 3f }, Matrix.Identity);
-                }
-
-                Utility.Utility.DrawArc(sb, pos, range, 5, startAngle, endAngle, color);
-            }*/
-
-            foreach (SectorLight sl in sectorLights)
+                rangeMultiplier = 3.0f;
+            }
+            else if (camera.Scale.Y > 6500)
             {
-                Vector2 screenPos = sl.Coordinates.Transform(camera.GetMatrix());
-                foreach (SectorLight.Sector s in sl.Sectors)
+                rangeMultiplier = 2.0f;
+            }
+
+            if (camera.Scale.Y > 3000)
+            {
+                foreach (SectorLight sl in sectorLights)
                 {
-                    // draw dashed sector boundaries if light is sector light. If it is directional light draw dashed line in the middle
-                    if (float.IsNaN(s.Orientation))
-                    {
-                        if (s.StartAngle == s.EndAngle)
-                            continue;
-
-                        Vector2 startAnglePoint = new Vector2(
-                            screenPos.X + (float)(Math.Sin(s.StartAngle) * (s.Range + 5)),
-                            screenPos.Y - (float)(Math.Cos(s.StartAngle) * (s.Range + 5))
-                        );
-
-                        Vector2 endAnglePoint = new Vector2(
-                            screenPos.X + (float)(Math.Sin(s.EndAngle) * (s.Range + 5)),
-                            screenPos.Y - (float)(Math.Cos(s.EndAngle) * (s.Range + 5))
-                        );
-
-                        LineRenderer.DrawDashedLine(sb, new[] { screenPos, startAnglePoint }, Color.DimGray, new[] { 7f, 3f }, Matrix.Identity);
-                        LineRenderer.DrawDashedLine(sb, new[] { screenPos, endAnglePoint }, Color.DimGray, new[] { 7f, 3f }, Matrix.Identity);
-                    }
-                    else
-                    {
-                        Vector2 orientationAnglePoint = new Vector2(
-                            screenPos.X + (float)(Math.Sin(s.Orientation) * (s.Range + 5)),
-                            screenPos.Y - (float)(Math.Cos(s.Orientation) * (s.Range + 5))
-                        );
-                        LineRenderer.DrawDashedLine(sb, new[] { screenPos, orientationAnglePoint }, Color.DimGray, new[] { 7f, 3f }, Matrix.Identity);
-                    }
-
-                    Utility.Utility.DrawArc(sb, screenPos, s.Range, 5, s.StartAngle, s.EndAngle, s.Color);
+                    // skip minor lights at zoom levels below 15000
+                    if(!sl.Major && camera.Scale.Y < 15000) continue;
+                    
+                    sl.Draw(sb, camera, rangeMultiplier);
                 }
             }
         }

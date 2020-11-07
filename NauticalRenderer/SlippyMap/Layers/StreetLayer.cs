@@ -34,7 +34,7 @@ namespace NauticalRenderer.SlippyMap.Layers
                 if(!(geo is CompleteWay way)) continue;
 
                 if(!way.Tags.TryGetValue("highway", out string type)) continue;
-                Color color = GetColorForHighwayType(type);
+                Color color = GetColorForHighwayType(type) * 0.7f;
 
                 if (type == "track" || type == "path" || type == "footway")
                 {
