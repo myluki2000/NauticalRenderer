@@ -52,6 +52,7 @@ namespace NauticalRenderer.SlippyMap.Layers
                 }
             }
 
+            
             streets = streetsList.ToArray();
             smallStreets = smallStreetsList.ToArray();
         }
@@ -59,7 +60,7 @@ namespace NauticalRenderer.SlippyMap.Layers
         /// <inheritdoc />
         public override void Draw(SpriteBatch sb, SpriteBatch mapSb, Camera camera)
         {
-            if(camera.Scale.Y > 10000)
+            if(camera.Scale.Y > 15000)
                 LineRenderer.DrawLineList(mapSb, smallStreets, camera.GetMatrix());
             LineRenderer.DrawLineList(mapSb, streets, camera.GetMatrix());
         }

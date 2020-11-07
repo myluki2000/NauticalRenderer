@@ -244,36 +244,11 @@ namespace NauticalRenderer.SlippyMap.Layers
                 }
             }
 
-            SplitBoundingPoly();
+            SplitBoundingPoly(mapPack);
             GenerateCoastMeshes();
         }
 
-        public void LoadBoundingPoly(Stream boundingPolyStream)
-        {
-            List<(bool corner, Vector2 point)> coords = new List<(bool corner, Vector2 point)>();
-            using (StreamReader sr = new StreamReader(boundingPolyStream))
-            {
-                // skip first two lines
-                sr.ReadLine();
-                sr.ReadLine();
-
-                string line = sr.ReadLine();
-                while (line != "END")
-                {
-                    line = line.Trim();
-                    line = line.Replace("   ", " ");
-                    string[] coordsString = line.Split(' ');
-
-                    coords.Add((true,
-                                new Vector2(float.Parse(coordsString[0], CultureInfo.InvariantCulture),
-                                            -float.Parse(coordsString[1], CultureInfo.InvariantCulture))));
-
-                    line = sr.ReadLine();
-                }
-            }
-
-            boundingPolygon = coords.ToArray();
-        }
+        
 
         private void ConnectWays(List<Vector2[]> ways, bool isCoastline = false, bool connectWithBoundingPoly = false)
         {
@@ -435,9 +410,9 @@ namespace NauticalRenderer.SlippyMap.Layers
             }
         }
 
-        private void SplitBoundingPoly()
+        private void SplitBoundingPoly(MapPack mapPack)
         {
-            LinkedList<(bool corner, Vector2 point)> newBoundingPoly = new LinkedList<(bool corner, Vector2 Point)>(boundingPolygon);
+            LinkedList<(bool corner, Vector2 point)> newBoundingPoly = new LinkedList<(bool corner, Vector2 Point)>(mapPack.BoundingPolygon.Select(x => (true, x)));
 
             for (int i = 0; i < newBoundingPoly.Count; i++)
             {

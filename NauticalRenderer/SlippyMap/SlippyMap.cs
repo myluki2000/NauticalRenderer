@@ -209,8 +209,6 @@ namespace NauticalRenderer.SlippyMap
 
         public void Load()
         {
-            mapGeoLayer.LoadBoundingPoly(MapPack.OpenFile("boundary.poly"));
-
             foreach (SourceLayer sourceLayer in SourceLayers)
             {
                 sourceLayer.LoadContent();
