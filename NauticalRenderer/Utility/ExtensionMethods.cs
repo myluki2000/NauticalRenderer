@@ -218,3 +218,13 @@ namespace NauticalRenderer.Utility
         }
     }
 }
+
+public class EnumUtils
+{
+    public static IEnumerable<T> GetFlags<T>(T input) where T : Enum
+    {
+        foreach (T value in Enum.GetValues(input.GetType()))
+            if (input.HasFlag(value) && Convert.ToInt32(value) != 0)
+                yield return value;
+    }
+}

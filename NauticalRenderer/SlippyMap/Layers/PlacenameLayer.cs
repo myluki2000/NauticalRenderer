@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Myra;
 using NauticalRenderer.Data;
 using NauticalRenderer.Utility;
+using OsmSharp.Complete;
 using OsmSharp.Streams;
 using OsmSharp.Streams.Complete;
 
@@ -19,6 +20,10 @@ namespace NauticalRenderer.SlippyMap.Layers
 
         private (Vector2 coords, string name)[] places;
 
+        private (Vector2 coords, string name)[] cities;
+        private (Vector2 coords, string name)[] towns;
+        private (Vector2 coords, string name)[] villages;
+
         /// <inheritdoc />
         public override void LoadContent(MapPack mapPack)
         {
@@ -28,12 +33,39 @@ namespace NauticalRenderer.SlippyMap.Layers
                 .Select(x => (OsmHelpers.GetCoordinateOfOsmGeo(x), x.Tags["name"]))
                 .ToArray();
 
+            OsmCompleteStreamSource placenameSource = new PBFOsmStreamSource(mapPack.OpenFile("placenames.osm.pbf")).ToComplete();
+            cities = placenameSource
+                .Where(x => x.Tags.Contains("place", "city"))
+                .Select(x => (OsmHelpers.GetCoordinateOfOsmGeo(x), x.Tags["name"]))
+                .ToArray();
 
-            //OsmCompleteStreamSource placenameSource = new PBFOsmStreamSource(Globals.ResourceManager.GetStreamForFile("Content/sh-placenames.osm.pbf")).ToComplete();
+            towns = placenameSource
+                .Where(x => x.Tags.Contains("place", "town"))
+                .Select(x => (OsmHelpers.GetCoordinateOfOsmGeo(x), x.Tags["name"]))
+                .ToArray();
+
+            villages = placenameSource
+                .Where(x => x.Tags.Contains("place", "village"))
+                .Select(x => (OsmHelpers.GetCoordinateOfOsmGeo(x), x.Tags["name"]))
+                .ToArray();
         }
 
         /// <inheritdoc />
         public override void Draw(SpriteBatch sb, SpriteBatch mapSb, Camera camera)
+        {
+            DrawPlaces(places, sb, camera);
+
+            DrawPlaces(cities, sb, camera);
+
+            if(camera.Scale.Y > 10000)
+                DrawPlaces(towns, sb, camera);
+
+            if(camera.Scale.Y > 20000)
+                DrawPlaces(villages, sb, camera);
+            
+        }
+
+        private void DrawPlaces((Vector2 coords, string name)[] places, SpriteBatch sb, Camera camera)
         {
             foreach ((Vector2 coords, string name) in places)
             {

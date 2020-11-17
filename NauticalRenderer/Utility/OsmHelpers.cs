@@ -69,8 +69,15 @@ namespace NauticalRenderer.Utility
                     return new Vector2((float) n.Longitude, -(float) n.Latitude);
                 case CompleteWay w:
                     return new Vector2((float) w.Nodes[0].Longitude, -(float) w.Nodes[0].Latitude);
+                case CompleteRelation r:
+                    Vector2 sum = Vector2.Zero;
+                    foreach (CompleteRelationMember rm in r.Members)
+                    {
+                        sum += GetCoordinateOfOsmGeo(rm.Member);
+                    }
+                    return sum / r.Members.Length;
                 default:
-                    throw new Exception("Did not expect a relation here!");
+                    throw new Exception("Encountered unknown osm geo type!");
             }
         }
 
