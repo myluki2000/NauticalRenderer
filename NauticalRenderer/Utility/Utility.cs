@@ -374,5 +374,22 @@ namespace NauticalRenderer.Utility
 
             return sb.ToString();
         }
+
+        public static Vector2[] LineStripsToLineList(Vector2[][] strips)
+        {
+            List<Vector2> ll = new List<Vector2>();
+            foreach (Vector2[] strip in strips)
+            {
+                ll.Add(strip[0]);
+                for (int i = 1; i < strip.Length - 1; i++)
+                {
+                    ll.Add(strip[i]);
+                    ll.Add(strip[i]);
+                }
+                ll.Add(strip[^1]);
+            }
+
+            return ll.ToArray();
+        }
     }
 }

@@ -28,7 +28,9 @@ namespace NauticalRenderer.SlippyMap.Layers
     {
         public List<Vector2[]> Coastlines { get; private set; }
         private List<Vector2[]> breakwaters;
-        private List<Vector2[]> piers;
+
+        private Vector2[] pierLines;
+        private List<Mesh> pierMeshes = new List<Mesh>();
         /// <inheritdoc />
         public override ILayerSettings LayerSettings { get; }
 
@@ -40,6 +42,8 @@ namespace NauticalRenderer.SlippyMap.Layers
         private List<Mesh> tidalFlatHoles = new List<Mesh>();
         private Mesh boundingMesh = new Mesh();
 
+
+        private static readonly Color PIER_COLOR = Color.Purple;
 
         public override void Draw(SpriteBatch sb, SpriteBatch mapSb, Camera camera)
         {
@@ -82,10 +86,13 @@ namespace NauticalRenderer.SlippyMap.Layers
 
             if (camera.Scale.Y > 3000)
             {
-                foreach (Vector2[] line in piers)
-                {
-                    LineRenderer.DrawLineStrip(mapSb, line, Color.Purple, camera.GetMatrix());
-                }
+                LineRenderer.DrawLineList(mapSb, pierLines, PIER_COLOR, camera.GetMatrix());
+            }
+
+            foreach (Mesh pierMesh in pierMeshes)
+            {
+                if(pierMesh.BoundingRectangle.Intersects(camera.DrawBounds))
+                    pierMesh.Draw(mapSb, camera.GetMatrix());
             }
         }
 
@@ -103,10 +110,19 @@ namespace NauticalRenderer.SlippyMap.Layers
                                                        select osmGeo;
             this.breakwaters = OsmHelpers.WaysToListOfVector2Arr(breakwaters);
 
-            IEnumerable<ICompleteOsmGeo> piers = from osmGeo in source
-                                                 where osmGeo.Type == OsmGeoType.Way && osmGeo.Tags.Contains("man_made", "pier")
-                                                 select osmGeo;
-            this.piers = OsmHelpers.WaysToListOfVector2Arr(piers);
+            List<Vector2[]> piers = OsmHelpers.WaysToListOfVector2Arr(source
+                .Where(osmGeo => osmGeo.Type == OsmGeoType.Way && osmGeo.Tags.Contains("man_made", "pier")));
+            piers.RemoveAll(x =>
+            {
+                if(x[0] == x[^1])
+                {
+                    pierMeshes.Add(new Mesh(Utility.Utility.Triangulate(x), PIER_COLOR));
+                    return true;
+                }
+
+                return false;
+            });
+            pierLines = Utility.Utility.LineStripsToLineList(piers.ToArray());
 
             IEnumerable<ICompleteOsmGeo> tidalFlats = from osmGeo in source
                                                       where (osmGeo.Type == OsmGeoType.Way || osmGeo.Type == OsmGeoType.Relation) &&
@@ -119,7 +135,6 @@ namespace NauticalRenderer.SlippyMap.Layers
                 if (osmGeo is CompleteWay way) wetlandWays.Add(OsmHelpers.WayToVector2Arr(way));
                 else if (osmGeo is CompleteRelation relation)
                 {
-
                     List<Vector2[]> relationOuterWays = relation.Members
                         .Where(x => x.Member.Type == OsmGeoType.Way && x.Role == "outer")
                         .Select(x => OsmHelpers.WayToVector2Arr((CompleteWay)x.Member))
