@@ -13,7 +13,7 @@ namespace NauticalRenderer.SlippyMap.Layers
 {
     class NavigationLineLayer : MapLayer
     {
-        private List<Vector2[]> navigationLines;
+        private (RectangleF boundingRect, Vector2[] points)[] navigationLines;
 
         /// <inheritdoc />
         public override ILayerSettings LayerSettings { get; }
@@ -21,10 +21,8 @@ namespace NauticalRenderer.SlippyMap.Layers
         /// <inheritdoc />
         public override void LoadContent(MapPack mapPack)
         {
-            navigationLines = OsmHelpers.WaysToListOfVector2Arr(
-                from osmGeo in new PBFOsmStreamSource(mapPack.OpenFile("base.osm.pbf")).ToComplete()
-                where osmGeo.Tags.Contains("seamark:type", "navigation_line")
-                select osmGeo);
+            navigationLines = OsmHelpers.WaysToListOfVector2Arr(new PBFOsmStreamSource(mapPack.OpenFile("base.osm.pbf")).ToComplete()
+                .Where(osmGeo => osmGeo.Tags.Contains("seamark:type", "navigation_line"))).Select(x => (OsmHelpers.GetBoundingRectOfPoints(x), x)).ToArray();
         }
 
         /// <inheritdoc />
@@ -32,14 +30,17 @@ namespace NauticalRenderer.SlippyMap.Layers
         {
             if (camera.Scale.Y > 10000)
             {
-                foreach (Vector2[] line in navigationLines)
+                foreach ((RectangleF boundingRect, Vector2[] points) in navigationLines)
                 {
-                    LineRenderer.DrawDashedLine(mapSb,
-                        line,
-                        Color.Black,
-                        new[] { 15 / camera.Scale.Y,
+                    if (boundingRect.Intersects(camera.DrawBounds))
+                    {
+                        LineRenderer.DrawDashedLine(mapSb,
+                            points,
+                            Color.Black,
+                            new[] { 15 / camera.Scale.Y,
                                 15 / camera.Scale.Y },
-                        camera.GetMatrix());
+                            camera.GetMatrix());
+                    }
                 }
             }
         }

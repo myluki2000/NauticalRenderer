@@ -49,11 +49,7 @@ namespace NauticalRenderer.Data
             Color = color;
             this.vertices = vertices.Select(x => new VertexPositionColor(new Vector3(x, 0), color)).ToArray();
 
-            float left = vertices.Select(x => x.X).Min();
-            float right = vertices.Select(x => x.X).Max();
-            float top = vertices.Select(x => x.Y).Min();
-            float bottom = vertices.Select(x => x.Y).Max();
-            BoundingRectangle = new RectangleF(left, top, right - left, bottom - top);
+            BoundingRectangle = OsmHelpers.GetBoundingRectOfPoints(vertices);
 
             Triangles = triangles;
         }

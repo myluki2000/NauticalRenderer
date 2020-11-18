@@ -53,11 +53,12 @@ namespace NauticalRenderer.SlippyMap.Layers
         /// <inheritdoc />
         public override void Draw(SpriteBatch sb, SpriteBatch mapSb, Camera camera)
         {
-            DrawPlaces(places, sb, camera);
-
             DrawPlaces(cities, sb, camera);
 
-            if(camera.Scale.Y > 10000)
+            if(camera.Scale.Y > 6000)
+                DrawPlaces(places, sb, camera);
+
+            if (camera.Scale.Y > 10000)
                 DrawPlaces(towns, sb, camera);
 
             if(camera.Scale.Y > 20000)

@@ -279,6 +279,8 @@ namespace NauticalRenderer.SlippyMap.Layers
             {
                 foreach (SectorLight sl in sectorLights)
                 {
+                    if(sl.Major && !landmarkLayerSettings.MajorLightsVisible || !sl.Major && !landmarkLayerSettings.MinorLightsVisible) continue;
+
                     // skip minor lights at zoom levels below 15000
                     if (!sl.Major && camera.Scale.Y < 15000) continue;
 
