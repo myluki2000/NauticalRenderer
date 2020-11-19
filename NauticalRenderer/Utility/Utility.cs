@@ -380,16 +380,35 @@ namespace NauticalRenderer.Utility
             List<Vector2> ll = new List<Vector2>();
             foreach (Vector2[] strip in strips)
             {
-                ll.Add(strip[0]);
-                for (int i = 1; i < strip.Length - 1; i++)
-                {
-                    ll.Add(strip[i]);
-                    ll.Add(strip[i]);
-                }
-                ll.Add(strip[^1]);
+                ll.AddRange(LineStripToLineList(strip));
             }
 
             return ll.ToArray();
+        }
+
+        public static Vector2[] LineStripToLineList(Vector2[] points)
+        {
+            Vector2[] newPoints = new Vector2[points.Length * 2 - 2];
+            newPoints[0] = points[0];
+            for (int i = 1; i < points.Length - 1; i++)
+            {
+                newPoints[i * 2 - 1] = points[i];
+                newPoints[i * 2] = points[i];
+            }
+            newPoints[^1] = points[^1];
+
+            return newPoints;
+        }
+
+        public static float LengthOfLine(Vector2[] points)
+        {
+            float l = 0;
+            for (int i = 0; i < points.Length - 1; i++)
+            {
+                l += (points[i + 1] - points[i]).Length();
+            }
+
+            return l;
         }
     }
 }

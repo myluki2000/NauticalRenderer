@@ -175,7 +175,7 @@ namespace NauticalRenderer.Utility
             return dict.TryGetValue(key, out string value) ? value : defaultValue;
         }
 
-        public static float ToRadiansRotation(this Vector2 value)
+        public static float Direction(this Vector2 value)
         {
             return (float)Math.Atan2(value.Y, value.X);
         }

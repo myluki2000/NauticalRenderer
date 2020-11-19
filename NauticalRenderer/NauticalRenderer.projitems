@@ -43,6 +43,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)SlippyMap\SourceLayers\SourceLayer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utility\LineRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utility\LineStyle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utility\LineText.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utility\OsmHelpers.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utility\RectangleF.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utility\Utility.cs" />

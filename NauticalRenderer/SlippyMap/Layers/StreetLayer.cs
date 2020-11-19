@@ -22,6 +22,8 @@ namespace NauticalRenderer.SlippyMap.Layers
         /// <inheritdoc />
         public override ILayerSettings LayerSettings { get; }
 
+        private List<(int minZoom, LineText lineText)> lineTexts = new List<(int minZoom, LineText lineText)>(); 
+
         /// <inheritdoc />
         public override void LoadContent(MapPack mapPack)
         {
@@ -53,13 +55,30 @@ namespace NauticalRenderer.SlippyMap.Layers
                         || type == "primary_link"
                         || type == "unclassified") list = smallStreetsList;
 
-                    list.Add(new VertexPositionColor(new Vector3(OsmHelpers.GetCoordinateOfOsmGeo(way.Nodes[0]), 0), color));
-                    for (int i = 1; i < way.Nodes.Length - 1; i++)
+                    Vector2[] lineStrip = way.Nodes.Select(OsmHelpers.GetCoordinateOfOsmGeo).ToArray();
+                    list.AddRange(Utility.Utility.LineStripToLineList(lineStrip).Select(x => new VertexPositionColor(new Vector3(x, 0), color)));
+
+                    if (geo.Tags.ContainsKey("name"))
                     {
-                        list.Add(new VertexPositionColor(new Vector3(OsmHelpers.GetCoordinateOfOsmGeo(way.Nodes[i]), 0), color));
-                        list.Add(new VertexPositionColor(new Vector3(OsmHelpers.GetCoordinateOfOsmGeo(way.Nodes[i]), 0), color));
+                        int minZoom = 200000;
+                        switch (type)
+                        {
+                            case "motorway":
+                            case "trunk":
+                                minZoom = 80000;
+                                break;
+                            case "primary":
+                                minZoom = 100000;
+                                break;
+                            case "secondary":
+                                minZoom = 120000;
+                                break;
+                            case "tertiary":
+                                minZoom = 150000;
+                                break;
+                        }
+                        lineTexts.Add((minZoom, new LineText(lineStrip, geo.Tags["name"], Myra.DefaultAssets.FontSmall, LineText.Alignment.CENTER)));
                     }
-                    list.Add(new VertexPositionColor(new Vector3(OsmHelpers.GetCoordinateOfOsmGeo(way.Nodes[^1]), 0), color));
                 }
             }
 
@@ -104,6 +123,14 @@ namespace NauticalRenderer.SlippyMap.Layers
             }
                 
             LineRenderer.DrawLineList(mapSb, streets, camera.GetMatrix());
+
+            if(camera.Scale.Y > 80000)
+                foreach ((int minZoom, LineText lineText) in lineTexts)
+                {
+                    if(lineText.BoundingRect.Intersects(camera.DrawBounds) && camera.Scale.Y > minZoom)
+                        lineText.Draw(sb, Color.Black, camera.GetMatrix());
+                }
+
         }
 
         private static Color GetColorForHighwayType(string type)

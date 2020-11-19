@@ -153,7 +153,7 @@ namespace NauticalRenderer.Utility
                                         new Vector2(thisSegmentPartLength, lineStyle.Width)),
                                     null,
                                     Color.White,
-                                    normal.ToRadiansRotation(),
+                                    normal.Direction(),
                                     new Vector2(0, lineStyle.Image.Height / 2f));
                             }
                             break;
