@@ -146,11 +146,14 @@ namespace NauticalRenderer.SlippyMap.Layers
         /// <inheritdoc />
         public override void Draw(SpriteBatch sb, SpriteBatch mapSb, Camera camera)
         {
-            buoyEffect.Parameters["WorldMatrix"].SetValue(camera.GetMatrix());
-            Globals.Graphics.GraphicsDevice.Indices = indexBuffer;
-            buoyEffect.CurrentTechnique.Passes[0].Apply();
-            Globals.Graphics.GraphicsDevice.SetVertexBuffers(bindings);
-            Globals.Graphics.GraphicsDevice.DrawInstancedPrimitives(PrimitiveType.TriangleList, 0, 0, 2, 0, instances.Length);
+            if (camera.Scale.Y > 3000)
+            {
+                buoyEffect.Parameters["WorldMatrix"].SetValue(camera.GetMatrix());
+                Globals.Graphics.GraphicsDevice.Indices = indexBuffer;
+                buoyEffect.CurrentTechnique.Passes[0].Apply();
+                Globals.Graphics.GraphicsDevice.SetVertexBuffers(bindings);
+                Globals.Graphics.GraphicsDevice.DrawInstancedPrimitives(PrimitiveType.TriangleList, 0, 0, 2, 0, instances.Length);
+            }
         }
 
         struct InstanceInfo

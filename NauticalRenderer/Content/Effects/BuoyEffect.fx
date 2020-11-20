@@ -53,8 +53,7 @@ struct VSOutput
 VSOutput MainVS(in VSInput input, float2 instanceTransform : POSITION1, int buoyShape : TEXCOORD1, int colorPattern : TEXCOORD2, float4 colors[4] : COLOR0)
 {
 	VSOutput output = (VSOutput)0;
-	//output.Position = mul(input.Position + float4(instanceTransform.x, instanceTransform.y, 0, 0), WorldViewProjection);
-	output.Position = mul(mul(float4(instanceTransform.x, instanceTransform.y, 0, 1), WorldMatrix) + float4(input.Position * Size, 0), ViewportMatrix);
+    output.Position = mul(round(mul(float4(instanceTransform.x, instanceTransform.y, 0, 1), WorldMatrix) + float4(input.Position * Size, 0)), ViewportMatrix);
 	output.Colors = colors;
 	output.ColorPattern = colorPattern;
 	output.BuoyShape = buoyShape;
