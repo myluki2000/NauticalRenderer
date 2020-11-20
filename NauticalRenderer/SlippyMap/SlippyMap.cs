@@ -167,16 +167,17 @@ namespace NauticalRenderer.SlippyMap
             mapSb.Begin(transformMatrix: Camera.GetMatrix());
 
             mapGeoLayer.Draw(sb, mapSb, Camera);
+            streetLayer.Draw(sb, mapSb, Camera);
             facilitiesLayer.Draw(sb, mapSb, Camera);
             harbourLayer.Draw(sb, mapSb, Camera);
-            landmarkLayer.Draw(sb, mapSb, Camera);
             if(Settings.VisibleLayers.NavigationLineLayer) navigationLineLayer.Draw(sb, mapSb, Camera);
             if(Settings.VisibleLayers.RestrictedAreaLayer) importantAreaLayer.Draw(sb, mapSb, Camera);
-            if(Settings.VisibleLayers.GribLayer) gribLayer.Draw(sb, mapSb, Camera);
             if(Settings.VisibleLayers.SeparationSchemeLayer) separationSchemeLayer.Draw(sb, mapSb, Camera);
-            placenameLayer.Draw(sb, mapSb, Camera);
             buoyLayer.Draw(sb, mapSb, Camera);
-            streetLayer.Draw(sb, mapSb, Camera);
+            landmarkLayer.Draw(sb, mapSb, Camera);
+            if (Settings.VisibleLayers.GribLayer) gribLayer.Draw(sb, mapSb, Camera);
+            placenameLayer.Draw(sb, mapSb, Camera);
+            
 
             mapSb.End();
 
