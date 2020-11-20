@@ -13,6 +13,7 @@ using Myra.Attributes;
 using NauticalRenderer.Data;
 using NauticalRenderer.SlippyMap.Data;
 using NauticalRenderer.Utility;
+using OsmSharp;
 using OsmSharp.Complete;
 using OsmSharp.Streams;
 using OsmSharp.Streams.Complete;
@@ -23,8 +24,7 @@ namespace NauticalRenderer.SlippyMap.Layers
     {
         private List<RestrictedArea> restrictedAreas;
         private List<Vector2[]> seacables;
-        private List<Vector2[]> borders;
-
+        private VertexPositionColor[] borders;
         private VertexPositionTexture[] seacablesVerts;
 
         private Effect squigglyLineEffect;
@@ -39,11 +39,14 @@ namespace NauticalRenderer.SlippyMap.Layers
 
             OsmCompleteStreamSource source = new PBFOsmStreamSource(mapPack.OpenFile("base.osm.pbf")).ToComplete();
 
-            borders = OsmHelpers.WaysToListOfVector2Arr(source
-                .Where(osmGeo =>
-                    osmGeo.Tags.Contains("admin_level", "2") && osmGeo.Tags.Contains("boundary", "administrative"))
-                .ToArray());
-            
+            borders = source
+                .Where(x => x.Type == OsmGeoType.Way && x.Tags.Contains("admin_level", "2") &&
+                            x.Tags.Contains("boundary", "administrative"))
+                .SelectMany(x => LineRenderer.GenerateDashedLineVerts(OsmHelpers.WayToVector2Arr((CompleteWay) x),
+                                                                      Color.Purple, 
+                                                                      new[] {0.001f, 0.001f, 0.0001f, 0.001f}))
+                .ToArray();
+
             restrictedAreas = source
                     .Where(osmGeo => osmGeo.Tags.Contains("seamark:type", "restricted_area"))
                     .Where(x => x is CompleteWay).Select(x => new RestrictedArea
@@ -101,10 +104,7 @@ namespace NauticalRenderer.SlippyMap.Layers
         /// <inheritdoc />
         public override void Draw(SpriteBatch sb, SpriteBatch mapSb, Camera camera)
         {
-            foreach (Vector2[] line in borders)
-            {
-                LineRenderer.DrawDashedLine(mapSb, line, Color.Purple, new []{0.001f, 0.001f, 0.0001f, 0.001f}, camera.GetMatrix());
-            }
+            LineRenderer.DrawLineList(mapSb, borders, camera.GetMatrix());
 
             foreach (RestrictedArea restrictedArea in restrictedAreas)
             {
