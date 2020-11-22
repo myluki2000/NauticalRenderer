@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Input.Touch;
 using NauticalRenderer.Data;
+using NauticalRenderer.Screens;
 using NauticalRenderer.SlippyMap.Data;
 using NauticalRenderer.SlippyMap.Layers;
 using NauticalRenderer.SlippyMap.SourceLayers;
@@ -24,8 +25,10 @@ namespace NauticalRenderer.SlippyMap
 
         public List<SourceLayer> SourceLayers = new List<SourceLayer>() { new SimplifiedCoastSourceLayer() };
 
+        private readonly MapScreen mapScreen;
+
         #region Layers
-        private readonly HarbourLayer harbourLayer = new HarbourLayer();
+        private readonly HarbourLayer harbourLayer;
         private readonly LandmarkLayer landmarkLayer = new LandmarkLayer();
         private readonly NavigationLineLayer navigationLineLayer = new NavigationLineLayer();
         private readonly ImportantAreaLayer importantAreaLayer = new ImportantAreaLayer();
@@ -39,8 +42,11 @@ namespace NauticalRenderer.SlippyMap
         #endregion
 
 
-        public SlippyMap()
+        public SlippyMap(MapScreen mapScreen)
         {
+            this.mapScreen = mapScreen;
+            harbourLayer = new HarbourLayer(mapScreen);
+
             Camera.TranslationChanged += (sender, e) => { CorrectScaling(); };
             MapPack = new MapPack("Content/German-Baltic-Coast-And-South-Denmark.mappack");
         }
@@ -109,6 +115,8 @@ namespace NauticalRenderer.SlippyMap
         private Vector2 mouseInertia;
         private void HandleMouseInput(GameTime gameTime)
         {
+            if (mapScreen.desktop.IsMouseOverGUI) return;
+
             MouseState mouseState = Mouse.GetState();
 
             int scrollDelta = mouseState.ScrollWheelValue - lastMouseState.ScrollWheelValue;

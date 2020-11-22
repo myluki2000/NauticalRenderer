@@ -18,7 +18,7 @@ namespace NauticalRenderer.Screens
     class MapScreen : Screen
     {
         private SpriteBatch spriteBatch;
-        private readonly Desktop desktop = new Desktop();
+        internal readonly Desktop desktop = new Desktop();
         private Label zoomLabel;
         private TextButton zoomOutButton = new TextButton() { Text = "  -  " };
         private TextButton zoomInButton = new TextButton() { Text = "  +  "};
@@ -29,7 +29,7 @@ namespace NauticalRenderer.Screens
         {
             Stopwatch watch = Stopwatch.StartNew();
 
-            slippyMap = new SlippyMap.SlippyMap();
+            slippyMap = new SlippyMap.SlippyMap(this);
             slippyMap.Load();
 
             watch.Stop();

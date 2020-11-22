@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -7,7 +8,10 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Myra.Graphics2D.UI;
 using NauticalRenderer.Data;
+using NauticalRenderer.Screens;
+using NauticalRenderer.SlippyMap.UI;
 using NauticalRenderer.Utility;
 using OsmSharp;
 using OsmSharp.Complete;
@@ -17,11 +21,19 @@ namespace NauticalRenderer.SlippyMap.Layers
 {
     class HarbourLayer : MapLayer
     {
+        private MapScreen mapScreen;
+        
         private List<Harbour> harbours;
 
         /// <inheritdoc />
         public override ILayerSettings LayerSettings => harbourLayerSettings;
         private readonly HarbourLayerSettings harbourLayerSettings = new HarbourLayerSettings();
+
+        /// <inheritdoc />
+        public HarbourLayer(MapScreen mapScreen)
+        {
+            this.mapScreen = mapScreen;
+        }
 
         /// <inheritdoc />
         public override void LoadContent(MapPack mapPack)
@@ -40,6 +52,7 @@ namespace NauticalRenderer.SlippyMap.Layers
             }).ToList();
         }
 
+        private MouseState lastMouseState;
         /// <inheritdoc />
         public override void Draw(SpriteBatch sb, SpriteBatch mapSb, Camera camera)
         {
@@ -79,9 +92,12 @@ namespace NauticalRenderer.SlippyMap.Layers
                     0);
 
                 // draw label on hover
-                if (harbour.OsmData.Tags.ContainsKey("name") && new Rectangle((iconPos - iconSize / 2).ToPoint(), iconSize.ToPoint()).Contains(Mouse.GetState().Position))
+                if (harbour.OsmData.Tags.TryGetValue("name", out string name) &&
+                    new Rectangle((iconPos - iconSize / 2).ToPoint(), iconSize.ToPoint()).Contains(Mouse.GetState()
+                        .Position))
+                {
                     sb.DrawString(Fonts.Arial.Regular,
-                        harbour.OsmData.Tags["name"],
+                        name,
                         iconPos,
                         Color.Black,
                         0,
@@ -89,8 +105,29 @@ namespace NauticalRenderer.SlippyMap.Layers
                         1f,
                         SpriteEffects.None,
                         0f);
+
+                    if (Mouse.GetState().LeftButton == ButtonState.Released
+                        && lastMouseState.LeftButton == ButtonState.Pressed
+                        && !mapScreen.desktop.IsMouseOverGUI
+                        && mapScreen.desktop.GetWindows().All(x => x.Title != name))
+                    {
+                        Window window = new Window()
+                        {
+                            Title = name,
+                        };
+
+                        OsmTagGrid tagGrid = new OsmTagGrid {TagsCollection = harbour.OsmData.Tags};
+
+                        window.Content = tagGrid;
+                        window.ShowModal(mapScreen.desktop);
+                        
+                        // prevent one click from opening multiple windows
+                        return;
+                    }
+                }
             }
 
+            lastMouseState = Mouse.GetState();
         }
 
         struct Harbour

@@ -10,6 +10,7 @@ using GeoAPI.Geometries;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Myra.Graphics2D.UI;
 using OsmSharp.Tags;
 
 namespace NauticalRenderer.Utility
@@ -215,6 +216,17 @@ namespace NauticalRenderer.Utility
         {
             value.Round();
             return value;
+        }
+
+        public static IEnumerable<Window> GetWindows(this Desktop desktop)
+        {
+            foreach (Widget w in desktop.Widgets)
+            {
+                if (w is Window window)
+                {
+                    yield return window;
+                }
+            }
         }
     }
 }

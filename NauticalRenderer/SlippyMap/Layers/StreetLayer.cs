@@ -22,7 +22,7 @@ namespace NauticalRenderer.SlippyMap.Layers
         /// <inheritdoc />
         public override ILayerSettings LayerSettings { get; }
 
-        private List<(int minZoom, LineText lineText)> lineTexts = new List<(int minZoom, LineText lineText)>(); 
+        private readonly List<(int minZoom, LineText lineText)> lineTexts = new List<(int minZoom, LineText lineText)>(); 
 
         /// <inheritdoc />
         public override void LoadContent(MapPack mapPack)
@@ -57,7 +57,7 @@ namespace NauticalRenderer.SlippyMap.Layers
 
                     Vector2[] lineStrip = way.Nodes.Select(OsmHelpers.GetCoordinateOfOsmGeo).ToArray();
                     list.AddRange(Utility.Utility.LineStripToLineList(lineStrip).Select(x => new VertexPositionColor(new Vector3(x, 0), color)));
-
+                    
                     if (geo.Tags.ContainsKey("name"))
                     {
                         int minZoom = 200000;

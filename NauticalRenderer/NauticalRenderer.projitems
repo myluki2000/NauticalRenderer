@@ -41,6 +41,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Data\Icons.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SlippyMap\SourceLayers\SimplifiedCoastSourceLayer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SlippyMap\SourceLayers\SourceLayer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SlippyMap\UI\OsmTagGrid.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utility\LineRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utility\LineStyle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utility\LineText.cs" />
