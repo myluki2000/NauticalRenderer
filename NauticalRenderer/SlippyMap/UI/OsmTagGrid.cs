@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Myra.Graphics2D;
 using Myra.Graphics2D.UI;
 using OsmSharp.Tags;
 
@@ -25,6 +26,8 @@ namespace NauticalRenderer.SlippyMap.UI
             InternalChild = new Grid()
             {
                 ShowGridLines = true,
+                ColumnSpacing =  10,
+                RowSpacing = 10,
             };
             InternalChild.ColumnsProportions.Add(Proportion.Auto);
             InternalChild.ColumnsProportions.Add(Proportion.Fill);
@@ -49,6 +52,7 @@ namespace NauticalRenderer.SlippyMap.UI
                     Text = tag.Value,
                     GridColumn = 1,
                     GridRow = i,
+                    Wrap = true,
                 };
                 InternalChild.Widgets.Add(valueLabel);
 

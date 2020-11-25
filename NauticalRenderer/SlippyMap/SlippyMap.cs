@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Runtime;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Input.Touch;
@@ -211,10 +212,6 @@ namespace NauticalRenderer.SlippyMap
             Camera.Scale = new Vector3(Camera.Scale.Y * ratio, Camera.Scale.Y, 1);
         }
 
-        
-
-        
-
         public void Load()
         {
             foreach (SourceLayer sourceLayer in SourceLayers)
@@ -233,6 +230,9 @@ namespace NauticalRenderer.SlippyMap
             buoyLayer.LoadContent(MapPack);
             streetLayer.LoadContent(MapPack);
             facilitiesLayer.LoadContent(MapPack);
+
+            GCSettings.LargeObjectHeapCompactionMode = GCLargeObjectHeapCompactionMode.CompactOnce;
+            GC.Collect();
 
             Settings.LandmarkLayerSettings = landmarkLayer.LayerSettings;
             Settings.HarbourLayerSettings = harbourLayer.LayerSettings;

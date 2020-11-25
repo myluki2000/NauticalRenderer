@@ -114,6 +114,7 @@ namespace NauticalRenderer.SlippyMap.Layers
                         Window window = new Window()
                         {
                             Title = name,
+                            MaxWidth = 400,
                         };
 
                         OsmTagGrid tagGrid = new OsmTagGrid {TagsCollection = harbour.OsmData.Tags};
