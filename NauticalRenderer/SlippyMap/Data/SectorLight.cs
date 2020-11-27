@@ -26,8 +26,8 @@ namespace NauticalRenderer.SlippyMap.Data
                         continue;
 
                     Vector2 startAnglePoint = new Vector2(
-                        screenPos.X + (float)(Math.Sin(s.StartAngle) * (s.Range + 5)),
-                        screenPos.Y - (float)(Math.Cos(s.StartAngle) * (s.Range + 5))
+                        screenPos.X + (float)(Math.Sin(s.StartAngle) * (s.Range * rangeMultiplier + 5)),
+                        screenPos.Y - (float)(Math.Cos(s.StartAngle) * (s.Range * rangeMultiplier + 5))
                     );
 
                     Vector2 endAnglePoint = new Vector2(
