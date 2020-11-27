@@ -68,7 +68,7 @@ namespace NauticalRenderer.Utility
                 case Node n:
                     return new Vector2((float) n.Longitude, -(float) n.Latitude);
                 case CompleteWay w:
-                    return new Vector2((float) w.Nodes[0].Longitude, -(float) w.Nodes[0].Latitude);
+                    return new Vector2((float)w.Nodes.Select(x => x.Longitude).Average().Value, -(float)w.Nodes.Select(x => x.Latitude).Average().Value);
                 case CompleteRelation r:
                     Vector2 sum = Vector2.Zero;
                     foreach (CompleteRelationMember rm in r.Members)

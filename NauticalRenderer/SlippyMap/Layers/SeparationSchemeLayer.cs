@@ -3,9 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Sockets;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Myra;
 using NauticalRenderer.Data;
 using NauticalRenderer.SlippyMap;
 using NauticalRenderer.SlippyMap.Layers;
@@ -20,29 +22,30 @@ namespace NauticalRenderer.SlippyMap.Layers
 {
     public class SeparationSchemeLayer : MapLayer
     {
-        public static List<Mesh> SeparationZones { get; set; } = new List<Mesh>();
-        public static List<Vector2[]> SeparationLanes { get; set; } = new List<Vector2[]>();
-        public static List<Vector2[]> SeparationBoundaries { get; set; } = new List<Vector2[]>();
-        public static List<Vector2[]> SeparationLines { get; set; } = new List<Vector2[]>();
+        private Mesh[] separationZones;
+        private Vector2[][] separationLanes;
+        private Vector2[][] separationBoundaries;
+        private Vector2[][] separationLines;
+        private List<(Vector2, string)> labels = new List<(Vector2, string)>();
 
         public override void Draw(SpriteBatch sb, SpriteBatch mapSb, Camera camera)
         {
-            foreach (Mesh zone in SeparationZones)
+            foreach (Mesh zone in separationZones)
             {
                 zone.Draw(mapSb, camera.GetMatrix());
             }
 
-            foreach (Vector2[] boundary in SeparationBoundaries)
+            foreach (Vector2[] boundary in separationBoundaries)
             {
                 LineRenderer.DrawDashedLine(mapSb, boundary, Color.Magenta, new []{0.005f, 0.003f}, camera.GetMatrix());
             }
 
-            foreach (Vector2[] line in SeparationLines)
+            foreach (Vector2[] line in separationLines)
             {
                 LineRenderer.DrawLineStrip(mapSb, line, Color.Magenta, camera.GetMatrix());
             }
 
-            foreach (Vector2[] lane in SeparationLanes)
+            foreach (Vector2[] lane in separationLanes)
             {
                 for (int i = 0; i < lane.Length - 1; i += 2)
                 {
@@ -53,6 +56,17 @@ namespace NauticalRenderer.SlippyMap.Layers
                     Utility.Utility.DrawBlockArrow(sb, Matrix.Identity, p1, p2, 0.0035f * camera.Scale.Y, Color.Magenta);
                 }
             }
+
+            if(camera.Scale.Y > 2500)
+                foreach ((Vector2 coords, string text) in labels)
+                {
+                    if (camera.DrawBounds.Contains(coords))
+                    {
+                        Vector2 size = DefaultAssets.FontSmall.MeasureString(text);
+                        sb.DrawString(DefaultAssets.FontSmall, text, coords.Transform(camera.GetMatrix()) - size / 2, Color.Purple);
+                    }
+                        
+                }
         }
 
         /// <inheritdoc />
@@ -62,36 +76,49 @@ namespace NauticalRenderer.SlippyMap.Layers
         {
             OsmCompleteStreamSource source = new PBFOsmStreamSource(mapPack.OpenFile("base.osm.pbf")).ToComplete();
 
-            SeparationZones.Clear();
-            SeparationLanes.Clear();
-            SeparationBoundaries.Clear();
+            labels.Clear();
 
-            IEnumerable<ICompleteOsmGeo> separationZones = from osmGeo in source
-                                                           where osmGeo.Tags.Contains("seamark:type", "separation_zone")
-                                                           select osmGeo;
 
-            foreach (Vector2[] zone in OsmHelpers.WaysToListOfVector2Arr(separationZones))
-            {
-                SeparationZones.Add(new Mesh(zone, Utility.Utility.TriangulateOld(zone), Color.Magenta));
-            }
+            ILookup<byte, CompleteWay> geos = source
+                .OfType<CompleteWay>()
+                .Where(x =>
+                {
+                    if (!x.Tags.TryGetValue("seamark:type", out string value)) return false;
 
-            IEnumerable<ICompleteOsmGeo> separationBoundaries = from osmGeo in source
-                                                                where osmGeo.Tags.Contains("seamark:type", "separation_boundary")
-                                                                select osmGeo;
+                    if (value != "separation_zone" && value != "separation_boundary" && value != "separation_lane" &&
+                        value != "separation_line") return false;
 
-            SeparationBoundaries = OsmHelpers.WaysToListOfVector2Arr(separationBoundaries);
+                    if(x.Tags.TryGetValue("seamark:name", out string name))
+                        labels.Add((OsmHelpers.GetCoordinateOfOsmGeo(x), name));
 
-            IEnumerable<ICompleteOsmGeo> separationLanes = from osmGeo in source
-                                                           where osmGeo.Tags.Contains("seamark:type", "separation_lane")
-                                                           select osmGeo;
+                    return true;
+                }).ToLookup(x =>
+                {
+                    return x.Tags["seamark:type"] switch
+                    {
+                        "separation_zone" => (byte)0,
+                        "separation_boundary" => (byte)1,
+                        "separation_lane" => (byte)2,
+                        "separation_line" => (byte)3,
+                    };
+                });
 
-            SeparationLanes = OsmHelpers.WaysToListOfVector2Arr(separationLanes);
+            separationZones = geos[0]
+                .Select(x => new Mesh(Utility.Utility.Triangulate(OsmHelpers.WayToVector2Arr(x)), Color.Magenta))
+                .ToArray();
 
-            IEnumerable<ICompleteOsmGeo> separationLines = from osmGeo in source
-                                                           where osmGeo.Tags.Contains("seamark:type", "separation_line")
-                                                           select osmGeo;
+            separationBoundaries = geos[1]
+                .Select(x => OsmHelpers.WayToVector2Arr(x))
+                .ToArray();
 
-            SeparationLines = OsmHelpers.WaysToListOfVector2Arr(separationLines);
+            separationLanes = geos[2]
+                .Select(x => OsmHelpers.WayToVector2Arr(x))
+                .ToArray();
+
+            separationLines = geos[3]
+                .Select(x => OsmHelpers.WayToVector2Arr(x))
+                .ToArray();
+
         }
     }
 }
