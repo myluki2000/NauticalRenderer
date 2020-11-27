@@ -123,7 +123,7 @@ namespace NauticalRenderer.SlippyMap.Layers
                         window.ShowModal(mapScreen.desktop);
                         
                         // prevent one click from opening multiple windows
-                        return;
+                        break;
                     }
                 }
             }
