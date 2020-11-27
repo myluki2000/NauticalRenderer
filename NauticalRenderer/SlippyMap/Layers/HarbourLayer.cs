@@ -53,9 +53,13 @@ namespace NauticalRenderer.SlippyMap.Layers
         }
 
         private MouseState lastMouseState;
+        private Point mousePosAtMouseDown;
         /// <inheritdoc />
         public override void Draw(SpriteBatch sb, SpriteBatch mapSb, Camera camera)
         {
+            if (Mouse.GetState().LeftButton == ButtonState.Pressed && lastMouseState.LeftButton == ButtonState.Released)
+                mousePosAtMouseDown = Mouse.GetState().Position;
+
             foreach (Harbour harbour in harbours)
             {
                 Vector2 iconPos = OsmHelpers.GetCoordinateOfOsmGeo(harbour.OsmData).Transform(camera.GetMatrix()).Rounded();
@@ -108,6 +112,7 @@ namespace NauticalRenderer.SlippyMap.Layers
 
                     if (Mouse.GetState().LeftButton == ButtonState.Released
                         && lastMouseState.LeftButton == ButtonState.Pressed
+                        && (Mouse.GetState().Position - mousePosAtMouseDown).LengthSquared() < 5
                         && !mapScreen.desktop.IsMouseOverGUI
                         && mapScreen.desktop.GetWindows().All(x => x.Title != name))
                     {

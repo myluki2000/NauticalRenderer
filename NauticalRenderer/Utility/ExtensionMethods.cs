@@ -228,6 +228,15 @@ namespace NauticalRenderer.Utility
                 }
             }
         }
+
+        public static float LengthSquared(this Point value)
+        {
+            return value.X * value.X + value.Y * value.Y;
+        }
+        public static float Length(this Point value)
+        {
+            return (float) Math.Sqrt(value.LengthSquared());
+        }
     }
 }
 
