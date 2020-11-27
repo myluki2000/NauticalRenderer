@@ -96,25 +96,24 @@ namespace NauticalRenderer.SlippyMap.Layers
                     0);
 
                 // draw label on hover
-                if (harbour.OsmData.Tags.TryGetValue("name", out string name) &&
-                    new Rectangle((iconPos - iconSize / 2).ToPoint(), iconSize.ToPoint()).Contains(Mouse.GetState()
-                        .Position))
+                if (new Rectangle((iconPos - iconSize / 2).ToPoint(), iconSize.ToPoint()).Contains(Mouse.GetState().Position))
                 {
-                    sb.DrawString(Fonts.Arial.Regular,
-                        name,
-                        iconPos,
-                        Color.Black,
-                        0,
-                        Vector2.Zero,
-                        1f,
-                        SpriteEffects.None,
-                        0f);
+                    if(harbour.OsmData.Tags.TryGetValue("name", out string name))
+                        sb.DrawString(Fonts.Arial.Regular,
+                            name,
+                            iconPos,
+                            Color.Black,
+                            0,
+                            Vector2.Zero,
+                            1f,
+                            SpriteEffects.None,
+                            0f);
 
                     if (Mouse.GetState().LeftButton == ButtonState.Released
                         && lastMouseState.LeftButton == ButtonState.Pressed
                         && (Mouse.GetState().Position - mousePosAtMouseDown).LengthSquared() < 5
                         && !mapScreen.desktop.IsMouseOverGUI
-                        && mapScreen.desktop.GetWindows().All(x => x.Title != name))
+                        && mapScreen.desktop.GetWindows().All(x => x.Content is OsmTagGrid grid && !ReferenceEquals(grid.TagsCollection, harbour.OsmData.Tags)))
                     {
                         Window window = new Window()
                         {
