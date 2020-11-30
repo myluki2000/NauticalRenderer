@@ -55,6 +55,8 @@ namespace NauticalRenderer.SlippyMap
         
         public void Update(GameTime gameTime)
         {
+            Camera.Update();
+
             HandleMouseInput(gameTime);
             HandleTouchInput(gameTime);
         }
@@ -116,7 +118,7 @@ namespace NauticalRenderer.SlippyMap
         private Vector2 mouseInertia;
         private void HandleMouseInput(GameTime gameTime)
         {
-            if (mapScreen.desktop.IsMouseOverGUI) return;
+            if (mapScreen.Desktop.IsMouseOverGUI) return;
 
             MouseState mouseState = Mouse.GetState();
 
@@ -138,7 +140,7 @@ namespace NauticalRenderer.SlippyMap
             else if (mouseIsDragging && mouseState.LeftButton == ButtonState.Released)
             {
                 mouseIsDragging = false;
-                mouseInertia = (Camera.ScreenPosToWorldPos(mouseState.Position.ToVector2()) - Camera.ScreenPosToWorldPos(lastMouseState.Position.ToVector2()))
+                mouseInertia = (Camera.MousePosition - Camera.ScreenPosToWorldPos(lastMouseState.Position.ToVector2()))
                           / (float)gameTime.ElapsedGameTime.TotalSeconds;
             }
 
@@ -165,6 +167,7 @@ namespace NauticalRenderer.SlippyMap
         private bool first = true;
         public void Draw(SpriteBatch sb)
         {
+            Camera.Update();
 
             foreach (SourceLayer sourceLayer in SourceLayers)
             {

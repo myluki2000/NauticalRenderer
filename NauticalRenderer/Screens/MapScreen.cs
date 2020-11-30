@@ -12,13 +12,16 @@ using Myra.Graphics2D.UI;
 using Myra.Graphics2D.UI.Properties;
 using Myra.Graphics2D.UI.Styles;
 using NauticalRenderer.SlippyMap.Layers;
+using NauticalRenderer.SlippyMap.UI;
+using NauticalRenderer.Utility;
+using OsmSharp.Tags;
 
 namespace NauticalRenderer.Screens
 {
     class MapScreen : Screen
     {
         private SpriteBatch spriteBatch;
-        internal readonly Desktop desktop = new Desktop();
+        public readonly Desktop Desktop = new Desktop();
         private Label zoomLabel;
         private TextButton zoomOutButton = new TextButton() { Text = "  -  " };
         private TextButton zoomInButton = new TextButton() { Text = "  +  "};
@@ -47,7 +50,7 @@ namespace NauticalRenderer.Screens
             spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.LinearWrap, null, null, null, null);
             slippyMap.Draw(spriteBatch);
             spriteBatch.End();
-            desktop.Render();
+            Desktop.Render();
         }
 
         /// <inheritdoc />
@@ -55,6 +58,26 @@ namespace NauticalRenderer.Screens
         {
             slippyMap.Update(gameTime);
             zoomLabel.Text = "Zoom: " + slippyMap.Camera.Scale.Y;
+        }
+
+        public bool ShowOsmTagsWindow(string windowTitle, TagsCollectionBase tags)
+        {
+            if(Desktop.GetWindows().All(x => x.Content is OsmTagGrid grid && !ReferenceEquals(grid.TagsCollection, tags)))
+            {
+                Window window = new Window()
+                {
+                    Title = windowTitle,
+                    MaxWidth = 400,
+                };
+
+                OsmTagGrid tagGrid = new OsmTagGrid { TagsCollection = tags };
+
+                window.Content = tagGrid;
+                window.ShowModal(Desktop);
+                return true;
+            }
+
+            return false;
         }
 
         private void InitUI()
@@ -122,7 +145,7 @@ namespace NauticalRenderer.Screens
             };
             grid.Widgets.Add(zoomInButton);
 
-            desktop.Root = grid;
+            Desktop.Root = grid;
         }
     }
 }

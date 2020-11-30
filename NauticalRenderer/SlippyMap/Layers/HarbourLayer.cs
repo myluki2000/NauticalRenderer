@@ -111,24 +111,11 @@ namespace NauticalRenderer.SlippyMap.Layers
 
                     if (Mouse.GetState().LeftButton == ButtonState.Released
                         && lastMouseState.LeftButton == ButtonState.Pressed
-                        && (Mouse.GetState().Position - mousePosAtMouseDown).LengthSquared() < 5
-                        && !mapScreen.desktop.IsMouseOverGUI
-                        && mapScreen.desktop.GetWindows().All(x => x.Content is OsmTagGrid grid && !ReferenceEquals(grid.TagsCollection, harbour.OsmData.Tags)))
+                        && (Mouse.GetState().Position - mousePosAtMouseDown).LengthSquared() < 5)
                     {
-                        Window window = new Window()
-                        {
-                            Title = name,
-                            MaxWidth = 400,
-                        };
-
-                        OsmTagGrid tagGrid = new OsmTagGrid {TagsCollection = harbour.OsmData.Tags};
-
-                        window.Content = tagGrid;
-                        window.ShowModal(mapScreen.desktop);
-                        
-                        // prevent one click from opening multiple windows
-                        break;
+                        if (mapScreen.ShowOsmTagsWindow(name, harbour.OsmData.Tags)) break;
                     }
+                    
                 }
             }
 

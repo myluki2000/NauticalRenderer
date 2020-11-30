@@ -91,13 +91,10 @@ namespace NauticalRenderer.SlippyMap.Data
                     break;
             }
 
-            // TODO: we shouldn't really need to calculate this separately for every area
-            Vector2 mouseWorldPos = camera.ScreenPosToWorldPos(Mouse.GetState().Position.ToVector2());
-
             // TODO: Also allow hovering over lines
             if (points[0] == points[points.Length - 1]
-                && BoundingRectangle.Contains(mouseWorldPos)
-                && Utility.Utility.IsPointInPolygon(mouseWorldPos, points))
+                && BoundingRectangle.Contains(camera.MousePosition)
+                && Utility.Utility.IsPointInPolygon(camera.MousePosition, points))
             {
                 SpriteFont font = DefaultAssets.FontSmall;
                 string formattedLabel = Utility.Utility.WrapText(font, Label, 100);

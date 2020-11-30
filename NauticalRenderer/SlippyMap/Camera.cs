@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using NauticalRenderer.Utility;
 
 namespace NauticalRenderer.SlippyMap
@@ -37,6 +38,8 @@ namespace NauticalRenderer.SlippyMap
             }
         }
 
+        public Vector2 MousePosition { get; private set; }
+
         public RectangleF DrawBounds { get; private set; }
 
         private Vector3 translation;
@@ -67,6 +70,11 @@ namespace NauticalRenderer.SlippyMap
         {
             this.Translation = translation;
             this.Scale = scale;
+        }
+
+        public void Update()
+        {
+            MousePosition = ScreenPosToWorldPos(Mouse.GetState().Position.ToVector2());
         }
 
         /// <returns>Returns a matrix which represents the camera view</returns>
