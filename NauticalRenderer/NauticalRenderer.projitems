@@ -20,6 +20,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)SlippyMap\Data\SectorLight.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SlippyMap\Layers\FacilitiesLayer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SlippyMap\Layers\BuoyLayer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SlippyMap\Layers\GpsLayer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SlippyMap\Layers\MapGeoLayer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Mesh.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SlippyMap\Data\RestrictedArea.cs" />

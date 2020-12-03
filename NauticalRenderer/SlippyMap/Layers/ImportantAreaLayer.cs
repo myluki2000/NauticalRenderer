@@ -11,6 +11,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Myra.Attributes;
 using NauticalRenderer.Data;
+using NauticalRenderer.Screens;
 using NauticalRenderer.SlippyMap.Data;
 using NauticalRenderer.Utility;
 using OsmSharp;
@@ -28,6 +29,13 @@ namespace NauticalRenderer.SlippyMap.Layers
         private VertexPositionTexture[] seacablesVerts;
 
         private Effect squigglyLineEffect;
+        private MapScreen mapScreen;
+
+        /// <inheritdoc />
+        public ImportantAreaLayer(MapScreen mapScreen)
+        {
+            this.mapScreen = mapScreen;
+        }
 
         /// <inheritdoc />
         public override ILayerSettings LayerSettings { get; }
@@ -108,8 +116,15 @@ namespace NauticalRenderer.SlippyMap.Layers
 
             foreach (RestrictedArea restrictedArea in restrictedAreas)
             {
-                if(restrictedArea.BoundingRectangle.Intersects(camera.DrawBounds))
-                    restrictedArea.Draw(sb, mapSb, camera);
+                if (restrictedArea.BoundingRectangle.Intersects(camera.DrawBounds))
+                {
+                    bool mouseInside = restrictedArea.IsArea && restrictedArea.Contains(camera.MousePosition);
+                    restrictedArea.Draw(sb, mapSb, camera, mouseInside);
+                    if (mouseInside)
+                    {
+                        // TODO: Open osm tag info window
+                    }
+                }
             }
 
             squigglyLineEffect.Parameters["WorldViewProjection"].SetValue(camera.GetMatrix() * Matrix.CreateOrthographicOffCenter(

@@ -10,6 +10,7 @@ namespace NauticalRenderer.Utility
 {
     public static class Icons
     {
+        public static Texture2D Vehicle { get; private set; }
         public static Texture2D Star { get; private set; }
         public static Texture2D LightBlob { get; private set; }
         public static Texture2D NoFishing { get; private set; }
@@ -62,6 +63,7 @@ namespace NauticalRenderer.Utility
 
         public static void LoadContent(ContentManager content)
         {
+            Vehicle = content.Load<Texture2D>("Icons/vehicle");
             Star = content.Load<Texture2D>("Icons/star");
             LightBlob = content.Load<Texture2D>("Icons/light_blob");
             NoFishing = content.Load<Texture2D>("Icons/no_fishing");

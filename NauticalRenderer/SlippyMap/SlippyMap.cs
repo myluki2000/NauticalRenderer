@@ -32,7 +32,7 @@ namespace NauticalRenderer.SlippyMap
         private readonly HarbourLayer harbourLayer;
         private readonly LandmarkLayer landmarkLayer = new LandmarkLayer();
         private readonly NavigationLineLayer navigationLineLayer = new NavigationLineLayer();
-        private readonly ImportantAreaLayer importantAreaLayer = new ImportantAreaLayer();
+        private readonly ImportantAreaLayer importantAreaLayer;
         private readonly GribLayer gribLayer = new GribLayer();
         private readonly SeparationSchemeLayer separationSchemeLayer = new SeparationSchemeLayer();
         private readonly MapGeoLayer mapGeoLayer = new MapGeoLayer();
@@ -40,6 +40,7 @@ namespace NauticalRenderer.SlippyMap
         private readonly BuoyLayer buoyLayer = new BuoyLayer();
         private readonly StreetLayer streetLayer = new StreetLayer();
         private readonly FacilitiesLayer facilitiesLayer = new FacilitiesLayer();
+        private readonly GpsLayer gpsLayer = new GpsLayer();
         #endregion
 
 
@@ -47,6 +48,7 @@ namespace NauticalRenderer.SlippyMap
         {
             this.mapScreen = mapScreen;
             harbourLayer = new HarbourLayer(mapScreen);
+            importantAreaLayer = new ImportantAreaLayer(mapScreen);
 
             Camera.TranslationChanged += (sender, e) => { CorrectScaling(); };
             MapPack = new MapPack("Content/German-Baltic-Coast-And-South-Denmark.mappack");
@@ -189,6 +191,7 @@ namespace NauticalRenderer.SlippyMap
             landmarkLayer.Draw(sb, mapSb, Camera);
             if (Settings.VisibleLayers.GribLayer) gribLayer.Draw(sb, mapSb, Camera);
             placenameLayer.Draw(sb, mapSb, Camera);
+            gpsLayer.Draw(sb, mapSb, Camera);
             
 
             mapSb.End();
@@ -233,6 +236,7 @@ namespace NauticalRenderer.SlippyMap
             buoyLayer.LoadContent(MapPack);
             streetLayer.LoadContent(MapPack);
             facilitiesLayer.LoadContent(MapPack);
+            gpsLayer.LoadContent(MapPack);
 
             GCSettings.LargeObjectHeapCompactionMode = GCLargeObjectHeapCompactionMode.CompactOnce;
             GC.Collect();

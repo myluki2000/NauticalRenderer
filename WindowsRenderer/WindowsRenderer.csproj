@@ -21,6 +21,7 @@
     <PackageReference Include="Myra" Version="1.0.1.209" />
     <PackageReference Include="NetTopologySuite.IO.ShapeFile" Version="2.0.0" />
     <PackageReference Include="OsmSharp" Version="6.2.0" />
+    <PackageReference Include="SharpGIS.NmeaParser" Version="2.1.0" />
     <PackageReference Include="Triangle" Version="0.0.6-Beta3" />
   </ItemGroup>
   <ItemGroup>

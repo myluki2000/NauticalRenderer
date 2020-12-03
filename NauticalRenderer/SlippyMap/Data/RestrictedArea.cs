@@ -54,7 +54,7 @@ namespace NauticalRenderer.SlippyMap.Data
             Restriction = restriction;
         }
 
-        public void Draw(SpriteBatch sb, SpriteBatch mapSb, Camera camera)
+        public void Draw(SpriteBatch sb, SpriteBatch mapSb, Camera camera, bool drawLabel = false)
         {
             switch (Restriction)
             {
@@ -91,16 +91,18 @@ namespace NauticalRenderer.SlippyMap.Data
                     break;
             }
 
-            // TODO: Also allow hovering over lines
-            if (points[0] == points[points.Length - 1]
-                && BoundingRectangle.Contains(camera.MousePosition)
-                && Utility.Utility.IsPointInPolygon(camera.MousePosition, points))
+            if (drawLabel)
             {
                 SpriteFont font = DefaultAssets.FontSmall;
                 string formattedLabel = Utility.Utility.WrapText(font, Label, 100);
                 Vector2 labelSize = font.MeasureString(formattedLabel);
                 sb.DrawString(font, formattedLabel, BoundingRectangle.Center.Transform(camera.GetMatrix()).Rounded(), Color.Black, 0, (labelSize / 2).Rounded(), Vector2.One, SpriteEffects.None, 0);
             }
+        }
+
+        public bool Contains(Vector2 point)
+        {
+            return Utility.Utility.IsPointInPolygon(point, points);
         }
 
         public enum RestrictedAreaCategory
