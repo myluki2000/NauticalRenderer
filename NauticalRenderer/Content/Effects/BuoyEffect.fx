@@ -112,9 +112,12 @@ float4 MainPS(VSOutput input) : COLOR
         atlasCoord = input.TexCoord / 4.0f + atlasCoord / 4.0f;
 
 	float4 backColor = float4(0.0f, 0.0f, 0.0f, 0.0f);
-    float color;
 	if (colorCount > 0)
 	{
+        float2 rotatedTexCoord = float2(
+			input.TexCoord.x * cos(colorAngle) - (ORIGIN_FRAC - input.TexCoord.y) * sin(colorAngle),
+			(ORIGIN_FRAC - input.TexCoord.y) * cos(colorAngle) + input.TexCoord.x * sin(colorAngle));
+		
 		switch (input.ColorPattern)
 		{
 			case COLOR_PATTERN_NONE:
@@ -131,7 +134,7 @@ float4 MainPS(VSOutput input) : COLOR
         
     }
 
-	return color;
+    return SAMPLE_TEXTURE(Texture, atlasCoord) * backColor;
 }
 
 technique BasicColorDrawing

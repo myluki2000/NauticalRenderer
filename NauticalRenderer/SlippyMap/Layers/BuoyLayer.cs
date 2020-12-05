@@ -49,7 +49,7 @@ namespace NauticalRenderer.SlippyMap.Layers
                 0,
                 1));
             buoyEffect.CurrentTechnique = buoyEffect.Techniques[0];
-            buoyEffect.Parameters["TextureSampler+Texture"].SetValue(Icons.Buoys);
+            buoyEffect.Parameters["Texture"].SetValue(Icons.Buoys);
 
             instanceVertexDeclaration = new VertexDeclaration(new VertexElement[]
             {
