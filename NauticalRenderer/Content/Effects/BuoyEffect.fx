@@ -181,7 +181,7 @@ float4 MainPS(VSOutput input) : COLOR
 
 	}
 
-	float4 color = SAMPLE_TEXTURE(Texture, atlasCoord)/* * backColor */;
+	float4 color = SAMPLE_TEXTURE(Texture, atlasCoord) * backColor;
 
 	return color;
 }
