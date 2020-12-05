@@ -81,6 +81,16 @@ namespace NauticalRenderer.SlippyMap
                 Camera.Scale /= new Vector3(1.1f, 1.1f, 1);
             }*/
 
+            if(touchState.Count == 2 && lastTouchState.Count == 2)
+            {
+                float distNow = (touchState[0].Position - touchState[1].Position).Length();
+                float distLast = (lastTouchState[0].Position - lastTouchState[1].Position).Length();
+
+                float s = distNow / distLast;
+
+                Camera.Scale *= new Vector3(s, s, 1);
+            }
+
             if (touchState.Count == 1 && lastTouchState.Count == 0)
             {
                 touchIsDragging = true;

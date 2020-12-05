@@ -77,46 +77,7 @@ float4 MainPS(VSOutput input) : COLOR
 	float colorAngle = 0.0f;
 	float2 atlasCoord = float2(0.0f, 0.0f);
 	
-    if (input.BuoyShape == BUOY_SHAPE_CONICAL)
-    {
-        atlasCoord = float2(0.0f, 0.0f);
-        colorAngle = 0.261799f; // 15° rotation
-    }
-    else if (input.BuoyShape == BUOY_SHAPE_CAN)
-    {
-        atlasCoord = float2(1.0f, 0.0f);
-        colorAngle = 0.261799f; // 15° rotation
-    }
-    else if (input.BuoyShape == BUOY_SHAPE_SPHERICAL)
-    {
-        atlasCoord = float2(2.0f, 0.0f);
-        colorAngle = 0.261799f; // 15° rotation
-    }
-    else if (input.BuoyShape == BUOY_SHAPE_PILLAR)
-    {
-        atlasCoord = float2(3.0f, 0.0f);
-        colorAngle = 0.261799f; // 15° rotation
-    }
-    else if (input.BuoyShape == BUOY_SHAPE_SPAR)
-    {
-        atlasCoord = float2(0.0f, 1.0f);
-        colorAngle = 0.261799f; // 15° rotation
-    }
-    else if (input.BuoyShape == BUOY_SHAPE_BARREL)
-    {
-        atlasCoord = float2(1.0f, 1.0f);
-    }
-    else if (input.BuoyShape == BUOY_SHAPE_SUPER_BUOY)
-    {
-        atlasCoord = float2(2.0f, 1.0f);
-    }
-    else if (input.BuoyShape == BUOY_SHAPE_ICE_BUOY)
-    {
-        atlasCoord = float2(3.0f, 1.0f);
-    }
-	
-	// only supported on shader model 4 :( maybe in the future...
-	/*switch (input.BuoyShape)
+	switch (input.BuoyShape)
 	{
 		case BUOY_SHAPE_CONICAL:
 			atlasCoord = float2(0.0f, 0.0f);
@@ -147,25 +108,14 @@ float4 MainPS(VSOutput input) : COLOR
 		case BUOY_SHAPE_ICE_BUOY:
 			atlasCoord = float2(3.0f, 1.0f);
 			break;
-	}*/
+	}
         atlasCoord = input.TexCoord / 4.0f + atlasCoord / 4.0f;
 
 	float4 backColor = float4(0.0f, 0.0f, 0.0f, 0.0f);
+    float color;
 	if (colorCount > 0)
 	{
-		float2 rotatedTexCoord = float2(
-			input.TexCoord.x * cos(colorAngle) - (ORIGIN_FRAC - input.TexCoord.y) * sin(colorAngle),
-			(ORIGIN_FRAC - input.TexCoord.y) * cos(colorAngle) + input.TexCoord.x * sin(colorAngle));
-
-        if (input.ColorPattern == COLOR_PATTERN_NONE)
-            backColor = input.Colors[0];
-        else if (input.ColorPattern == COLOR_PATTERN_HORIZONTAL)
-            backColor = input.Colors[floor((1 - rotatedTexCoord.y) * colorCount)];
-        else /* if (input.ColorPattern == COLOR_PATTERN_VERTICAL)*/
-            backColor = input.Colors[clamp(floor(map(rotatedTexCoord.x, 0.25f, 0.75f, 0.0f, 1.0f) * colorCount), 0.0f, colorCount - 1)];
-		
-		// only supported on shader model 4 :( maybe in the future...
-		/*switch (input.ColorPattern)
+		switch (input.ColorPattern)
 		{
 			case COLOR_PATTERN_NONE:
 				backColor = input.Colors[0];
@@ -177,11 +127,9 @@ float4 MainPS(VSOutput input) : COLOR
 			default:
 				backColor = input.Colors[clamp(floor(map(rotatedTexCoord.x, 0.25f, 0.75f, 0.0f, 1.0f) * colorCount), 0.0f, colorCount - 1)];
 				break;
-		}*/
-
-	}
-
-	float4 color = SAMPLE_TEXTURE(Texture, atlasCoord) * backColor;
+		}
+        
+    }
 
 	return color;
 }
