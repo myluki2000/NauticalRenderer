@@ -19,6 +19,7 @@ namespace NauticalRenderer.SlippyMap.SourceLayers
         {
             polygons.Clear();
 
+#if !ANDROID
             ShapefileDataReader dataReader = Shapefile.CreateDataReader("Content/SimplifiedCoastlines/coastlines-simplified", GeometryFactory.Default);
 
             while (dataReader.Read())
@@ -31,6 +32,7 @@ namespace NauticalRenderer.SlippyMap.SourceLayers
             polygons.RemoveAll(x => x.points.Length == 0);
 
             dataReader.Close();
+#endif
         }
 
         /// <inheritdoc />

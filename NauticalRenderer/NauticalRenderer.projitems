@@ -10,6 +10,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Data\MapPack.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Nmea\NmeaDeviceManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ResourceManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Screens\MapScreen.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Screens\Screen.cs" />
@@ -42,7 +43,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)Data\Icons.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SlippyMap\SourceLayers\SimplifiedCoastSourceLayer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SlippyMap\SourceLayers\SourceLayer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UI\SettingsWindow.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SlippyMap\UI\OsmTagGrid.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UI\NmeaDeviceSelectionDialog.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utility\LineRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utility\LineStyle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utility\LineText.cs" />

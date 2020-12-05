@@ -5,13 +5,13 @@ VisualStudioVersion = 16.0.30413.136
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "NauticalRenderer", "NauticalRenderer\NauticalRenderer.shproj", "{A0CDBD0E-3A41-42B7-9425-A838BC2C7383}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AndroidRenderer", "AndroidRenderer\AndroidRenderer.csproj", "{37FF3DE4-8E5C-44A1-94B5-9CDE29B52247}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WindowsRenderer", "WindowsRenderer\WindowsRenderer.csproj", "{4234A9B4-91CC-416D-892D-03251777F20E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AndroidRenderer", "AndroidRenderer\AndroidRenderer.csproj", "{11513B07-E4E3-43EB-A133-3A2EA3F348E9}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		NauticalRenderer\NauticalRenderer.projitems*{37ff3de4-8e5c-44a1-94b5-9cde29b52247}*SharedItemsImports = 4
+		NauticalRenderer\NauticalRenderer.projitems*{11513b07-e4e3-43eb-a133-3a2ea3f348e9}*SharedItemsImports = 4
 		NauticalRenderer\NauticalRenderer.projitems*{4234a9b4-91cc-416d-892d-03251777f20e}*SharedItemsImports = 5
 		NauticalRenderer\NauticalRenderer.projitems*{a0cdbd0e-3a41-42b7-9425-a838bc2c7383}*SharedItemsImports = 13
 	EndGlobalSection
@@ -22,18 +22,6 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{37FF3DE4-8E5C-44A1-94B5-9CDE29B52247}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{37FF3DE4-8E5C-44A1-94B5-9CDE29B52247}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{37FF3DE4-8E5C-44A1-94B5-9CDE29B52247}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{37FF3DE4-8E5C-44A1-94B5-9CDE29B52247}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{37FF3DE4-8E5C-44A1-94B5-9CDE29B52247}.Debug|x86.Build.0 = Debug|Any CPU
-		{37FF3DE4-8E5C-44A1-94B5-9CDE29B52247}.Debug|x86.Deploy.0 = Debug|Any CPU
-		{37FF3DE4-8E5C-44A1-94B5-9CDE29B52247}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{37FF3DE4-8E5C-44A1-94B5-9CDE29B52247}.Release|Any CPU.Build.0 = Release|Any CPU
-		{37FF3DE4-8E5C-44A1-94B5-9CDE29B52247}.Release|Any CPU.Deploy.0 = Release|Any CPU
-		{37FF3DE4-8E5C-44A1-94B5-9CDE29B52247}.Release|x86.ActiveCfg = Release|Any CPU
-		{37FF3DE4-8E5C-44A1-94B5-9CDE29B52247}.Release|x86.Build.0 = Release|Any CPU
-		{37FF3DE4-8E5C-44A1-94B5-9CDE29B52247}.Release|x86.Deploy.0 = Release|Any CPU
 		{4234A9B4-91CC-416D-892D-03251777F20E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4234A9B4-91CC-416D-892D-03251777F20E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4234A9B4-91CC-416D-892D-03251777F20E}.Debug|x86.ActiveCfg = Debug|Any CPU
@@ -42,6 +30,18 @@ Global
 		{4234A9B4-91CC-416D-892D-03251777F20E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4234A9B4-91CC-416D-892D-03251777F20E}.Release|x86.ActiveCfg = Release|Any CPU
 		{4234A9B4-91CC-416D-892D-03251777F20E}.Release|x86.Build.0 = Release|Any CPU
+		{11513B07-E4E3-43EB-A133-3A2EA3F348E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{11513B07-E4E3-43EB-A133-3A2EA3F348E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{11513B07-E4E3-43EB-A133-3A2EA3F348E9}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{11513B07-E4E3-43EB-A133-3A2EA3F348E9}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{11513B07-E4E3-43EB-A133-3A2EA3F348E9}.Debug|x86.Build.0 = Debug|Any CPU
+		{11513B07-E4E3-43EB-A133-3A2EA3F348E9}.Debug|x86.Deploy.0 = Debug|Any CPU
+		{11513B07-E4E3-43EB-A133-3A2EA3F348E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{11513B07-E4E3-43EB-A133-3A2EA3F348E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{11513B07-E4E3-43EB-A133-3A2EA3F348E9}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{11513B07-E4E3-43EB-A133-3A2EA3F348E9}.Release|x86.ActiveCfg = Release|Any CPU
+		{11513B07-E4E3-43EB-A133-3A2EA3F348E9}.Release|x86.Build.0 = Release|Any CPU
+		{11513B07-E4E3-43EB-A133-3A2EA3F348E9}.Release|x86.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

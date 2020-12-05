@@ -24,8 +24,5 @@
     <PackageReference Include="SharpGIS.NmeaParser" Version="2.1.0" />
     <PackageReference Include="Triangle" Version="0.0.6-Beta3" />
   </ItemGroup>
-  <ItemGroup>
-    <MonoGameContentReference Include="Content\Content.mgcb" />
-  </ItemGroup>
   <Import Project="..\NauticalRenderer\NauticalRenderer.projitems" Label="Shared" />
 </Project>

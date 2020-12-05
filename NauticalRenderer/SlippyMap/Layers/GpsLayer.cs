@@ -23,11 +23,11 @@ namespace NauticalRenderer.SlippyMap.Layers
         public GpsLayer()
         {
             int baudRate = 4800;
-            SerialPort port = new SerialPort("COM5", baudRate);
-            gpsDevice = new SerialPortDevice(port);
+            //SerialPort port = new SerialPort("COM5", baudRate);
+            //gpsDevice = new SerialPortDevice(port);
 
-            gpsDevice.MessageReceived += OnNmeaMessageReceived;
-            gpsDevice.OpenAsync();
+            //gpsDevice.MessageReceived += OnNmeaMessageReceived;
+            //gpsDevice.OpenAsync();
         } 
 
         /// <inheritdoc />

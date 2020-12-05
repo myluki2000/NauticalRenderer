@@ -32,9 +32,12 @@ namespace NauticalRenderer.Data
 
         public Stream OpenFile(string mapName)
         {
-            Stream tmp = Globals.ResourceManager.GetStreamForFile(zipPath);
+            using var ms = new MemoryStream();
+            Globals.ResourceManager.GetStreamForFile(zipPath).CopyTo(ms);
+            ms.Position = 0;
+
             Stream output = new MemoryStream();
-            using (ZipFile zip = ZipFile.Read(tmp))
+            using (ZipFile zip = ZipFile.Read(ms))
             {
                 ZipEntry entry = zip[mapName];
                 entry.Extract(output);
@@ -43,6 +46,7 @@ namespace NauticalRenderer.Data
             output.Seek(0, SeekOrigin.Begin);
             return output;
         }
+
 
         public void LoadBoundingPoly(Stream boundingPolyStream)
         {

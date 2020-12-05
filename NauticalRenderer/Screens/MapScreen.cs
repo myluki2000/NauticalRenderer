@@ -13,6 +13,7 @@ using Myra.Graphics2D.UI.Properties;
 using Myra.Graphics2D.UI.Styles;
 using NauticalRenderer.SlippyMap.Layers;
 using NauticalRenderer.SlippyMap.UI;
+using NauticalRenderer.UI;
 using NauticalRenderer.Utility;
 using OsmSharp.Tags;
 
@@ -23,8 +24,6 @@ namespace NauticalRenderer.Screens
         private SpriteBatch spriteBatch;
         public readonly Desktop Desktop = new Desktop();
         private Label zoomLabel;
-        private TextButton zoomOutButton = new TextButton() { Text = "  -  " };
-        private TextButton zoomInButton = new TextButton() { Text = "  +  "};
         private SlippyMap.SlippyMap slippyMap;
 
         /// <inheritdoc />
@@ -62,7 +61,7 @@ namespace NauticalRenderer.Screens
 
         public bool ShowOsmTagsWindow(string windowTitle, TagsCollectionBase tags)
         {
-            if(Desktop.GetWindows().All(x => x.Content is OsmTagGrid grid && !ReferenceEquals(grid.TagsCollection, tags)))
+            if (Desktop.GetWindows().All(x => x.Content is OsmTagGrid grid && !ReferenceEquals(grid.TagsCollection, tags)))
             {
                 Window window = new Window()
                 {
@@ -94,56 +93,64 @@ namespace NauticalRenderer.Screens
             grid.ColumnsProportions.Add(Proportion.Auto);
 
             grid.RowsProportions.Add(Proportion.Auto);
-            grid.RowsProportions.Add(Proportion.Auto);
             grid.RowsProportions.Add(Proportion.Fill);
 
-            /*grid.ColumnsProportions.Add(new Proportion(ProportionType.Auto));
-            grid.ColumnsProportions.Add(new Proportion(ProportionType.Auto));
-            grid.RowsProportions.Add(new Proportion(ProportionType.Auto));
-            grid.RowsProportions.Add(new Proportion(ProportionType.Auto));
 
-            CheckBox cbMarinaLayer = new CheckBox() { Text = "Marinas" };
-            cbMarinaLayer.PressedChanged += (s, e) => { slippyMap.Layers.MarinaLayer.Visible = cbMarinaLayer.IsPressed; };
-            grid.Widgets.Add(cbMarinaLayer);
-
-            CheckBox cbNavigationLineLayer = new CheckBox() { Text = "Navigation Lines" };
-            cbNavigationLineLayer.PressedChanged += (s, e) => { slippyMap.Layers.NavigationLineLayer.Visible = cbNavigationLineLayer.IsPressed; };
-            grid.Widgets.Add(cbNavigationLineLayer);
-
-            desktop.Root = grid;*/
-
-
-            PropertyGrid propertyGrid = new PropertyGrid
+            VerticalStackPanel propertiesPanel = new VerticalStackPanel()
             {
-                Object = slippyMap.Settings,
                 GridColumn = 0,
                 GridRow = 0,
-                GridRowSpan = 3,
-                
+                GridRowSpan = 2,
             };
 
-            grid.Widgets.Add(propertyGrid);
+            foreach (MapLayer.ILayerSettings setting in slippyMap.Settings.LayersSettings)
+            {
+                PropertyGrid propertyGrid = new PropertyGrid
+                {
+                    Object = setting,
+                };
 
-            zoomLabel = new Label() { GridColumn = 2, GridRow = 2};
+                propertiesPanel.Widgets.Add(propertyGrid);
+            }
+
+
+
+            grid.Widgets.Add(propertiesPanel);
+
+            zoomLabel = new Label() { GridColumn = 2, GridRow = 1 };
             grid.Widgets.Add(zoomLabel);
 
-            zoomOutButton.HorizontalAlignment = HorizontalAlignment.Right;
-            zoomOutButton.GridColumn = 2;
-            zoomOutButton.GridRow = 0;
-            zoomOutButton.Click += (sender, args) =>
+            HorizontalStackPanel pnlControls = new HorizontalStackPanel()
+            {
+                Spacing = 8,
+                HorizontalAlignment = HorizontalAlignment.Right,
+                GridColumn = 2,
+                GridRow = 0,
+            };
+
+            TextButton btnSettings = new TextButton() {Text = "Settings" };
+            btnSettings.Click += (sender, args) =>
+            {
+                SettingsWindow mapSettingsWindow = new SettingsWindow(slippyMap);
+                mapSettingsWindow.ShowModal(Desktop);
+            };
+            pnlControls.Widgets.Add(btnSettings);
+
+            TextButton btnZoomOut = new TextButton() { Text = "  -  " };
+            btnZoomOut.Click += (sender, args) =>
             {
                 slippyMap.Camera.Scale /= new Vector3(1.1f, 1.1f, 1.0f);
             };
-            grid.Widgets.Add(zoomOutButton);
+            pnlControls.Widgets.Add(btnZoomOut);
 
-            zoomInButton.HorizontalAlignment = HorizontalAlignment.Right;
-            zoomInButton.GridColumn = 2;
-            zoomInButton.GridRow = 1;
-            zoomInButton.Click += (sender, args) =>
+            TextButton btnZoomIn = new TextButton() { Text = "  +  " };
+            btnZoomIn.Click += (sender, args) =>
             {
                 slippyMap.Camera.Scale *= new Vector3(1.1f, 1.1f, 1.0f);
             };
-            grid.Widgets.Add(zoomInButton);
+            pnlControls.Widgets.Add(btnZoomIn);
+
+            grid.Widgets.Add(pnlControls);
 
             Desktop.Root = grid;
         }

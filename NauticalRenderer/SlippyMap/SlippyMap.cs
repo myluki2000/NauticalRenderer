@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Runtime;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
@@ -25,30 +26,30 @@ namespace NauticalRenderer.SlippyMap
         public MapSettings Settings { get; set; } = new MapSettings();
 
         public List<SourceLayer> SourceLayers = new List<SourceLayer>() { new SimplifiedCoastSourceLayer() };
+        public IReadOnlyList<MapLayer> MapLayers;
 
         private readonly MapScreen mapScreen;
-
-        #region Layers
-        private readonly HarbourLayer harbourLayer;
-        private readonly LandmarkLayer landmarkLayer = new LandmarkLayer();
-        private readonly NavigationLineLayer navigationLineLayer = new NavigationLineLayer();
-        private readonly ImportantAreaLayer importantAreaLayer;
-        private readonly GribLayer gribLayer = new GribLayer();
-        private readonly SeparationSchemeLayer separationSchemeLayer = new SeparationSchemeLayer();
-        private readonly MapGeoLayer mapGeoLayer = new MapGeoLayer();
-        private readonly PlacenameLayer placenameLayer = new PlacenameLayer();
-        private readonly BuoyLayer buoyLayer = new BuoyLayer();
-        private readonly StreetLayer streetLayer = new StreetLayer();
-        private readonly FacilitiesLayer facilitiesLayer = new FacilitiesLayer();
-        private readonly GpsLayer gpsLayer = new GpsLayer();
-        #endregion
 
 
         public SlippyMap(MapScreen mapScreen)
         {
             this.mapScreen = mapScreen;
-            harbourLayer = new HarbourLayer(mapScreen);
-            importantAreaLayer = new ImportantAreaLayer(mapScreen);
+
+            MapLayers = new List<MapLayer>()
+            {
+                new MapGeoLayer(),
+                new StreetLayer(),
+                new FacilitiesLayer(),
+                new HarbourLayer(mapScreen),
+                new NavigationLineLayer(),
+                new ImportantAreaLayer(mapScreen),
+                new SeparationSchemeLayer(),
+                new BuoyLayer(),
+                new LandmarkLayer(),
+                new GribLayer(),
+                new PlacenameLayer(),
+                new GpsLayer(),
+            };
 
             Camera.TranslationChanged += (sender, e) => { CorrectScaling(); };
             MapPack = new MapPack("Content/German-Baltic-Coast-And-South-Denmark.mappack");
@@ -180,18 +181,10 @@ namespace NauticalRenderer.SlippyMap
 
             mapSb.Begin(transformMatrix: Camera.GetMatrix());
 
-            mapGeoLayer.Draw(sb, mapSb, Camera);
-            streetLayer.Draw(sb, mapSb, Camera);
-            facilitiesLayer.Draw(sb, mapSb, Camera);
-            harbourLayer.Draw(sb, mapSb, Camera);
-            if(Settings.VisibleLayers.NavigationLineLayer) navigationLineLayer.Draw(sb, mapSb, Camera);
-            if(Settings.VisibleLayers.RestrictedAreaLayer) importantAreaLayer.Draw(sb, mapSb, Camera);
-            if(Settings.VisibleLayers.SeparationSchemeLayer) separationSchemeLayer.Draw(sb, mapSb, Camera);
-            buoyLayer.Draw(sb, mapSb, Camera);
-            landmarkLayer.Draw(sb, mapSb, Camera);
-            if (Settings.VisibleLayers.GribLayer) gribLayer.Draw(sb, mapSb, Camera);
-            placenameLayer.Draw(sb, mapSb, Camera);
-            gpsLayer.Draw(sb, mapSb, Camera);
+            foreach (MapLayer mapLayer in MapLayers)
+            {
+                mapLayer.Draw(sb, mapSb, Camera);
+            }
             
 
             mapSb.End();
@@ -225,44 +218,22 @@ namespace NauticalRenderer.SlippyMap
                 sourceLayer.LoadContent();
             }
 
-            placenameLayer.LoadContent(MapPack);
-            mapGeoLayer.LoadContent(MapPack);
-            harbourLayer.LoadContent(MapPack);
-            landmarkLayer.LoadContent(MapPack);
-            navigationLineLayer.LoadContent(MapPack);
-            importantAreaLayer.LoadContent(MapPack);
-            gribLayer.LoadContent(MapPack);
-            separationSchemeLayer.LoadContent(MapPack);
-            buoyLayer.LoadContent(MapPack);
-            streetLayer.LoadContent(MapPack);
-            facilitiesLayer.LoadContent(MapPack);
-            gpsLayer.LoadContent(MapPack);
+            foreach (MapLayer mapLayer in MapLayers)
+            {
+                mapLayer.LoadContent(MapPack);
+            }
 
             GCSettings.LargeObjectHeapCompactionMode = GCLargeObjectHeapCompactionMode.CompactOnce;
             GC.Collect();
 
-            Settings.LandmarkLayerSettings = landmarkLayer.LayerSettings;
-            Settings.HarbourLayerSettings = harbourLayer.LayerSettings;
+            Settings.LayersSettings = MapLayers.Select(x => x.LayerSettings).ToList();
         }
 
 
 
         public class MapSettings
         {
-            public VisibleLayersSetting VisibleLayers { get; set; } = new VisibleLayersSetting();
-
-            public MapLayer.ILayerSettings HarbourLayerSettings;
-            public MapLayer.ILayerSettings LandmarkLayerSettings;
-
-            public class VisibleLayersSetting
-            {
-                public bool NavigationLineLayer = true;
-                public bool MarinaLayer = true;
-                public bool RestrictedAreaLayer = true;
-                public bool LandmarkLayer = true;
-                public bool GribLayer = true;
-                public bool SeparationSchemeLayer = true;
-            }
+            public List<MapLayer.ILayerSettings> LayersSettings;
         }
     }
 }
