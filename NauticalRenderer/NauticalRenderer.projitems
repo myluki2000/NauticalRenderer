@@ -10,11 +10,14 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Data\MapPack.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Nmea\GpsManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Nmea\NmeaDeviceInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Nmea\NmeaDeviceManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ResourceManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Screens\MapScreen.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Screens\Screen.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Screens\ScreenHandler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SettingsManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SlippyMap\Data\Buoy.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SlippyMap\Data\Landmark.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SlippyMap\Data\MapStyle.cs" />
@@ -43,7 +46,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)Data\Icons.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SlippyMap\SourceLayers\SimplifiedCoastSourceLayer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SlippyMap\SourceLayers\SourceLayer.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)UI\SettingsWindow.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UI\Settings\Panels\GpsSettingsPanel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UI\Settings\Panels\NmeaSettingsPanel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UI\Settings\Panels\SettingsPanel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UI\Settings\SettingsWindow.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SlippyMap\UI\OsmTagGrid.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\NmeaDeviceSelectionDialog.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utility\LineRenderer.cs" />

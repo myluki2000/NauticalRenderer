@@ -11,5 +11,6 @@ namespace NauticalRenderer
         public static GraphicsDeviceManager Graphics;
         public static ContentManager Content;
         public static ResourceManager ResourceManager;
+        public static SettingsManager SettingsManager;
     }
 }

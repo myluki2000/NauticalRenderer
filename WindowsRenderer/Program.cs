@@ -7,7 +7,7 @@ namespace WindowsRenderer
         [STAThread]
         static void Main()
         {
-            using (var game = new NauticalRenderer.Main(new WindowsResourceManager()))
+            using (var game = new NauticalRenderer.Main(new WindowsResourceManager(), new WindowsSettingsManager()))
                 game.Run();
         }
     }

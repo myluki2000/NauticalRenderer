@@ -1,15 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO.Ports;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Text.Json;
 using NmeaParser;
 
 namespace NauticalRenderer.Nmea
 {
     static class NmeaDeviceManager
     {
-        public static IReadOnlyDictionary<string, NmeaDevice> ConnectedDevices => devices;
+        public static IReadOnlyDictionary<string, (NmeaDeviceInfo deviceInfo, NmeaDevice device)> ConnectedDevices 
+        {
+            get
+            {
+                if(devices == null)
+                    ConnectDevicesFromSettings();
+
+                return devices;
+            }
+        }
 
         public static event Action ConnectedDevicesChanged;
 
@@ -17,35 +28,63 @@ namespace NauticalRenderer.Nmea
         {
             add
             {
-                foreach (NmeaDevice dev in devices.Values)
+                foreach ((NmeaDeviceInfo deviceInfo, NmeaDevice device) in devices.Values)
                 {
-                    dev.MessageReceived += value;
+                    device.MessageReceived += value;
                 }
             }
 
             remove
             {
-                foreach (NmeaDevice dev in devices.Values)
+                foreach ((NmeaDeviceInfo deviceInfo, NmeaDevice device) in devices.Values)
                 {
-                    dev.MessageReceived -= value;
+                    device.MessageReceived -= value;
                 }
             }
         }
 
-        private static Dictionary<string, NmeaDevice> devices = new Dictionary<string, NmeaDevice>();
+        private static Dictionary<string, (NmeaDeviceInfo deviceInfo, NmeaDevice device)> devices = null;
+
+        public static void ConnectDevicesFromSettings()
+        {
+            devices = new Dictionary<string, (NmeaDeviceInfo deviceInfo, NmeaDevice device)>();
+
+            String s = (string) Globals.SettingsManager.GetSettingsValue("NmeaDevices");
+            if(!string.IsNullOrEmpty(s))
+                foreach (NmeaDeviceInfo devInfo in JsonSerializer.Deserialize<NmeaDeviceInfo[]>(s))
+                {
+                    ConnectDevice(devInfo);
+                }
+        }
+
+        public static void ConnectDevice(NmeaDeviceInfo devInfo)
+        {
+            ConnectDevice(devInfo.PortName, devInfo.BaudRate);
+        }
 
         public static void ConnectDevice(string portName, int baudRate)
         {
-            /*SerialPort port = new SerialPort(portName, baudRate);
-            devices.Add(portName, new SerialPortDevice(port));
-            ConnectedDevicesChanged?.Invoke();*/
+            // abort if device is already connected
+            if (devices != null && ConnectedDevices.ContainsKey(portName)) return;
+
+            SerialPort port = new SerialPort(portName, baudRate);
+            SerialPortDevice dev = new SerialPortDevice(port);
+            dev.OpenAsync();
+            devices.Add(portName, (new NmeaDeviceInfo(portName, baudRate), dev));
+            
+            // Serialize device infos and save them in the settings
+            NmeaDeviceInfo[] dis = devices.Select(x => x.Value.deviceInfo).ToArray();
+            
+            Globals.SettingsManager.SetSettingsValue("NmeaDevices", JsonSerializer.Serialize(dis));
+
+            ConnectedDevicesChanged?.Invoke();
         }
 
         public static void DisconnectDevice(string portName)
         {
-            NmeaDevice dev = devices[portName];
-            if (dev.IsOpen) dev.CloseAsync();
-            dev.Dispose();
+            (NmeaDeviceInfo deviceInfo, NmeaDevice device) = devices[portName];
+            if (device.IsOpen) device.CloseAsync();
+            device.Dispose();
             devices.Remove(portName);
             ConnectedDevicesChanged?.Invoke();
         }

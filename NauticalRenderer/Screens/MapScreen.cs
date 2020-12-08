@@ -14,6 +14,7 @@ using Myra.Graphics2D.UI.Styles;
 using NauticalRenderer.SlippyMap.Layers;
 using NauticalRenderer.SlippyMap.UI;
 using NauticalRenderer.UI;
+using NauticalRenderer.UI.Settings;
 using NauticalRenderer.Utility;
 using OsmSharp.Tags;
 

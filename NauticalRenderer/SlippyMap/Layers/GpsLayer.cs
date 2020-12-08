@@ -5,8 +5,10 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NauticalRenderer.Data;
+using NauticalRenderer.Nmea;
 using NauticalRenderer.Utility;
 using NmeaParser;
+using NmeaParser.Messages;
 
 namespace NauticalRenderer.SlippyMap.Layers
 {
@@ -22,12 +24,7 @@ namespace NauticalRenderer.SlippyMap.Layers
 
         public GpsLayer()
         {
-            int baudRate = 4800;
-            //SerialPort port = new SerialPort("COM5", baudRate);
-            //gpsDevice = new SerialPortDevice(port);
-
-            //gpsDevice.MessageReceived += OnNmeaMessageReceived;
-            //gpsDevice.OpenAsync();
+            GpsManager.GpsDataReceived += OnNmeaMessageReceived;
         } 
 
         /// <inheritdoc />
@@ -42,13 +39,10 @@ namespace NauticalRenderer.SlippyMap.Layers
             sb.Draw(Icons.Vehicle, currentCoords.Transform(camera.GetMatrix()), null, Color.White, float.IsNaN(currentRot) ? 0 : currentRot, Icons.Vehicle.Bounds.Center.ToVector2(), 1.0f / 16, SpriteEffects.None, 0);
         }
 
-        private void OnNmeaMessageReceived(object o, NmeaParser.NmeaMessageReceivedEventArgs args)
+        private void OnNmeaMessageReceived(object o, Rmc rmc)
         {
-            if (args.Message is NmeaParser.Messages.Rmc rmc)
-            {
-                currentCoords = new Vector2((float)rmc.Longitude, -(float)rmc.Latitude);
-                currentRot = MathHelper.ToRadians((float)rmc.Course);
-            }
+            currentCoords = new Vector2((float)rmc.Longitude, -(float)rmc.Latitude);
+            currentRot = MathHelper.ToRadians((float)rmc.Course);
         }
     }
 }

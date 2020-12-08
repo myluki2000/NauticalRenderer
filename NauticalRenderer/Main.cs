@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Myra;
+using NauticalRenderer.Nmea;
 using NauticalRenderer.Screens;
 using NauticalRenderer.SlippyMap.SourceLayers;
 using NauticalRenderer.Utility;
@@ -20,11 +21,12 @@ namespace NauticalRenderer
     {
         private readonly Stopwatch frametimeWatch = new Stopwatch();
 
-        public Main(ResourceManager resourceManager)
+        public Main(ResourceManager resourceManager, SettingsManager settingsManager)
         {
             Globals.Graphics = new GraphicsDeviceManager(this);
             Globals.Graphics.GraphicsProfile = GraphicsProfile.HiDef;
             Globals.ResourceManager = resourceManager;
+            Globals.SettingsManager = settingsManager;
             Content.RootDirectory = "Content";
             Globals.Graphics.IsFullScreen = false;
             IsMouseVisible = true;
@@ -41,8 +43,10 @@ namespace NauticalRenderer
         protected override void Initialize()
         {
             base.Initialize();
+
+            GpsManager.Initialize();
+
             MyraEnvironment.Game = this;
-            
             ScreenHandler.CurrentScreen = new MapScreen();
         }
 
