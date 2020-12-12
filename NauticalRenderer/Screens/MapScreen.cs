@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics;
 using System.Dynamic;
 using System.Linq;
@@ -38,7 +39,7 @@ namespace NauticalRenderer.Screens
             watch.Stop();
             Console.WriteLine("Loaded map in " + watch.ElapsedMilliseconds + "ms.");
 
-            spriteBatch = new SpriteBatch(Globals.Graphics.GraphicsDevice);
+            
 
             InitUI();
         }
@@ -46,6 +47,7 @@ namespace NauticalRenderer.Screens
         /// <inheritdoc />
         public override void Draw()
         {
+            spriteBatch = new SpriteBatch(Globals.Graphics.GraphicsDevice);
             spriteBatch.GraphicsDevice.Clear(Color.FromNonPremultiplied(30, 30, 30, 255));
             spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.LinearWrap, null, null, null, null);
             slippyMap.Draw(spriteBatch);

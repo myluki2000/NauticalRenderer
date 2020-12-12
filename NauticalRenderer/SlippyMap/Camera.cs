@@ -47,6 +47,7 @@ namespace NauticalRenderer.SlippyMap
 
         private Matrix viewMatrix;
         private bool viewMatrixValid = false;
+        private static bool viewMatrixValidStatic = false;
 
         public event EventHandler TranslationChanged;
 
@@ -80,12 +81,13 @@ namespace NauticalRenderer.SlippyMap
         /// <returns>Returns a matrix which represents the camera view</returns>
         public Matrix GetMatrix()
         {
-            if (!viewMatrixValid)
+            if (!viewMatrixValid || !viewMatrixValidStatic)
             {
                 viewMatrix = Matrix.CreateTranslation(Translation)
                              * Matrix.CreateScale(Scale)
-                             * Matrix.CreateTranslation(1920 / 2, 1080 / 2, 0)
-                             * Matrix.CreateScale((float)Globals.Graphics.PreferredBackBufferHeight / 1080);
+                             * Matrix.CreateTranslation(Globals.Graphics.PreferredBackBufferWidth / 2,
+                                 Globals.Graphics.PreferredBackBufferHeight / 2, 0);
+                             //* Matrix.CreateScale((float)Globals.Graphics.PreferredBackBufferHeight / Globals.Graphics.PreferredBackBufferHeight);
                 Matrix inverted = viewMatrix.Invert();
                 Vector2 topLeft = new Vector2(-DRAW_BOUNDS_MARGIN, -DRAW_BOUNDS_MARGIN).Transform(inverted);
                 DrawBounds = new RectangleF(
@@ -94,17 +96,10 @@ namespace NauticalRenderer.SlippyMap
                 );
 
                 viewMatrixValid = true;
+                viewMatrixValidStatic = true;
             }
 
             return viewMatrix;
-        }
-
-        public Matrix GetMatrixWithYScale()
-        {
-            return Matrix.CreateTranslation(Translation)
-                   * Matrix.CreateScale(Scale.Y, Scale.Y, 1)
-                   * Matrix.CreateTranslation(1920 / 2, 1080 / 2, 0)
-                   * Matrix.CreateScale((float)Globals.Graphics.PreferredBackBufferHeight / 1080);
         }
 
         /// <summary>
@@ -121,26 +116,26 @@ namespace NauticalRenderer.SlippyMap
             switch (horizontalAlignment)
             {
                 case HorizontalAlignment.LEFT:
-                    displacement.X = -(1920 / 2);
+                    displacement.X = -(Globals.Graphics.PreferredBackBufferWidth / 2);
                     break;
                 case HorizontalAlignment.CENTER:
                     displacement.X = 0;
                     break;
                 case HorizontalAlignment.RIGHT:
-                    displacement.X = (1920 / 2);
+                    displacement.X = (Globals.Graphics.PreferredBackBufferWidth / 2);
                     break;
             }
 
             switch (verticalAlignment)
             {
                 case VerticalAlignment.TOP:
-                    displacement.Y = -(1080 / 2);
+                    displacement.Y = -(Globals.Graphics.PreferredBackBufferHeight / 2);
                     break;
                 case VerticalAlignment.MIDDLE:
                     displacement.Y = 0;
                     break;
                 case VerticalAlignment.BOTTOM:
-                    displacement.Y = (1080 / 2);
+                    displacement.Y = (Globals.Graphics.PreferredBackBufferHeight / 2);
                     break;
             }
 
@@ -149,17 +144,23 @@ namespace NauticalRenderer.SlippyMap
 
         public Vector2 ScreenPosToWorldPos(Vector2 screenPos)
         {
-            // TODO: This may not work with non-default scale. Check if it does before using
-            /*return new Vector2(
-                (screenPos.X / Globals.Graphics.PreferredBackBufferWidth) * 1920 / Scale.X - Translation.X,
-                (screenPos.Y / Globals.Graphics.PreferredBackBufferHeight) * 1080 / Scale.Y - Translation.Y
-            );*/
+            // TODO: Cache inverse matrix
             return screenPos.Transform(GetMatrix().Invert());
+        }
+
+        public void InvalidateViewMatrix()
+        {
+            viewMatrixValid = false;
+        }
+
+        public static void InvalidateViewMatrixStatic()
+        {
+            viewMatrixValidStatic = false;
         }
 
         public static Matrix GetViewportMatrix()
         {
-            return Matrix.CreateScale((float)Globals.Graphics.PreferredBackBufferHeight / 1080);
+            return Matrix.CreateScale((float)Globals.Graphics.PreferredBackBufferHeight / Globals.Graphics.PreferredBackBufferHeight);
         }
 
         public enum VerticalAlignment

@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Input;
 using Myra;
 using NauticalRenderer.Nmea;
 using NauticalRenderer.Screens;
+using NauticalRenderer.SlippyMap;
 using NauticalRenderer.SlippyMap.SourceLayers;
 using NauticalRenderer.Utility;
 
@@ -24,14 +25,22 @@ namespace NauticalRenderer
         public Main(ResourceManager resourceManager, SettingsManager settingsManager)
         {
             Globals.Graphics = new GraphicsDeviceManager(this);
+            Globals.GameWindow = Window;
             Globals.Graphics.GraphicsProfile = GraphicsProfile.HiDef;
             Globals.ResourceManager = resourceManager;
             Globals.SettingsManager = settingsManager;
             Content.RootDirectory = "Content";
             Globals.Graphics.IsFullScreen = false;
+            Window.AllowUserResizing = true;
+            Window.ClientSizeChanged += (sender, args) =>
+            {
+                Camera.InvalidateViewMatrixStatic();
+            };
             IsMouseVisible = true;
-            Globals.Graphics.PreferredBackBufferWidth = 1280;
-            Globals.Graphics.PreferredBackBufferHeight = 720;
+
+            System.Drawing.Point windowSize = (System.Drawing.Point) Globals.SettingsManager.GetSettingsValue("WindowSize");
+            Globals.Graphics.PreferredBackBufferWidth = windowSize.X;
+            Globals.Graphics.PreferredBackBufferHeight = windowSize.Y;
         }
 
         /// <summary>
@@ -77,7 +86,7 @@ namespace NauticalRenderer
                 Exit();
             }
 #endif
-
+            
             ScreenHandler.Update(gameTime);
             
 

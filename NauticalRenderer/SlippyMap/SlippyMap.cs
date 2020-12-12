@@ -165,7 +165,6 @@ namespace NauticalRenderer.SlippyMap
             if (mouseIsDragging)
             {
                 Vector2 delta = (mouseState.Position - lastMouseState.Position).ToVector2();
-                delta *= new Vector2(1920.0f / Globals.Graphics.PreferredBackBufferWidth, 1080.0f / Globals.Graphics.PreferredBackBufferHeight);
                 Camera.Translation += new Vector3(delta, 0) / Camera.Scale;
             }
             else if (mouseInertia != Vector2.Zero)
@@ -177,7 +176,6 @@ namespace NauticalRenderer.SlippyMap
             lastMouseState = mouseState;
         }
 
-        private bool first = true;
         public void Draw(SpriteBatch sb)
         {
             Camera.Update();
@@ -198,8 +196,6 @@ namespace NauticalRenderer.SlippyMap
             
 
             mapSb.End();
-
-            first = false;
         }
 
         private void CorrectScaling()

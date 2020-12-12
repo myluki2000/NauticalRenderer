@@ -12,5 +12,6 @@ namespace NauticalRenderer
         public static ContentManager Content;
         public static ResourceManager ResourceManager;
         public static SettingsManager SettingsManager;
+        public static GameWindow GameWindow;
     }
 }

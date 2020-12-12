@@ -25,6 +25,12 @@ namespace NauticalRenderer.Utility
             dummyTexture.SetData(new Color[] { Color.White });
 
             basicEffect.VertexColorEnabled = true;
+            Globals.GameWindow.ClientSizeChanged += (sender, args) => UpdateProjectionMatrix();
+            UpdateProjectionMatrix();
+        }
+
+        private static void UpdateProjectionMatrix()
+        {
             basicEffect.Projection = Matrix.CreateOrthographicOffCenter(
                 0,
                 Globals.Graphics.GraphicsDevice.Viewport.Width,
