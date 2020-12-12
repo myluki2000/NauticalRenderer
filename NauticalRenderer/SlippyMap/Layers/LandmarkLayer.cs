@@ -57,7 +57,7 @@ namespace NauticalRenderer.SlippyMap.Layers
                             return new Landmark(category, OsmHelpers.GetCoordinateOfOsmGeo(x));
                         }
 
-                        throw new Exception("Could not parse landmark category! String was \"" + categoryString + "\"");
+                        return new Landmark(Landmark.LandmarkCategory.GENERIC, OsmHelpers.GetCoordinateOfOsmGeo(x));
                     }
 
                     return new Landmark(Landmark.LandmarkCategory.GENERIC, OsmHelpers.GetCoordinateOfOsmGeo(x));

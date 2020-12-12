@@ -11,7 +11,7 @@ using Android.OS;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
-using NauticalRenderer;
+/*using NauticalRenderer;
 
 namespace AndroidRenderer
 {
@@ -29,4 +29,4 @@ namespace AndroidRenderer
             return assetManager.Open(path);
         }
     }
-}
+}*/

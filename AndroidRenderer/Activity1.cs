@@ -3,7 +3,7 @@ using Android.Content.PM;
 using Android.OS;
 using Android.Views;
 using Microsoft.Xna.Framework;
-using NauticalRenderer;
+//using NauticalRenderer;
 
 namespace AndroidRenderer
 {
@@ -18,18 +18,18 @@ namespace AndroidRenderer
     )]
     public class Activity1 : AndroidGameActivity
     {
-        private Main _game;
+        //private Main _game;
         private View _view;
 
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
 
-            _game = new Main(new AndroidResourceManager(Assets));
+            /*_game = new Main(new AndroidResourceManager(Assets));
             _view = _game.Services.GetService(typeof(View)) as View;
 
             SetContentView(_view);
-            _game.Run();
+            _game.Run();*/
         }
     }
 }

@@ -35,17 +35,17 @@ namespace NauticalRenderer.SlippyMap.Layers
 
             OsmCompleteStreamSource placenameSource = new PBFOsmStreamSource(mapPack.OpenFile("placenames.osm.pbf")).ToComplete();
             cities = placenameSource
-                .Where(x => x.Tags.Contains("place", "city"))
+                .Where(x => x.Tags.Contains("place", "city") && x.Tags.ContainsKey("name"))
                 .Select(x => (OsmHelpers.GetCoordinateOfOsmGeo(x), x.Tags["name"]))
                 .ToArray();
 
             towns = placenameSource
-                .Where(x => x.Tags.Contains("place", "town"))
+                .Where(x => x.Tags.Contains("place", "town") && x.Tags.ContainsKey("name"))
                 .Select(x => (OsmHelpers.GetCoordinateOfOsmGeo(x), x.Tags["name"]))
                 .ToArray();
 
             villages = placenameSource
-                .Where(x => x.Tags.Contains("place", "village"))
+                .Where(x => x.Tags.Contains("place", "village") && x.Tags.ContainsKey("name"))
                 .Select(x => (OsmHelpers.GetCoordinateOfOsmGeo(x), x.Tags["name"]))
                 .ToArray();
         }

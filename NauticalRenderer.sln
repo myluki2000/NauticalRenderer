@@ -11,7 +11,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AndroidRenderer", "AndroidR
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		NauticalRenderer\NauticalRenderer.projitems*{11513b07-e4e3-43eb-a133-3a2ea3f348e9}*SharedItemsImports = 4
 		NauticalRenderer\NauticalRenderer.projitems*{4234a9b4-91cc-416d-892d-03251777f20e}*SharedItemsImports = 5
 		NauticalRenderer\NauticalRenderer.projitems*{a0cdbd0e-3a41-42b7-9425-a838bc2c7383}*SharedItemsImports = 13
 	EndGlobalSection

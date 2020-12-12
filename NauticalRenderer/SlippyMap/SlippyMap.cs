@@ -52,7 +52,7 @@ namespace NauticalRenderer.SlippyMap
             };
 
             Camera.TranslationChanged += (sender, e) => { CorrectScaling(); };
-            MapPack = new MapPack("Content/German-Baltic-Coast-And-South-Denmark.mappack");
+            MapPack = new MapPack("Content/German-North-Sea.mappack");
         }
 
         
