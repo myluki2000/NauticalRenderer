@@ -27,6 +27,9 @@ namespace NauticalRenderer.SlippyMap.Layers
         private Vector2[][] separationLines;
         private List<(Vector2, string)> labels = new List<(Vector2, string)>();
 
+        private static readonly Color SEPARATION_SCHEME_COLOR = Color.Magenta * 0.5f;
+        private static readonly Color SEPARATION_SCHEME_TEXT_COLOR = new Color(96, 0, 96);
+
         public override void Draw(SpriteBatch sb, SpriteBatch mapSb, Camera camera)
         {
             foreach (Mesh zone in separationZones)
@@ -36,12 +39,12 @@ namespace NauticalRenderer.SlippyMap.Layers
 
             foreach (Vector2[] boundary in separationBoundaries)
             {
-                LineRenderer.DrawDashedLine(mapSb, boundary, Color.Magenta, new []{0.005f, 0.003f}, camera.GetMatrix());
+                LineRenderer.DrawDashedLine(mapSb, boundary, SEPARATION_SCHEME_COLOR, new []{0.005f, 0.003f}, camera.GetMatrix());
             }
 
             foreach (Vector2[] line in separationLines)
             {
-                LineRenderer.DrawLineStrip(mapSb, line, Color.Magenta, camera.GetMatrix());
+                LineRenderer.DrawLineStrip(mapSb, line, SEPARATION_SCHEME_COLOR, camera.GetMatrix());
             }
 
             foreach (Vector2[] lane in separationLanes)
@@ -52,7 +55,7 @@ namespace NauticalRenderer.SlippyMap.Layers
                     Vector2 p2 = lane[(i + 1) % lane.Length].Transform(camera.GetMatrix());
 
 
-                    Utility.Utility.DrawBlockArrow(sb, Matrix.Identity, p1, p2, 0.0035f * camera.Scale.Y, Color.Magenta);
+                    Utility.Utility.DrawBlockArrow(sb, Matrix.Identity, p1, p2, 0.0035f * camera.Scale.Y, SEPARATION_SCHEME_COLOR);
                 }
             }
 
@@ -62,7 +65,7 @@ namespace NauticalRenderer.SlippyMap.Layers
                     if (camera.DrawBounds.Contains(coords))
                     {
                         Vector2 size = DefaultAssets.FontSmall.MeasureString(text);
-                        sb.DrawString(DefaultAssets.FontSmall, text, coords.Transform(camera.GetMatrix()) - size / 2, Color.Purple);
+                        sb.DrawString(DefaultAssets.FontSmall, text, (coords.Transform(camera.GetMatrix()) - size / 2).Rounded(), SEPARATION_SCHEME_TEXT_COLOR);
                     }
                         
                 }
@@ -103,7 +106,7 @@ namespace NauticalRenderer.SlippyMap.Layers
                 });
 
             separationZones = geos[0]
-                .Select(x => new Mesh(Utility.Utility.Triangulate(OsmHelpers.WayToVector2Arr(x)), Color.Magenta))
+                .Select(x => new Mesh(Utility.Utility.Triangulate(OsmHelpers.WayToVector2Arr(x)), SEPARATION_SCHEME_COLOR))
                 .ToArray();
 
             separationBoundaries = geos[1]
