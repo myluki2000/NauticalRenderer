@@ -49,6 +49,13 @@ namespace NauticalRenderer.SlippyMap.Layers
         {
             boundingMesh.Draw(mapSb, camera.GetMatrix());
 
+
+            foreach (Mesh tidalFlat in tidalFlats)
+            {
+                if (tidalFlat.BoundingRectangle.Intersects(camera.DrawBounds))
+                    tidalFlat.Draw(mapSb, camera.GetMatrix());
+            }
+
             foreach (Mesh coastMesh in coastMeshes)
             {
                 if (coastMesh.BoundingRectangle.Intersects(camera.DrawBounds))
@@ -59,12 +66,6 @@ namespace NauticalRenderer.SlippyMap.Layers
             {
                 if (waterMesh.BoundingRectangle.Intersects(camera.DrawBounds))
                     waterMesh.Draw(mapSb, camera.GetMatrix());
-            }
-
-            foreach (Mesh tidalFlat in tidalFlats)
-            {
-                if (tidalFlat.BoundingRectangle.Intersects(camera.DrawBounds))
-                    tidalFlat.Draw(mapSb, camera.GetMatrix());
             }
 
             foreach (Mesh tidalFlatHole in tidalFlatHoles)
@@ -154,7 +155,7 @@ namespace NauticalRenderer.SlippyMap.Layers
                     wetlandWays.AddRange(relationOuterWays);
 
                     List<Vector2[]> relationInnerWays = relation.Members
-                        .Where(x => x.Member.Type == OsmGeoType.Way && x.Role == "inner")
+                        .Where(x => x.Member.Type == OsmGeoType.Way && x.Role == "inner" && !x.Member.Tags.Contains("natural", "coastline"))
                         .Select(x => OsmHelpers.WayToVector2Arr((CompleteWay)x.Member))
                         .ToList();
 
@@ -368,14 +369,6 @@ namespace NauticalRenderer.SlippyMap.Layers
 
         private void GenerateCoastMeshes()
         {
-            foreach (Vector2[] line in Coastlines)
-            {
-                if (line.Contains(new Vector2(12.424892f, -54.246006f)))
-                {
-                    continue;
-                }
-            }
-
             Polygon tmpBoundingPoly = new Polygon(new LinearRing(boundingPolygon.Select(x => new Coordinate(x.point.X, x.point.Y)).ToArray()));
             // remove points outside of bounding polygon
             for (int i = 0; i < Coastlines.Count; i++)
