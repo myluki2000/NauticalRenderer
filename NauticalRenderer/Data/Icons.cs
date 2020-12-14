@@ -71,7 +71,7 @@ namespace NauticalRenderer.Utility
             WindFarm = content.Load<Texture2D>("Icons/wind_farm");
             NoAnchoring = content.Load<Texture2D>("Icons/no_anchoring");
             Buoys = content.Load<Texture2D>("Icons/buoys");
-            //Facilities = content.Load<Texture2D>("Icons/facilities");
+            Facilities = content.Load<Texture2D>("Icons/facilities");
 
             Landmarks.LoadContent(content);
             Harbours.LoadContent(content);

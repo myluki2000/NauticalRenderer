@@ -53,7 +53,7 @@ namespace NauticalRenderer.SlippyMap.Layers
                     const int WIDTH = 30;
                     for (int i = 0; i < cats.Length; i++)
                     {
-                        sb.Draw(Icons.Buoys,
+                        sb.Draw(Icons.Facilities,
                             new Rectangle(screenPos.ToPoint() + new Point(i * WIDTH - (cats.Length * WIDTH) / 2, 0), new Point(WIDTH, WIDTH)),
                             new Rectangle(GetAtlasCoordsForCategory(cats[i]), new Point(512, 512)),
                             Color.White);
