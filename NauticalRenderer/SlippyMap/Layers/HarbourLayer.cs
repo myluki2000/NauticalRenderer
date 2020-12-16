@@ -135,10 +135,10 @@ namespace NauticalRenderer.SlippyMap.Layers
 
             public enum HarbourCategory
             {
+                OTHER,
                 FISHING,
                 MARINA,
                 MARINA_NO_FACILITIES,
-                OTHER
             }
         }
 
