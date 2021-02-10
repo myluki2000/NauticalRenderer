@@ -25,6 +25,12 @@
 /processorParam:DebugMode=Auto
 /build:Effects/SquigglyLineEffect.fx
 
+#begin Effects/SymbolInstancingEffect.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Effects/SymbolInstancingEffect.fx
+
 #begin Fonts/Arial-Regular.xnb
 /copy:Fonts/Arial-Regular.xnb
 
@@ -45,6 +51,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Icons/buoys.png
+
+#begin Icons/danger_symbols.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Icons/danger_symbols.png
 
 #begin Icons/facilities.png
 /importer:TextureImporter

@@ -26,7 +26,6 @@ namespace NauticalRenderer
         {
             Globals.Graphics = new GraphicsDeviceManager(this);
             Globals.GameWindow = Window;
-            Globals.Graphics.GraphicsProfile = GraphicsProfile.HiDef;
             Globals.ResourceManager = resourceManager;
             Globals.SettingsManager = settingsManager;
             Content.RootDirectory = "Content";
@@ -39,8 +38,12 @@ namespace NauticalRenderer
             IsMouseVisible = true;
 
             System.Drawing.Point windowSize = (System.Drawing.Point) Globals.SettingsManager.GetSettingsValue("WindowSize");
+
+            Globals.Graphics.GraphicsProfile = GraphicsProfile.HiDef;
             Globals.Graphics.PreferredBackBufferWidth = windowSize.X;
             Globals.Graphics.PreferredBackBufferHeight = windowSize.Y;
+            Globals.Graphics.PreferMultiSampling = true;
+
         }
 
         /// <summary>
@@ -54,6 +57,9 @@ namespace NauticalRenderer
             base.Initialize();
 
             GpsManager.Initialize();
+
+            Globals.Graphics.GraphicsDevice.PresentationParameters.MultiSampleCount = 32;
+            Globals.Graphics.ApplyChanges();
 
             MyraEnvironment.Game = this;
             ScreenHandler.CurrentScreen = new MapScreen();

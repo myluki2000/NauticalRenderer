@@ -4,7 +4,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using NauticalRenderer.Data;
+using static NauticalRenderer.Globals;
 
 namespace NauticalRenderer.Utility
 {
@@ -28,16 +28,16 @@ namespace NauticalRenderer.Utility
         {
             public static Texture2D Texture { get; private set; }
 
-            public static Rectangle Chimney => new Rectangle(0, 0, 512, 512);
-            public static Rectangle Cross => new Rectangle(512, 0, 512, 512);
-            public static Rectangle DishAerial => new Rectangle(1024, 0, 512, 512);
-            public static Rectangle Flagstaff => new Rectangle(1536, 0, 512, 512);
-            public static Rectangle FlareStack => new Rectangle(0, 512, 512, 512);
-            public static Rectangle Mast => new Rectangle(512, 512, 512, 512);
-            public static Rectangle Tower => new Rectangle(1024, 512, 512, 512);
-            public static Rectangle WindTurbine => new Rectangle(1536, 512, 512, 512);
-            public static Rectangle Windmill => new Rectangle(0, 1024, 512, 512);
-            public static Rectangle Windsock => new Rectangle(512, 1024, 512, 512);
+            public static Rectangle Chimney => TEXINDEX_0_0;
+            public static Rectangle Cross => TEXINDEX_1_0;
+            public static Rectangle DishAerial => TEXINDEX_2_0;
+            public static Rectangle Flagstaff => TEXINDEX_3_0;
+            public static Rectangle FlareStack => TEXINDEX_0_1;
+            public static Rectangle Mast => TEXINDEX_1_1;
+            public static Rectangle Tower => TEXINDEX_2_1;
+            public static Rectangle WindTurbine => TEXINDEX_3_1;
+            public static Rectangle Windmill => TEXINDEX_0_2;
+            public static Rectangle Windsock => TEXINDEX_1_2;
 
             public static void LoadContent(ContentManager content)
             {
@@ -61,6 +61,23 @@ namespace NauticalRenderer.Utility
             }
         }
 
+        public static class DangerSymbols
+        {
+            public static Texture2D Texture;
+
+            public static Rectangle Rock => TEXINDEX_0_0;
+            public static Rectangle RockAwash => TEXINDEX_1_0;
+            public static Rectangle RockCovers => TEXINDEX_2_0;
+            public static Rectangle Wreck => TEXINDEX_0_1;
+            public static Rectangle WreckDangerous => TEXINDEX_1_1;
+            public static Rectangle WreckShowing => TEXINDEX_2_1;
+
+            public static void LoadContent(ContentManager content)
+            {
+                Texture = content.Load<Texture2D>("Icons/danger_symbols");
+            }
+        }
+
         public static void LoadContent(ContentManager content)
         {
             Vehicle = content.Load<Texture2D>("Icons/vehicle");
@@ -75,6 +92,7 @@ namespace NauticalRenderer.Utility
 
             Landmarks.LoadContent(content);
             Harbours.LoadContent(content);
+            DangerSymbols.LoadContent(content);
         }
     }
 }

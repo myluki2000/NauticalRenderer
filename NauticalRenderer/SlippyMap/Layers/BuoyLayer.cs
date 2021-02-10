@@ -153,13 +153,7 @@ namespace NauticalRenderer.SlippyMap.Layers
 
         private void UpdateViewportMatrix()
         {
-            buoyEffect.Parameters["ViewportMatrix"].SetValue(Matrix.CreateOrthographicOffCenter(
-                0,
-                Globals.Graphics.GraphicsDevice.Viewport.Width,
-                Globals.Graphics.GraphicsDevice.Viewport.Height,
-                0,
-                0,
-                1));
+            buoyEffect.Parameters["ViewportMatrix"].SetValue(Globals.ViewportMatrix);
         }
 
         struct InstanceInfo

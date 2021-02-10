@@ -10,6 +10,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Data\MapPack.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Effects\SymbolInstancingEffect.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Nmea\GpsManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Nmea\NmeaDeviceInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Nmea\NmeaDeviceManager.cs" />
@@ -22,6 +23,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)SlippyMap\Data\Landmark.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SlippyMap\Data\MapStyle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SlippyMap\Data\SectorLight.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SlippyMap\Layers\DangerSymbolsLayer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SlippyMap\Layers\FacilitiesLayer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SlippyMap\Layers\BuoyLayer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SlippyMap\Layers\GpsLayer.cs" />

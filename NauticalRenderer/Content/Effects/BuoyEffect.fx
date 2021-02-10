@@ -109,7 +109,7 @@ float4 MainPS(VSOutput input) : COLOR
 			atlasCoord = float2(3.0f, 1.0f);
 			break;
 	}
-        atlasCoord = input.TexCoord / 4.0f + atlasCoord / 4.0f;
+    atlasCoord = input.TexCoord / 4.0f + atlasCoord / 4.0f;
 
 	float4 backColor = float4(0.0f, 0.0f, 0.0f, 0.0f);
 	if (colorCount > 0)
