@@ -59,10 +59,10 @@ namespace NauticalRenderer.SlippyMap.Layers
             const float HALF_SIZE = 0.5f;
             VertexPositionTexture[] vertices = new VertexPositionTexture[]
             {
-                new VertexPositionTexture(new Vector3(-HALF_SIZE, HALF_SIZE, 0), new Vector2(0, 1)),
-                new VertexPositionTexture(new Vector3(-HALF_SIZE, -HALF_SIZE, 0), new Vector2(0, 0)),
-                new VertexPositionTexture(new Vector3(HALF_SIZE, -HALF_SIZE, 0), new Vector2(1, 0)),
-                new VertexPositionTexture(new Vector3(HALF_SIZE, HALF_SIZE, 0), new Vector2(1, 1)),
+                new VertexPositionTexture(new Vector3(-HALF_SIZE, 0.1f, 0), new Vector2(0, 1)),
+                new VertexPositionTexture(new Vector3(-HALF_SIZE, -0.9f, 0), new Vector2(0, 0)),
+                new VertexPositionTexture(new Vector3(HALF_SIZE, -0.9f, 0), new Vector2(1, 0)),
+                new VertexPositionTexture(new Vector3(HALF_SIZE, 0.1f, 0), new Vector2(1, 1)),
             };
             geometryBuffer = new VertexBuffer(Globals.Graphics.GraphicsDevice, VertexPositionTexture.VertexDeclaration, 4, BufferUsage.WriteOnly);
             geometryBuffer.SetData(vertices);
@@ -140,20 +140,20 @@ namespace NauticalRenderer.SlippyMap.Layers
         /// <inheritdoc />
         public override void Draw(SpriteBatch sb, SpriteBatch mapSb, Camera camera)
         {
-            if (camera.Scale.Y < 3000)
+            if (camera.Scale.Y < 4000)
             {
                 return;
             }
 
-            if (camera.Scale.Y < 5000)
+            if (camera.Scale.Y < 10000)
             {
                 buoyEffect.Parameters["Size"].SetValue(16.0f);
             }
-            else if (camera.Scale.Y < 10000)
+            else if (camera.Scale.Y < 30000)
             {
                 buoyEffect.Parameters["Size"].SetValue(24.0f);
             }
-            else if (camera.Scale.Y < 35000)
+            else if (camera.Scale.Y < 100000)
             {
                 buoyEffect.Parameters["Size"].SetValue(32.0f);
             }
