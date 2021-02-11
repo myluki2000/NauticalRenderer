@@ -25,20 +25,13 @@ namespace NauticalRenderer.Utility
             dummyTexture.SetData(new Color[] { Color.White });
 
             basicEffect.VertexColorEnabled = true;
-            Globals.GameWindow.ClientSizeChanged += (sender, args) => UpdateProjectionMatrix();
+            Globals.ViewportMatrixChanged += () => UpdateProjectionMatrix();
             UpdateProjectionMatrix();
         }
 
         private static void UpdateProjectionMatrix()
         {
-            basicEffect.Projection = Matrix.CreateOrthographicOffCenter(
-                0,
-                Globals.Graphics.GraphicsDevice.Viewport.Width,
-                Globals.Graphics.GraphicsDevice.Viewport.Height,
-                0,
-                0,
-                1
-            );
+            basicEffect.Projection = Globals.ViewportMatrix;
         }
 
         public static void DrawArc(SpriteBatch sb,

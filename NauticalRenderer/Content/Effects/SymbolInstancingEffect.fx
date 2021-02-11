@@ -28,12 +28,12 @@ struct VertexShaderOutput
     float2 TexCoord : TEXCOORD0;
 };
 
-VertexShaderOutput MainVS(in VertexShaderInput input, float4 instanceTransform : POSITION1, float2 atlasCoord : TEXCOORD1)
+VertexShaderOutput MainVS(in VertexShaderInput input, float2 instanceTransform : POSITION1, float2 atlasCoord : TEXCOORD1)
 {
     VertexShaderOutput output = (VertexShaderOutput) 0;
 
     output.Position = mul(round(mul(float4(instanceTransform.x, instanceTransform.y, 0, 1), WorldMatrix) + float4(input.Position * Size, 0)), ViewportMatrix);
-    output.TexCoord = (input.TexCoord + atlasCoord) / 4;
+    output.TexCoord = atlasCoord + input.TexCoord / 4;
 
     return output;
 }

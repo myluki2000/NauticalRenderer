@@ -37,7 +37,7 @@ float4 MainPS(VertexShaderOutput input) : COLOR
 {
 	const float LINE_WIDTH = 0.1f;
     float value = sin(input.TexCoord.x) * (1.0f - LINE_WIDTH);
-	if(abs(input.TexCoord.y * 2.0f - 1.0f - value) < LINE_WIDTH) {
+	if(abs(input.TexCoord.y - value) < LINE_WIDTH) {
 		return float4(1.0f, 0.0f, 0.0f, 1.0f);
 	} else {
 		return float4(0.0f, 0.0f ,0.0f, 0.0f);

@@ -44,6 +44,7 @@ namespace NauticalRenderer.SlippyMap
                 new NavigationLineLayer(),
                 new ImportantAreaLayer(mapScreen),
                 new SeparationSchemeLayer(),
+                new DangerSymbolsLayer(),
                 new BuoyLayer(),
                 new LandmarkLayer(),
                 new GribLayer(),

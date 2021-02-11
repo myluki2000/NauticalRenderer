@@ -42,7 +42,7 @@ namespace NauticalRenderer.SlippyMap.Layers
             buoyEffect = Globals.Content.Load<Effect>("Effects/BuoyEffect");
             buoyEffect.Parameters["Size"].SetValue(24.0f);
             UpdateViewportMatrix();
-            Globals.GameWindow.ClientSizeChanged += (sender, args) => UpdateViewportMatrix();
+            Globals.ViewportMatrixChanged += () => UpdateViewportMatrix();
             buoyEffect.CurrentTechnique = buoyEffect.Techniques[0];
             buoyEffect.Parameters["Texture"].SetValue(Icons.Buoys);
 
@@ -65,7 +65,7 @@ namespace NauticalRenderer.SlippyMap.Layers
                 new VertexPositionTexture(new Vector3(HALF_SIZE, -HALF_SIZE, 0), new Vector2(1, 0)),
                 new VertexPositionTexture(new Vector3(HALF_SIZE, HALF_SIZE, 0), new Vector2(1, 1)),
             };
-            geometryBuffer = new VertexBuffer(Globals.Graphics.GraphicsDevice, VertexPositionTexture.VertexDeclaration, 6, BufferUsage.WriteOnly);
+            geometryBuffer = new VertexBuffer(Globals.Graphics.GraphicsDevice, VertexPositionTexture.VertexDeclaration, 4, BufferUsage.WriteOnly);
             geometryBuffer.SetData(vertices);
 
             int[] indices = new[]
@@ -158,13 +158,13 @@ namespace NauticalRenderer.SlippyMap.Layers
 
         struct InstanceInfo
         {
-            public Vector2 InstanceTransform;
-            public Int32 BuoyShape;
-            public Int32 ColorPattern;
-            public Color Color1;
-            public Color Color2;
-            public Color Color3;
-            public Color Color4;
+            public readonly Vector2 InstanceTransform;
+            public readonly Int32 BuoyShape;
+            public readonly Int32 ColorPattern;
+            public readonly Color Color1;
+            public readonly Color Color2;
+            public readonly Color Color3;
+            public readonly Color Color4;
 
             public InstanceInfo(Vector2 instanceTransform, int buoyShape, int colorPattern, Color color1, Color color2, Color color3, Color color4)
             {

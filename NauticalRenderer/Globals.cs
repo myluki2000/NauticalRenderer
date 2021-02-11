@@ -15,25 +15,28 @@ namespace NauticalRenderer
 
         public static GameWindow GameWindow
         {
-            get => _gameWindow;
             set
             {
                 _gameWindow = value;
-                _gameWindow.ClientSizeChanged += (sender, args) =>
-                {
-                    ViewportMatrix = Matrix.CreateOrthographicOffCenter(
-                        0,
-                        Graphics.GraphicsDevice.Viewport.Width,
-                        Graphics.GraphicsDevice.Viewport.Height,
-                        0,
-                        0,
-                        1);
-                };
+                _gameWindow.ClientSizeChanged += (sender, args) => UpdateViewportMatrix();
             }
         }
 
+        public static event Action ViewportMatrixChanged;
 
         public static Matrix ViewportMatrix { get; private set; }
+
+        public static void UpdateViewportMatrix()
+        {
+            ViewportMatrix = Matrix.CreateOrthographicOffCenter(
+                0,
+                Graphics.GraphicsDevice.Viewport.Width,
+                Graphics.GraphicsDevice.Viewport.Height,
+                0,
+                0,
+                1);
+            ViewportMatrixChanged?.Invoke();
+        }
 
         #region Texture Coordinates
 

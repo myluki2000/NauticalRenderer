@@ -96,13 +96,13 @@ namespace NauticalRenderer.SlippyMap.Layers
                     halfWidthVector.Normalize();
                     halfWidthVector *= 0.001f;
 
-                    seacablesVertsList.Add(new VertexPositionTexture(new Vector3(start - halfWidthVector, 0), new Vector2(0, 0)));
+                    seacablesVertsList.Add(new VertexPositionTexture(new Vector3(start - halfWidthVector, 0), new Vector2(0, -1)));
                     seacablesVertsList.Add(new VertexPositionTexture(new Vector3(start + halfWidthVector, 0), new Vector2(0, 1)));
-                    seacablesVertsList.Add(new VertexPositionTexture(new Vector3(end - halfWidthVector, 0), new Vector2(length, 0)));
+                    seacablesVertsList.Add(new VertexPositionTexture(new Vector3(end - halfWidthVector, 0), new Vector2(length, -1)));
 
                     seacablesVertsList.Add(new VertexPositionTexture(new Vector3(start + halfWidthVector, 0), new Vector2(0, 1)));
                     seacablesVertsList.Add(new VertexPositionTexture(new Vector3(end + halfWidthVector, 0), new Vector2(length, 1)));
-                    seacablesVertsList.Add(new VertexPositionTexture(new Vector3(end - halfWidthVector, 0), new Vector2(length, 0)));
+                    seacablesVertsList.Add(new VertexPositionTexture(new Vector3(end - halfWidthVector, 0), new Vector2(length, -1)));
                 }
             }
 

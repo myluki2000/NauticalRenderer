@@ -56,6 +56,8 @@ namespace NauticalRenderer
         {
             base.Initialize();
 
+            Globals.UpdateViewportMatrix();
+
             GpsManager.Initialize();
 
             Globals.Graphics.GraphicsDevice.PresentationParameters.MultiSampleCount = 32;
