@@ -77,9 +77,11 @@ namespace NauticalRenderer.SlippyMap.Layers
         /// <inheritdoc />
         public override void Draw(SpriteBatch sb, SpriteBatch mapSb, Camera camera)
         {
-            symbolEffect.WorldMatrix = camera.GetMatrix();
-            symbolEffect.Draw();
-
+            if (camera.Scale.Y > 3000)
+            {
+                symbolEffect.WorldMatrix = camera.GetMatrix();
+                symbolEffect.Draw();
+            }
         }
     }
 }

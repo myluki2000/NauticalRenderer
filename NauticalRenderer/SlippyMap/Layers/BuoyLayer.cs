@@ -40,7 +40,6 @@ namespace NauticalRenderer.SlippyMap.Layers
         public override void LoadContent(MapPack mapPack)
         {
             buoyEffect = Globals.Content.Load<Effect>("Effects/BuoyEffect");
-            buoyEffect.Parameters["Size"].SetValue(24.0f);
             UpdateViewportMatrix();
             Globals.ViewportMatrixChanged += () => UpdateViewportMatrix();
             buoyEffect.CurrentTechnique = buoyEffect.Techniques[0];
@@ -141,14 +140,32 @@ namespace NauticalRenderer.SlippyMap.Layers
         /// <inheritdoc />
         public override void Draw(SpriteBatch sb, SpriteBatch mapSb, Camera camera)
         {
-            if (camera.Scale.Y > 3000)
+            if (camera.Scale.Y < 3000)
             {
-                buoyEffect.Parameters["WorldMatrix"].SetValue(camera.GetMatrix());
-                Globals.Graphics.GraphicsDevice.Indices = indexBuffer;
-                buoyEffect.CurrentTechnique.Passes[0].Apply();
-                Globals.Graphics.GraphicsDevice.SetVertexBuffers(bindings);
-                Globals.Graphics.GraphicsDevice.DrawInstancedPrimitives(PrimitiveType.TriangleList, 0, 0, 2, 0, instances.Length);
+                return;
             }
+
+            if (camera.Scale.Y < 5000)
+            {
+                buoyEffect.Parameters["Size"].SetValue(16.0f);
+            }
+            else if (camera.Scale.Y < 10000)
+            {
+                buoyEffect.Parameters["Size"].SetValue(24.0f);
+            }
+            else if (camera.Scale.Y < 35000)
+            {
+                buoyEffect.Parameters["Size"].SetValue(32.0f);
+            }
+            else
+            {
+                buoyEffect.Parameters["Size"].SetValue(48.0f);
+            }
+            buoyEffect.Parameters["WorldMatrix"].SetValue(camera.GetMatrix());
+            Globals.Graphics.GraphicsDevice.Indices = indexBuffer;
+            buoyEffect.CurrentTechnique.Passes[0].Apply();
+            Globals.Graphics.GraphicsDevice.SetVertexBuffers(bindings);
+            Globals.Graphics.GraphicsDevice.DrawInstancedPrimitives(PrimitiveType.TriangleList, 0, 0, 2, 0, instances.Length);
         }
 
         private void UpdateViewportMatrix()
