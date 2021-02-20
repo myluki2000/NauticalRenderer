@@ -179,7 +179,10 @@ namespace NauticalRenderer.SlippyMap.Layers
             {
                 if (way[0] == way[way.Length - 1])
                 {
-                    this.tidalFlats.Add(new Mesh(Utility.Utility.Triangulate(way), MapStyle.COLOR_TIDAL_FLATS));
+                    this.tidalFlats.Add(new Mesh(Utility.Utility.Triangulate(way), null, MapStyle.COLOR_TIDAL_FLATS, true, way)
+                    {
+                        OutlineColor = MapStyle.COLOR_TIDAL_FLATS_OUTLINE,
+                    });
                 }
             }
 
@@ -187,7 +190,10 @@ namespace NauticalRenderer.SlippyMap.Layers
             {
                 if (hole[0] == hole[hole.Length - 1])
                 {
-                    tidalFlatHoles.Add(new Mesh(Utility.Utility.Triangulate(hole), MapStyle.COLOR_WATER));
+                    tidalFlatHoles.Add(new Mesh(Utility.Utility.Triangulate(hole), null, MapStyle.COLOR_WATER, true, hole)
+                    {
+                        OutlineColor = MapStyle.COLOR_TIDAL_FLATS_OUTLINE,
+                    });
                 }
             }
 
@@ -248,7 +254,7 @@ namespace NauticalRenderer.SlippyMap.Layers
             {
                 if (waterWay[0] == waterWay[waterWay.Length - 1])
                 {
-                    waterMeshes.Add(new Mesh(Utility.Utility.Triangulate(waterWay), MapStyle.COLOR_WATER));
+                    waterMeshes.Add(new Mesh(Utility.Utility.Triangulate(waterWay), MapStyle.COLOR_INLAND_WATER));
                 }
             }
 
@@ -414,9 +420,8 @@ namespace NauticalRenderer.SlippyMap.Layers
                 {
                     coastMeshes.Add(new Mesh(Utility.Utility.Triangulate(coastline), null, MapStyle.COLOR_LAND, true, coastline)
                     {
-                        OutlineColor = new Color(60, 45, 13),
+                        OutlineColor = MapStyle.COLOR_LAND_OUTLINE,
                     });
-                    //coastMeshes.Add(new Mesh(coastline, /*Utility.Utility.TriangulateOld(coastline)*/ new int[] { }, Color.FromNonPremultiplied(213, 203, 161, 255)));
                 }
             }
         }

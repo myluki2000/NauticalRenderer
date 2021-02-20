@@ -38,6 +38,7 @@ namespace NauticalRenderer.SlippyMap
             MapLayers = new List<MapLayer>()
             {
                 new MapGeoLayer(),
+                new LanduseLayer(),
                 new StreetLayer(),
                 new FacilitiesLayer(),
                 new HarbourLayer(mapScreen),
