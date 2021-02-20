@@ -412,7 +412,10 @@ namespace NauticalRenderer.SlippyMap.Layers
             {
                 if (coastline[0] == coastline[coastline.Length - 1])
                 {
-                    coastMeshes.Add(new Mesh(Utility.Utility.Triangulate(coastline), MapStyle.COLOR_LAND));
+                    coastMeshes.Add(new Mesh(Utility.Utility.Triangulate(coastline), null, MapStyle.COLOR_LAND, true, coastline)
+                    {
+                        OutlineColor = new Color(60, 45, 13),
+                    });
                     //coastMeshes.Add(new Mesh(coastline, /*Utility.Utility.TriangulateOld(coastline)*/ new int[] { }, Color.FromNonPremultiplied(213, 203, 161, 255)));
                 }
             }

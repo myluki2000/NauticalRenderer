@@ -36,6 +36,10 @@ namespace NauticalRenderer.Data
             }
         }
 
+        public bool DrawOutline { get; set; }
+        public Color OutlineColor { get; set; }
+        public Vector2[] OutlineVertices { get; set; }
+
         public RectangleF BoundingRectangle { get; private set; }
 
         public Mesh(Vector2[] vertices) : this(vertices, null) { }
@@ -44,14 +48,18 @@ namespace NauticalRenderer.Data
 
         public Mesh(Vector2[] vertices, int[] triangles) : this(vertices, triangles, Color.Black) { }
 
-        public Mesh(Vector2[] vertices, int[] triangles, Color color) : this()
+        public Mesh(Vector2[] vertices, int[] triangles, Color color, bool drawOutline = false, Vector2[] outlineVertices = null) : this()
         {
+            DrawOutline = false;
             Color = color;
             this.vertices = vertices.Select(x => new VertexPositionColor(new Vector3(x, 0), color)).ToArray();
 
             BoundingRectangle = OsmHelpers.GetBoundingRectOfPoints(vertices);
 
             Triangles = triangles;
+            DrawOutline = drawOutline;
+            OutlineVertices = outlineVertices;
+            OutlineColor = Color.Black;
         }
 
         public void Draw(SpriteBatch sb, Matrix viewMatrix)
@@ -74,6 +82,14 @@ namespace NauticalRenderer.Data
                     0,
                     Triangles.Length / 3);
 
+
+            if (DrawOutline)
+            {
+                LineRenderer.DrawLineStrip(sb,
+                    OutlineVertices ?? Vertices.Select(x => x.Position.XY()).ToArray(),
+                    OutlineColor,
+                    viewMatrix);
+            }
         }
     }
 }

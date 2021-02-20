@@ -162,7 +162,6 @@ namespace NauticalRenderer.Utility
             TriangleNet.Geometry.Polygon p = new TriangleNet.Geometry.Polygon(points.Length - 1);
             p.Add(new Contour(points.Take(points.Length - 1).Select(x => new Vertex(x.X, x.Y))));
             return p.Triangulate(new QualityOptions() {MinimumAngle = 25}).Triangles.SelectMany(x => new[] { x.GetVertex(0), x.GetVertex(1), x.GetVertex(2) }).Select(x => new Vector2((float)x.X, (float)x.Y)).ToArray();
-
         }
 
         // old triangulation method with rounding errors

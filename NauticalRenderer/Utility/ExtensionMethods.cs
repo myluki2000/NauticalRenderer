@@ -237,15 +237,21 @@ namespace NauticalRenderer.Utility
         {
             return (float) Math.Sqrt(value.LengthSquared());
         }
+
+        public static Vector2 XY(this Vector3 value)
+        {
+            return new Vector2(value.X, value.Y);
+        }
+    }
+
+    public class EnumUtils
+    {
+        public static IEnumerable<T> GetFlags<T>(T input) where T : Enum
+        {
+            foreach (T value in Enum.GetValues(input.GetType()))
+                if (input.HasFlag(value) && Convert.ToInt32(value) != 0)
+                    yield return value;
+        }
     }
 }
 
-public class EnumUtils
-{
-    public static IEnumerable<T> GetFlags<T>(T input) where T : Enum
-    {
-        foreach (T value in Enum.GetValues(input.GetType()))
-            if (input.HasFlag(value) && Convert.ToInt32(value) != 0)
-                yield return value;
-    }
-}
