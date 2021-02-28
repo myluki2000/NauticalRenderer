@@ -6,6 +6,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NauticalRenderer.Data;
+using NauticalRenderer.SlippyMap.UI;
 using NauticalRenderer.Utility;
 using OsmSharp;
 using OsmSharp.Complete;
@@ -127,8 +128,8 @@ namespace NauticalRenderer.SlippyMap.Layers
             if(camera.Scale.Y > 80000)
                 foreach ((int minZoom, LineText lineText) in lineTexts)
                 {
-                    if(lineText.BoundingRect.Intersects(camera.DrawBounds) && camera.Scale.Y > minZoom)
-                        lineText.Draw(sb, Color.Black, camera.GetMatrix());
+                    if(camera.Scale.Y > minZoom)
+                        lineText.Draw(sb, Color.Black, camera);
                 }
 
         }

@@ -18,6 +18,8 @@ using NauticalRenderer.UI;
 using NauticalRenderer.UI.Settings;
 using NauticalRenderer.Utility;
 using OsmSharp.Tags;
+using HorizontalAlignment = Myra.Graphics2D.UI.HorizontalAlignment;
+using Label = Myra.Graphics2D.UI.Label;
 
 namespace NauticalRenderer.Screens
 {

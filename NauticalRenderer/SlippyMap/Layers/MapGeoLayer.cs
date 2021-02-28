@@ -8,8 +8,10 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Myra;
 using NauticalRenderer.Data;
 using NauticalRenderer.SlippyMap.Data;
+using NauticalRenderer.SlippyMap.UI;
 using NauticalRenderer.Utility;
 using NetTopologySuite.Geometries;
 using OsmSharp;
@@ -31,6 +33,8 @@ namespace NauticalRenderer.SlippyMap.Layers
 
         private Vector2[] pierLines;
         private List<Mesh> pierMeshes = new List<Mesh>();
+        private LineText[] pierLineTexts;
+        private MapLabel[] pierLabels;
         /// <inheritdoc />
         public override ILayerSettings LayerSettings { get; }
 
@@ -92,8 +96,21 @@ namespace NauticalRenderer.SlippyMap.Layers
 
             foreach (Mesh pierMesh in pierMeshes)
             {
-                if(pierMesh.BoundingRectangle.Intersects(camera.DrawBounds))
+                if (pierMesh.BoundingRectangle.Intersects(camera.DrawBounds))
                     pierMesh.Draw(mapSb, camera.GetMatrix());
+            }
+
+            if (camera.Scale.Y > 5000)
+            {
+                foreach (LineText pierLineText in pierLineTexts)
+                {
+                    pierLineText.Draw(sb, Color.Black, camera);
+                }
+
+                foreach (MapLabel label in pierLabels)
+                {
+                    label.Draw(sb, Color.Black, camera);
+                }
             }
         }
 
@@ -111,19 +128,38 @@ namespace NauticalRenderer.SlippyMap.Layers
                                                        select osmGeo;
             this.breakwaters = OsmHelpers.WaysToListOfVector2Arr(breakwaters);
 
-            List<Vector2[]> piers = OsmHelpers.WaysToListOfVector2Arr(source
-                .Where(osmGeo => osmGeo.Type == OsmGeoType.Way && osmGeo.Tags.Contains("man_made", "pier")));
+            List<MapLabel> pierLabels = new List<MapLabel>();
+            List<LineText> pierLineTexts = new List<LineText>();
+            List<CompleteWay> piers = source
+                .Where(osmGeo => osmGeo.Type == OsmGeoType.Way && osmGeo.Tags.Contains("man_made", "pier"))
+                .Cast<CompleteWay>()
+                .ToList();
             piers.RemoveAll(x =>
             {
-                if(x[0] == x[^1])
+                Vector2[] points = OsmHelpers.WayToVector2Arr(x);
+                string name;
+                // pier is an area
+                if (points[0] == points[^1])
                 {
-                    pierMeshes.Add(new Mesh(Utility.Utility.Triangulate(x), PIER_COLOR));
+                    if (x.Tags.TryGetValue("name", out name))
+                    {
+                        pierLabels.Add(new MapLabel(name, OsmHelpers.GetCoordinateOfOsmGeo(x), VerticalAlignment.MIDDLE, HorizontalAlignment.CENTER, DefaultAssets.FontSmall));
+                    }
+                    pierMeshes.Add(new Mesh(Utility.Utility.Triangulate(points), PIER_COLOR));
                     return true;
                 }
 
+                // pier is a line
+                if (x.Tags.TryGetValue("name", out name))
+                {
+                    pierLineTexts.Add(new LineText(points, name, DefaultAssets.FontSmall, LineText.Alignment.CENTER));
+                }
                 return false;
             });
-            pierLines = Utility.Utility.LineStripsToLineList(piers.ToArray());
+            this.pierLabels = pierLabels.ToArray();
+            this.pierLineTexts = pierLineTexts.ToArray();
+
+            pierLines = Utility.Utility.LineStripsToLineList(piers.Select(x => OsmHelpers.WayToVector2Arr(x)).ToArray());
 
             IEnumerable<ICompleteOsmGeo> tidalFlats = from osmGeo in source
                                                       where (osmGeo.Type == OsmGeoType.Way || osmGeo.Type == OsmGeoType.Relation) &&
@@ -270,7 +306,7 @@ namespace NauticalRenderer.SlippyMap.Layers
             GenerateCoastMeshes();
         }
 
-        
+
 
         private void ConnectWays(List<Vector2[]> ways, bool isCoastline = false, bool connectWithBoundingPoly = false)
         {

@@ -162,19 +162,5 @@ namespace NauticalRenderer.SlippyMap
         {
             return Matrix.CreateScale((float)Globals.Graphics.PreferredBackBufferHeight / Globals.Graphics.PreferredBackBufferHeight);
         }
-
-        public enum VerticalAlignment
-        {
-            TOP,
-            MIDDLE,
-            BOTTOM
-        }
-
-        public enum HorizontalAlignment
-        {
-            LEFT,
-            CENTER,
-            RIGHT
-        }
     }
 }

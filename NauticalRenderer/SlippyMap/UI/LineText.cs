@@ -7,9 +7,10 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NauticalRenderer.SlippyMap;
+using NauticalRenderer.Utility;
 using OsmSharp.API;
 
-namespace NauticalRenderer.Utility
+namespace NauticalRenderer.SlippyMap.UI
 {
     class LineText
     {
@@ -29,18 +30,20 @@ namespace NauticalRenderer.Utility
             BoundingRect = OsmHelpers.GetBoundingRectOfPoints(points);
         }
 
-        public void Draw(SpriteBatch sb, Color color, Matrix viewMatrix)
+        public void Draw(SpriteBatch sb, Color color, Camera camera)
         {
-            List<TextSegment> segments = new List<TextSegment>();
+            if (!BoundingRect.Intersects(camera.DrawBounds)) return;
+
+                List<TextSegment> segments = new List<TextSegment>();
             Vector2[] tPoints = new Vector2[points.Length];
 
             for (int i = 0; i < tPoints.Length; i++)
             {
-                tPoints[i] = points[i].Transform(viewMatrix);
+                tPoints[i] = points[i].Transform(camera.GetMatrix());
             }
 
             float textLength = font.MeasureString(text).X * 0.00001f;
-            float lineLength = Utility.LengthOfLine(tPoints);
+            float lineLength = Utility.Utility.LengthOfLine(tPoints);
 
             float startLength = alignment switch
             {
