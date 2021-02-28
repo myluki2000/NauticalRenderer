@@ -6,7 +6,9 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NauticalRenderer.Data;
+using NauticalRenderer.SlippyMap.UI;
 using NauticalRenderer.Utility;
+using OsmSharp.Complete;
 using OsmSharp.Streams;
 
 namespace NauticalRenderer.SlippyMap.Layers
@@ -14,6 +16,8 @@ namespace NauticalRenderer.SlippyMap.Layers
     class NavigationLineLayer : MapLayer
     {
         private (RectangleF boundingRect, Vector2[] points)[] navigationLines;
+        private VertexPositionColor[] recommendedTracks;
+        
 
         /// <inheritdoc />
         public override ILayerSettings LayerSettings { get; }
@@ -23,6 +27,17 @@ namespace NauticalRenderer.SlippyMap.Layers
         {
             navigationLines = OsmHelpers.WaysToListOfVector2Arr(new PBFOsmStreamSource(mapPack.OpenFile("base.osm.pbf")).ToComplete()
                 .Where(osmGeo => osmGeo.Tags.Contains("seamark:type", "navigation_line"))).Select(x => (OsmHelpers.GetBoundingRectOfPoints(x), x)).ToArray();
+
+            recommendedTracks = new PBFOsmStreamSource(mapPack.OpenFile("base.osm.pbf")).ToComplete()
+                .OfType<CompleteWay>()
+                .Where(osmGeo => osmGeo.Tags.Contains("seamark:type", "recommended_track"))
+                .SelectMany(x =>
+                {
+                    Vector2[] points = OsmHelpers.WayToVector2Arr(x);
+                    points = Utility.Utility.LineStripToLineList(points);
+                    return points.Select(x => new VertexPositionColor(new Vector3(x, 0), Color.Black));
+                })
+                .ToArray();
         }
 
         /// <inheritdoc />
@@ -42,6 +57,8 @@ namespace NauticalRenderer.SlippyMap.Layers
                             camera.GetMatrix());
                     }
                 }
+
+                LineRenderer.DrawLineList(sb, recommendedTracks, camera.GetMatrix());
             }
         }
     }
