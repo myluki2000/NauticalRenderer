@@ -10,6 +10,7 @@ using NauticalRenderer.SlippyMap.UI;
 using NauticalRenderer.Utility;
 using OsmSharp.Complete;
 using OsmSharp.Streams;
+using OsmSharp.Tags;
 
 namespace NauticalRenderer.SlippyMap.Layers
 {
@@ -17,7 +18,7 @@ namespace NauticalRenderer.SlippyMap.Layers
     {
         private (RectangleF boundingRect, Vector2[] points)[] navigationLines;
         private VertexPositionColor[] recommendedTracks;
-        
+        private LineText[] lineLabels;
 
         /// <inheritdoc />
         public override ILayerSettings LayerSettings { get; }
@@ -25,19 +26,48 @@ namespace NauticalRenderer.SlippyMap.Layers
         /// <inheritdoc />
         public override void LoadContent(MapPack mapPack)
         {
-            navigationLines = OsmHelpers.WaysToListOfVector2Arr(new PBFOsmStreamSource(mapPack.OpenFile("base.osm.pbf")).ToComplete()
-                .Where(osmGeo => osmGeo.Tags.Contains("seamark:type", "navigation_line"))).Select(x => (OsmHelpers.GetBoundingRectOfPoints(x), x)).ToArray();
+            List<LineText> labels = new List<LineText>();
+
+            navigationLines = new PBFOsmStreamSource(mapPack.OpenFile("base.osm.pbf")).ToComplete()
+                .OfType<CompleteWay>()
+                .Where(osmGeo => osmGeo.Tags.Contains("seamark:type", "navigation_line"))
+                .Select(x =>
+                {
+                    Vector2[] points = OsmHelpers.WayToVector2Arr(x);
+
+                    foreach (Tag tag in x.Tags)
+                    {
+                        if (tag.Key.EndsWith("orientation"))
+                        {
+                            labels.Add(new LineText(points, tag.Value + "°", Myra.DefaultAssets.FontSmall, LineText.Alignment.CENTER));
+                            break;
+                        }
+                    }
+                    return (OsmHelpers.GetBoundingRectOfPoints(points), points);
+                })
+                .ToArray();
 
             recommendedTracks = new PBFOsmStreamSource(mapPack.OpenFile("base.osm.pbf")).ToComplete()
                 .OfType<CompleteWay>()
                 .Where(osmGeo => osmGeo.Tags.Contains("seamark:type", "recommended_track"))
-                .SelectMany(x =>
+                .Select(x =>
                 {
                     Vector2[] points = OsmHelpers.WayToVector2Arr(x);
-                    points = Utility.Utility.LineStripToLineList(points);
-                    return points.Select(x => new VertexPositionColor(new Vector3(x, 0), Color.Black));
+
+                    foreach (Tag tag in x.Tags)
+                    {
+                        if (tag.Key.EndsWith("orientation"))
+                        {
+                            labels.Add(new LineText(points, tag.Value + "°", Myra.DefaultAssets.FontSmall, LineText.Alignment.CENTER));
+                            break;
+                        }
+                    }
+                    return points;
                 })
+                .SelectMany(x => Utility.Utility.LineStripToLineList(x).Select(x => new VertexPositionColor(new Vector3(x, 0), Color.Black)))
                 .ToArray();
+
+            lineLabels = labels.ToArray();
         }
 
         /// <inheritdoc />
@@ -59,6 +89,11 @@ namespace NauticalRenderer.SlippyMap.Layers
                 }
 
                 LineRenderer.DrawLineList(sb, recommendedTracks, camera.GetMatrix());
+
+                foreach (LineText label in lineLabels)
+                {
+                    label.Draw(sb, Color.Black, camera);
+                }
             }
         }
     }
