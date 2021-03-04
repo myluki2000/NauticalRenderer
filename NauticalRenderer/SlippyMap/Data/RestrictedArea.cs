@@ -89,6 +89,10 @@ namespace NauticalRenderer.SlippyMap.Data
                         SpriteEffects.None,
                         0);
                     break;
+                case RestrictedAreaRestriction.UNKNOWN:
+                    if (camera.Scale.Y < 5000) return;
+                    LineRenderer.DrawDashedLine(sb, points, Color.Black, new []{ 0.002f, 0.004f }, camera.GetMatrix());
+                    break;
             }
 
             if (drawLabel)
