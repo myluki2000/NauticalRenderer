@@ -9,7 +9,8 @@
     <Import_RootNamespace>NauticalRenderer</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)Data\MapPack.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\MapPack\BaseMapData.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\MapPack\MapPack.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Effects\SymbolInstancingEffect.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Nmea\GpsManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Nmea\NmeaDeviceInfo.cs" />
@@ -30,7 +31,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)SlippyMap\Layers\LanduseLayer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SlippyMap\Layers\MapGeoLayer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Mesh.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)SlippyMap\Data\RestrictedArea.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Map\RestrictedArea.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SlippyMap\Data\Way.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SlippyMap\Layers\PlacenameLayer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SlippyMap\Layers\SeparationSchemeLayer.cs" />
@@ -70,5 +71,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)Content\Content.mgcb" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)Data\Map\" />
   </ItemGroup>
 </Project>

@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Input.Touch;
 using NauticalRenderer.Data;
+using NauticalRenderer.Data.MapPack;
 using NauticalRenderer.Screens;
 using NauticalRenderer.SlippyMap.Data;
 using NauticalRenderer.SlippyMap.Layers;

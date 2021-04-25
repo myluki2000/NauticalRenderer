@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Myra;
 using NauticalRenderer.Data;
+using NauticalRenderer.Data.MapPack;
 using NauticalRenderer.SlippyMap;
 using NauticalRenderer.SlippyMap.Layers;
 using NauticalRenderer.Utility;

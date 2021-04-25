@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NauticalRenderer.Data;
+using NauticalRenderer.Data.MapPack;
 using NauticalRenderer.SlippyMap.Data;
 using NauticalRenderer.Utility;
 using OsmSharp;

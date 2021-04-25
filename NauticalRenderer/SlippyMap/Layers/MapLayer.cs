@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Myra.Attributes;
 using NauticalRenderer.Data;
+using NauticalRenderer.Data.MapPack;
 
 namespace NauticalRenderer.SlippyMap.Layers
 {

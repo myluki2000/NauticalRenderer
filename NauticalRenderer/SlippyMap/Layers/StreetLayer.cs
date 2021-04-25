@@ -6,6 +6,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NauticalRenderer.Data;
+using NauticalRenderer.Data.MapPack;
 using NauticalRenderer.SlippyMap.UI;
 using NauticalRenderer.Utility;
 using OsmSharp;

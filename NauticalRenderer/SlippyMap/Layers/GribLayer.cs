@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 using NauticalRenderer.Data;
+using NauticalRenderer.Data.MapPack;
 
 namespace NauticalRenderer.SlippyMap.Layers
 {

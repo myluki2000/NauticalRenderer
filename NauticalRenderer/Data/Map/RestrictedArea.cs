@@ -7,9 +7,10 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Myra;
 using NauticalRenderer.Data;
+using NauticalRenderer.SlippyMap;
 using NauticalRenderer.Utility;
 
-namespace NauticalRenderer.SlippyMap.Data
+namespace NauticalRenderer.Data.Map
 {
     struct RestrictedArea
     {

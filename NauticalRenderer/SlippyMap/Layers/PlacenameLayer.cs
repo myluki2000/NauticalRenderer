@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Myra;
 using NauticalRenderer.Data;
+using NauticalRenderer.Data.MapPack;
 using NauticalRenderer.Utility;
 using OsmSharp.Complete;
 using OsmSharp.Streams;

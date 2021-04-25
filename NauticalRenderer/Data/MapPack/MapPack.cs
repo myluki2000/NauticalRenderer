@@ -6,8 +6,11 @@ using System.Text;
 using Ionic.Zip;
 using Microsoft.Xna.Framework;
 using NauticalRenderer.Utility;
+using OsmSharp.Complete;
+using OsmSharp.Streams;
+using OsmSharp.Streams.Complete;
 
-namespace NauticalRenderer.Data
+namespace NauticalRenderer.Data.MapPack
 {
     public class MapPack
     {
@@ -72,6 +75,14 @@ namespace NauticalRenderer.Data
             }
 
             boundingPoly = coords.ToArray();
+        }
+
+
+        public MapData Data;
+
+        public class MapData
+        {
+
         }
     }
 }
