@@ -11,7 +11,7 @@ namespace NauticalRenderer.Data.MapPack
 {
     class BaseMapData
     {
-        public List<RestrictedArea> RestrictedAreas { get; private set; }
+        /*public List<RestrictedArea> RestrictedAreas { get; private set; }
 
         public void Load(MapPack mapPack)
         {
@@ -44,6 +44,6 @@ namespace NauticalRenderer.Data.MapPack
                     }
                 }
             }
-        }
+        }*/
     }
 }

@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using Myra.Attributes;
 using NauticalRenderer.Data;
 using NauticalRenderer.Data.Map;
@@ -71,7 +72,8 @@ namespace NauticalRenderer.SlippyMap.Layers
                             x.Tags.TryGetValue("seamark:restricted_area:restriction", out value)
                                 ? Enum.TryParse(value, true, out RestrictedArea.RestrictedAreaRestriction r) ? r :
                                 RestrictedArea.RestrictedAreaRestriction.UNKNOWN
-                                : RestrictedArea.RestrictedAreaRestriction.UNKNOWN
+                                : RestrictedArea.RestrictedAreaRestriction.UNKNOWN,
+                            x.Tags
                         ))
                     .ToList();
 
@@ -111,20 +113,35 @@ namespace NauticalRenderer.SlippyMap.Layers
             seacablesVerts = seacablesVertsList.ToArray();
         }
 
+        private MouseState lastMouseState;
         /// <inheritdoc />
         public override void Draw(SpriteBatch sb, SpriteBatch mapSb, Camera camera)
         {
             LineRenderer.DrawLineList(mapSb, borders, camera.GetMatrix());
 
+            // used so that only the first area that is found is marked when mouse is hovering over it
+            bool mouseInPreviousArea = false;
+            
             foreach (RestrictedArea restrictedArea in restrictedAreas)
             {
-                if (restrictedArea.BoundingRectangle.Intersects(camera.DrawBounds))
+                if (!restrictedArea.BoundingRectangle.Intersects(camera.DrawBounds)) continue;
+
+                if (mouseInPreviousArea)
+                {
+                    restrictedArea.Draw(sb, mapSb, camera, false);
+                }
+                else
                 {
                     bool mouseInside = restrictedArea.IsArea && restrictedArea.Contains(camera.MousePosition);
                     restrictedArea.Draw(sb, mapSb, camera, mouseInside);
                     if (mouseInside)
                     {
-                        // TODO: Open osm tag info window
+                        mouseInPreviousArea = true;
+                        if (Mouse.GetState().LeftButton == ButtonState.Released &&
+                            lastMouseState.LeftButton == ButtonState.Pressed)
+                        {
+                            mapScreen.ShowOsmTagsWindow(restrictedArea.Label, restrictedArea.Tags);
+                        }
                     }
                 }
             }
@@ -142,6 +159,8 @@ namespace NauticalRenderer.SlippyMap.Layers
                 pass.Apply();
                 mapSb.GraphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleList, seacablesVerts, 0, seacablesVerts.Length / 3);
             }
+
+            lastMouseState = Mouse.GetState();
         }
     }
 }

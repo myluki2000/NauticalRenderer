@@ -9,6 +9,7 @@ using Myra;
 using NauticalRenderer.Data;
 using NauticalRenderer.SlippyMap;
 using NauticalRenderer.Utility;
+using OsmSharp.Tags;
 
 namespace NauticalRenderer.Data.Map
 {
@@ -18,6 +19,7 @@ namespace NauticalRenderer.Data.Map
         public RestrictedAreaCategory Category { get; }
         public RestrictedAreaRestriction Restriction { get; }
         public RectangleF BoundingRectangle { get; }
+        public TagsCollectionBase Tags { get; }
 
 
         public bool IsArea { get; }
@@ -25,10 +27,11 @@ namespace NauticalRenderer.Data.Map
         private readonly Vector2[] points;
 
         /// <inheritdoc />
-        public RestrictedArea(string label, Vector2[] points, RestrictedAreaCategory category, RestrictedAreaRestriction restriction) : this()
+        public RestrictedArea(string label, Vector2[] points, RestrictedAreaCategory category, RestrictedAreaRestriction restriction, TagsCollectionBase tags) : this()
         {
             this.Label = label;
             this.points = points;
+            this.Tags = tags;
             IsArea = points[0] == points[points.Length - 1];
             if (IsArea)
             {
@@ -77,9 +80,9 @@ namespace NauticalRenderer.Data.Map
                     LineRenderer.DrawStyledLine(mapSb, points, Color.Black, LineStyle.NoFishing, camera.GetMatrix());
                     break;
                 case RestrictedAreaRestriction.NO_ANCHORING:
-                    if (camera.Scale.Y < 5000) return;
+                    if (camera.Scale.Y < 4000) return;
                     LineRenderer.DrawDashedLine(mapSb, points, Color.Black, new []{0.0005f, 0.001f}, camera.GetMatrix());
-                    if (camera.Scale.Y < 15000) return;
+                    if (camera.Scale.Y < 4000) return;
                     sb.Draw(Icons.NoAnchoring,
                         BoundingRectangle.Center.Transform(camera.GetMatrix()),
                         null,
@@ -91,7 +94,6 @@ namespace NauticalRenderer.Data.Map
                         0);
                     break;
                 case RestrictedAreaRestriction.UNKNOWN:
-                    if (camera.Scale.Y < 5000) return;
                     LineRenderer.DrawDashedLine(sb, points, Color.Black, new []{ 0.002f, 0.004f }, camera.GetMatrix());
                     break;
             }

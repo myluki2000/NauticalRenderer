@@ -31,7 +31,6 @@ namespace NauticalRenderer.SlippyMap
 
         private readonly MapScreen mapScreen;
 
-
         public SlippyMap(MapScreen mapScreen)
         {
             this.mapScreen = mapScreen;
