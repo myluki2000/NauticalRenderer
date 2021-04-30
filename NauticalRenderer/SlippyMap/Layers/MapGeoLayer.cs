@@ -216,10 +216,7 @@ namespace NauticalRenderer.SlippyMap.Layers
             {
                 if (way[0] == way[way.Length - 1])
                 {
-                    this.tidalFlats.Add(new Mesh(Utility.Utility.Triangulate(way), null, MapStyle.COLOR_TIDAL_FLATS, true, way)
-                    {
-                        OutlineColor = MapStyle.COLOR_TIDAL_FLATS_OUTLINE,
-                    });
+                    this.tidalFlats.Add(new Mesh(Utility.Utility.Triangulate(way), null, MapStyle.COLOR_TIDAL_FLATS, true, MapStyle.COLOR_TIDAL_FLATS_OUTLINE, way));
                 }
             }
 
@@ -227,10 +224,7 @@ namespace NauticalRenderer.SlippyMap.Layers
             {
                 if (hole[0] == hole[hole.Length - 1])
                 {
-                    tidalFlatHoles.Add(new Mesh(Utility.Utility.Triangulate(hole), null, MapStyle.COLOR_WATER, true, hole)
-                    {
-                        OutlineColor = MapStyle.COLOR_TIDAL_FLATS_OUTLINE,
-                    });
+                    tidalFlatHoles.Add(new Mesh(Utility.Utility.Triangulate(hole), null, MapStyle.COLOR_WATER, true, MapStyle.COLOR_TIDAL_FLATS_OUTLINE, hole));
                 }
             }
 
@@ -455,10 +449,7 @@ namespace NauticalRenderer.SlippyMap.Layers
             {
                 if (coastline[0] == coastline[coastline.Length - 1])
                 {
-                    coastMeshes.Add(new Mesh(Utility.Utility.Triangulate(coastline), null, MapStyle.COLOR_LAND, true, coastline)
-                    {
-                        OutlineColor = MapStyle.COLOR_LAND_OUTLINE,
-                    });
+                    coastMeshes.Add(new Mesh(Utility.Utility.Triangulate(coastline), null, MapStyle.COLOR_LAND, true, MapStyle.COLOR_LAND_OUTLINE, coastline));
                 }
             }
         }
@@ -500,7 +491,7 @@ namespace NauticalRenderer.SlippyMap.Layers
 
             boundingPolygon = newBoundingPoly.ToArray();
             Vector2[] boundingPoints = boundingPolygon.Select(x => x.point).ToArray();
-            boundingMesh = new Mesh(boundingPoints, Utility.Utility.TriangulateOld(boundingPoints), MapStyle.COLOR_WATER);
+            boundingMesh = new Mesh(Utility.Utility.Triangulate(boundingPoints), null, MapStyle.COLOR_WATER);
         }
     }
 }

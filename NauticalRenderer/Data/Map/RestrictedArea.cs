@@ -35,13 +35,15 @@ namespace NauticalRenderer.Data.Map
             IsArea = points[0] == points[points.Length - 1];
             if (IsArea)
             {
-                mesh = new Mesh(points, Utility.Utility.TriangulateOld(points));
+                Color color = Color.Black;
                 switch (restriction)
                 {
                     case RestrictedAreaRestriction.NO_ENTRY:
-                        mesh.Color = Color.Red * 0.25f;
+                        color = Color.Red * 0.25f;
                         break;
                 }
+
+                mesh = new Mesh(Utility.Utility.Triangulate(points), color);
             }
 
             float xMin = float.MaxValue, xMax = float.MinValue, yMin = float.MaxValue, yMax = float.MinValue;
