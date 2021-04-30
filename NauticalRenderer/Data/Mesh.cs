@@ -66,6 +66,7 @@ namespace NauticalRenderer.Data
             Utility.Utility.basicEffect.CurrentTechnique.Passes[0].Apply();
 
             sb.GraphicsDevice.SetVertexBuffer(vbf);
+
             if (ibf == null)
             {
                 sb.GraphicsDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, primitiveCount);
