@@ -23,7 +23,7 @@ namespace NauticalRenderer.Data
 
         public bool DrawOutline { get; set; }
 
-        public RectangleF BoundingRectangle { get; private set; }
+        public RectangleF BoundingRectangle { get; }
 
         public Mesh(Vector2[] vertices, Color color) : this(vertices, null, color) { }
 

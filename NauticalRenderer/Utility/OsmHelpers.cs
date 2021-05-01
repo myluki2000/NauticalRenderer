@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using OsmSharp;
 using OsmSharp.Complete;
 
@@ -90,6 +91,19 @@ namespace NauticalRenderer.Utility
                 if (x > xMax) xMax = x;
                 if (y < yMin) yMin = y;
                 if (y > yMax) yMax = y;
+            }
+            return new RectangleF(xMin, yMin, xMax - xMin, yMax - yMin);
+        }
+
+        public static RectangleF GetBoundingRectOfPoints(VertexPositionColor[] points)
+        {
+            float xMin = float.MaxValue, xMax = float.MinValue, yMin = float.MaxValue, yMax = float.MinValue;
+            foreach (VertexPositionColor p in points)
+            {
+                if (p.Position.X < xMin) xMin = p.Position.X;
+                if (p.Position.X > xMax) xMax = p.Position.X;
+                if (p.Position.Y < yMin) yMin = p.Position.Y;
+                if (p.Position.Y > yMax) yMax = p.Position.Y;
             }
             return new RectangleF(xMin, yMin, xMax - xMin, yMax - yMin);
         }

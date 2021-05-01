@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using NauticalRenderer.Data;
 using NauticalRenderer.Utility;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.IO;
@@ -12,44 +13,43 @@ namespace NauticalRenderer.SlippyMap.SourceLayers
 {
     class SimplifiedCoastSourceLayer : SourceLayer
     {
-        private readonly List<(RectangleF boundingRect, Vector2[] points)> polygons = new List<(RectangleF boundingRect, Vector2[] points)>();
+        private LineStrip[] lineLists;
 
         /// <inheritdoc />
         public override void LoadContent()
         {
-            polygons.Clear();
+            List<(RectangleF boundingRect, Vector2[] points)> polygons = new List<(RectangleF boundingRect, Vector2[] points)>();
 
-#if !ANDROID
+
             ShapefileDataReader dataReader = Shapefile.CreateDataReader("Content/SimplifiedCoastlines/coastlines-simplified", GeometryFactory.Default);
 
             while (dataReader.Read())
             {
                 Geometry geo = dataReader.Geometry;
-                Vector2[] arr = geo.Coordinates.Select(x => new Vector2((float) x.X, -(float) x.Y)).ToArray();
+                Vector2[] arr = geo.Coordinates.Select(x => new Vector2((float)x.X, -(float)x.Y)).ToArray();
                 polygons.Add((OsmHelpers.GetBoundingRectOfPoints(arr), arr));
             }
 
             polygons.RemoveAll(x => x.points.Length == 0);
 
             dataReader.Close();
-#endif
+
+            lineLists = new LineStrip[polygons.Count];
+            for (int i = 0; i < polygons.Count; i++)
+            {
+                lineLists[i] = new LineStrip(polygons[i].points, Color.LightGray);
+            }
         }
 
         /// <inheritdoc />
         public override void Draw(Camera camera)
         {
             SpriteBatch mapSb = new SpriteBatch(Globals.Graphics.GraphicsDevice);
-            mapSb.Begin(transformMatrix: camera.GetMatrix());
-            int i = 0;
-            foreach ((RectangleF boundingRect, Vector2[] points) in polygons)
+            foreach (LineStrip lineList in lineLists)
             {
-                if (boundingRect.Intersects(camera.DrawBounds))
-                {
-                    LineRenderer.DrawLineStrip(mapSb, points, Color.LightGray, camera.GetMatrix());
-                    i++;
-                }
+                if(lineList.BoundingRectangle.Intersects(camera.DrawBounds))
+                    lineList.Draw(mapSb, camera.GetMatrix());
             }
-            Console.WriteLine("Drawn polys: " + i);
         }
     }
 }
