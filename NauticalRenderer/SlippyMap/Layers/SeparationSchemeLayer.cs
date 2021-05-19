@@ -112,19 +112,19 @@ namespace NauticalRenderer.SlippyMap.Layers
                 });
 
             separationZones = geos[0]
-                .Select(x => new Mesh(Utility.Utility.Triangulate(OsmHelpers.WayToVector2Arr(x)), SEPARATION_SCHEME_COLOR))
+                .Select(x => new Mesh(Utility.Utility.Triangulate(OsmHelpers.WayToLineStrip(x)), SEPARATION_SCHEME_COLOR))
                 .ToArray();
 
             separationBoundaries = geos[1]
-                .Select(x => OsmHelpers.WayToVector2Arr(x))
+                .Select(x => OsmHelpers.WayToLineStrip(x))
                 .ToArray();
 
             separationLanes = geos[2]
-                .Select(x => OsmHelpers.WayToVector2Arr(x))
+                .Select(x => OsmHelpers.WayToLineStrip(x))
                 .ToArray();
 
             separationLines = geos[3]
-                .Select(x => OsmHelpers.WayToVector2Arr(x))
+                .Select(x => OsmHelpers.WayToLineStrip(x))
                 .ToArray();
 
         }

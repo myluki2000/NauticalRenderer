@@ -34,7 +34,7 @@ namespace NauticalRenderer.SlippyMap.Layers
                 .Where(osmGeo => osmGeo.Tags.Contains("seamark:type", "navigation_line"))
                 .Select(x =>
                 {
-                    Vector2[] points = OsmHelpers.WayToVector2Arr(x);
+                    Vector2[] points = OsmHelpers.WayToLineStrip(x);
 
                     foreach (Tag tag in x.Tags)
                     {
@@ -53,7 +53,7 @@ namespace NauticalRenderer.SlippyMap.Layers
                 .Where(osmGeo => osmGeo.Tags.Contains("seamark:type", "recommended_track"))
                 .Select(x =>
                 {
-                    Vector2[] points = OsmHelpers.WayToVector2Arr(x);
+                    Vector2[] points = OsmHelpers.WayToLineStrip(x);
 
                     foreach (Tag tag in x.Tags)
                     {

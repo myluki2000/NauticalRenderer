@@ -16,13 +16,13 @@ namespace NauticalRenderer.Utility
             List<Vector2[]> list = new List<Vector2[]>();
             foreach (CompleteWay way in geo)
             {
-                list.Add(WayToVector2Arr(way));
+                list.Add(WayToLineStrip(way));
             }
 
             return list;
         }
 
-        public static Vector2[] WayToVector2Arr(CompleteWay way)
+        public static Vector2[] WayToLineStrip(CompleteWay way)
         {
             return way.Nodes.Select(x => new Vector2((float) x.Longitude, -(float) x.Latitude)).ToArray();
         }

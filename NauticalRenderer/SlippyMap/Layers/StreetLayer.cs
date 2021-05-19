@@ -43,7 +43,7 @@ namespace NauticalRenderer.SlippyMap.Layers
 
                 if (type == "track" || type == "path" || type == "footway")
                 {
-                    smallStreetsList.AddRange(LineRenderer.GenerateDashedLineVerts(OsmHelpers.WayToVector2Arr(way), color, new []{0.0001f, 0.0001f}));
+                    smallStreetsList.AddRange(LineRenderer.GenerateDashedLineVerts(OsmHelpers.WayToLineStrip(way), color, new []{0.0001f, 0.0001f}));
                 }
                 else
                 {

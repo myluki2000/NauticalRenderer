@@ -50,12 +50,21 @@ namespace NauticalRenderer.SlippyMap.Layers
 
             OsmCompleteStreamSource source = new PBFOsmStreamSource(mapPack.OpenFile("base.osm.pbf")).ToComplete();
 
-            borders = source
+            /*borders = source
                 .Where(x => x.Type == OsmGeoType.Way && x.Tags.Contains("admin_level", "2") &&
                             x.Tags.Contains("boundary", "administrative"))
-                .SelectMany(x => LineRenderer.GenerateDashedLineVerts(OsmHelpers.WayToVector2Arr((CompleteWay) x),
+                .SelectMany(x => LineRenderer.GenerateDashedLineVerts(OsmHelpers.WayToLineStrip((CompleteWay) x),
                                                                       Color.Purple, 
                                                                       new[] {0.001f, 0.001f, 0.0001f, 0.001f}))
+                .ToArray();*/
+
+            borders = source
+                .OfType<CompleteWay>()
+                .Where(x => x.Tags.Contains("admin_level", "2") &&
+                            x.Tags.Contains("boundary", "administrative"))
+                .Select(OsmHelpers.WayToLineStrip)
+                .SelectMany(Utility.Utility.LineStripToLineList)
+                .Select(x => new VertexPositionColor(new Vector3(x, 0), Color.Purple))
                 .ToArray();
 
             restrictedAreas = source
@@ -117,7 +126,11 @@ namespace NauticalRenderer.SlippyMap.Layers
         /// <inheritdoc />
         public override void Draw(SpriteBatch sb, SpriteBatch mapSb, Camera camera)
         {
-            LineRenderer.DrawLineList(mapSb, borders, camera.GetMatrix());
+            //LineRenderer.DrawLineList(mapSb, borders, camera.GetMatrix());
+            Utility.Utility.DashedLineEffect.WorldMatrix = camera.GetMatrix();
+            Utility.Utility.DashedLineEffect.LineAndGapLengths = new[] { 10f, 10f, 1f, 10f };
+            Utility.Utility.DashedLineEffect.Apply();
+            sb.GraphicsDevice.DrawUserPrimitives(PrimitiveType.LineList, borders, 0, borders.Length / 2);
 
             // used so that only the first area that is found is marked when mouse is hovering over it
             bool mouseInPreviousArea = false;

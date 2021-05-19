@@ -137,7 +137,7 @@ namespace NauticalRenderer.SlippyMap.Layers
                 .ToList();
             piers.RemoveAll(x =>
             {
-                Vector2[] points = OsmHelpers.WayToVector2Arr(x);
+                Vector2[] points = OsmHelpers.WayToLineStrip(x);
                 string name;
                 // pier is an area
                 if (points[0] == points[^1])
@@ -160,7 +160,7 @@ namespace NauticalRenderer.SlippyMap.Layers
             this.pierLabels = pierLabels.ToArray();
             this.pierLineTexts = pierLineTexts.ToArray();
 
-            pierLines = Utility.Utility.LineStripsToLineList(piers.Select(x => OsmHelpers.WayToVector2Arr(x)).ToArray());
+            pierLines = Utility.Utility.LineStripsToLineList(piers.Select(x => OsmHelpers.WayToLineStrip(x)).ToArray());
 
             IEnumerable<ICompleteOsmGeo> tidalFlats = from osmGeo in source
                                                       where (osmGeo.Type == OsmGeoType.Way || osmGeo.Type == OsmGeoType.Relation) &&
@@ -170,12 +170,12 @@ namespace NauticalRenderer.SlippyMap.Layers
             List<Vector2[]> holes = new List<Vector2[]>();
             foreach (ICompleteOsmGeo osmGeo in tidalFlats)
             {
-                if (osmGeo is CompleteWay way) wetlandWays.Add(OsmHelpers.WayToVector2Arr(way));
+                if (osmGeo is CompleteWay way) wetlandWays.Add(OsmHelpers.WayToLineStrip(way));
                 else if (osmGeo is CompleteRelation relation)
                 {
                     List<Vector2[]> relationOuterWays = relation.Members
                         .Where(x => x.Member.Type == OsmGeoType.Way && x.Role == "outer")
-                        .Select(x => OsmHelpers.WayToVector2Arr((CompleteWay)x.Member))
+                        .Select(x => OsmHelpers.WayToLineStrip((CompleteWay)x.Member))
                         .ToList();
 
                     relationOuterWays.RemoveAll(x =>
@@ -193,7 +193,7 @@ namespace NauticalRenderer.SlippyMap.Layers
 
                     List<Vector2[]> relationInnerWays = relation.Members
                         .Where(x => x.Member.Type == OsmGeoType.Way && x.Role == "inner" && !x.Member.Tags.Contains("natural", "coastline"))
-                        .Select(x => OsmHelpers.WayToVector2Arr((CompleteWay)x.Member))
+                        .Select(x => OsmHelpers.WayToLineStrip((CompleteWay)x.Member))
                         .ToList();
 
                     relationInnerWays.RemoveAll(x =>
@@ -237,13 +237,13 @@ namespace NauticalRenderer.SlippyMap.Layers
             List<Vector2[]> innerIslands = new List<Vector2[]>();
             foreach (ICompleteOsmGeo osmGeo in waters)
             {
-                if (osmGeo is CompleteWay way) waterWays.Add(OsmHelpers.WayToVector2Arr(way));
+                if (osmGeo is CompleteWay way) waterWays.Add(OsmHelpers.WayToLineStrip(way));
                 else if (osmGeo is CompleteRelation relation)
                 {
 
                     List<Vector2[]> relationOuterWays = relation.Members
                         .Where(x => x.Member.Type == OsmGeoType.Way && x.Role == "outer")
-                        .Select(x => OsmHelpers.WayToVector2Arr((CompleteWay)x.Member))
+                        .Select(x => OsmHelpers.WayToLineStrip((CompleteWay)x.Member))
                         .ToList();
 
                     relationOuterWays.RemoveAll(x =>
@@ -261,7 +261,7 @@ namespace NauticalRenderer.SlippyMap.Layers
 
                     List<Vector2[]> relationInnerWays = relation.Members
                         .Where(x => x.Member.Type == OsmGeoType.Way && x.Role == "inner")
-                        .Select(x => OsmHelpers.WayToVector2Arr((CompleteWay)x.Member))
+                        .Select(x => OsmHelpers.WayToLineStrip((CompleteWay)x.Member))
                         .ToList();
 
                     relationInnerWays.RemoveAll(x =>
