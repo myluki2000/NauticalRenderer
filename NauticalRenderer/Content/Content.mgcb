@@ -19,6 +19,12 @@
 /processorParam:DebugMode=Auto
 /build:Effects/BuoyEffect.fx
 
+#begin Effects/DashedLineEffect.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Effects/DashedLineEffect.fx
+
 #begin Effects/SquigglyLineEffect.fx
 /importer:EffectImporter
 /processor:EffectProcessor

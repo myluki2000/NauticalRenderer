@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -102,10 +103,19 @@ namespace NauticalRenderer.Utility
 
         public static void DrawDashedLine(SpriteBatch sb, Vector2[] points, Color color, float[] lineAndGapLengths, Matrix viewMatrix)
         {
-            VertexPositionColor[] verts = GenerateDashedLineVerts(points, color, lineAndGapLengths);
+            VertexPositionColor[] verts = new VertexPositionColor[points.Length];
+            verts[0] = new VertexPositionColor(new Vector3(points[0], 0), color);
+            for (int i = 1; i < points.Length; i++)
+            {
+                verts[i] = new VertexPositionColor(new Vector3(points[i], 0), color);
+            }
 
-            if (verts.Length > 0)
-                DrawLineList(sb, verts, viewMatrix);
+            if (verts.Length < 1) return;
+
+            Utility.DashedLineEffect.WorldMatrix = viewMatrix;
+            Utility.DashedLineEffect.LineAndGapLengths = lineAndGapLengths;
+            Utility.DashedLineEffect.Apply();
+            sb.GraphicsDevice.DrawUserPrimitives(PrimitiveType.LineStrip, verts, 0, verts.Length - 1);
         }
 
         public static void DrawStyledLine(SpriteBatch sb, Vector2[] points, Color color, LineStyle lineStyle, Matrix viewMatrix)

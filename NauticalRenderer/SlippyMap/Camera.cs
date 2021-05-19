@@ -157,10 +157,5 @@ namespace NauticalRenderer.SlippyMap
         {
             viewMatrixValidStatic = false;
         }
-
-        public static Matrix GetViewportMatrix()
-        {
-            return Matrix.CreateScale((float)Globals.Graphics.PreferredBackBufferHeight / Globals.Graphics.PreferredBackBufferHeight);
-        }
     }
 }

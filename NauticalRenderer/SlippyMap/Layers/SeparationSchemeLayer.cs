@@ -40,7 +40,12 @@ namespace NauticalRenderer.SlippyMap.Layers
 
             foreach (Vector2[] boundary in separationBoundaries)
             {
-                LineRenderer.DrawDashedLine(mapSb, boundary, SEPARATION_SCHEME_COLOR, new []{0.005f, 0.003f}, camera.GetMatrix());
+                LineRenderer.DrawDashedLine(
+                    mapSb,
+                    boundary,
+                    SEPARATION_SCHEME_COLOR,
+                    new []{ 6.25f, 3.75f, 0, 0 },
+                    camera.GetMatrix());
             }
 
             foreach (Vector2[] line in separationLines)

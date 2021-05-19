@@ -80,11 +80,11 @@ namespace NauticalRenderer.SlippyMap.Layers
                 {
                     if (boundingRect.Intersects(camera.DrawBounds))
                     {
-                        LineRenderer.DrawDashedLine(mapSb,
+                        LineRenderer.DrawDashedLine(
+                            mapSb,
                             points,
                             Color.Black,
-                            new[] { 15 / camera.Scale.Y,
-                                15 / camera.Scale.Y },
+                            new[] { 5f, 5f, 0, 0 },
                             camera.GetMatrix());
                     }
                 }

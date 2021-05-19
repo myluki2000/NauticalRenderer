@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Myra;
+using NauticalRenderer.Effects;
 using NauticalRenderer.Nmea;
 using NauticalRenderer.Screens;
 using NauticalRenderer.SlippyMap;
@@ -76,6 +77,7 @@ namespace NauticalRenderer
             Globals.Content = Content;
             Fonts.LoadContent(Content);
             Icons.LoadContent(Content);
+            Utility.Utility.DashedLineEffect = new DashedLineEffect(Globals.Content);
         }
 
         /// <summary>

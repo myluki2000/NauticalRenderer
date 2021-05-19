@@ -70,7 +70,7 @@ namespace NauticalRenderer.Data.Map
 
                     break;
                 case RestrictedAreaRestriction.RESTRICTED_ENTRY:
-                    LineRenderer.DrawDashedLine(mapSb, points, Color.Black, new [] {0.004f, 0.002f}, camera.GetMatrix());
+                    LineRenderer.DrawDashedLine(mapSb, points, Color.Black, new [] { 6f, 4f, 0, 0 }, camera.GetMatrix());
 
                     break;
                 case RestrictedAreaRestriction.RESTRICTED_FISHING:
@@ -83,7 +83,7 @@ namespace NauticalRenderer.Data.Map
                     break;
                 case RestrictedAreaRestriction.NO_ANCHORING:
                     if (camera.Scale.Y < 4000) return;
-                    LineRenderer.DrawDashedLine(mapSb, points, Color.Black, new []{0.0005f, 0.001f}, camera.GetMatrix());
+                    LineRenderer.DrawDashedLine(mapSb, points, Color.Black, new []{ 8f, 2f, 0, 0 }, camera.GetMatrix());
                     if (camera.Scale.Y < 4000) return;
                     sb.Draw(Icons.NoAnchoring,
                         BoundingRectangle.Center.Transform(camera.GetMatrix()),
@@ -96,7 +96,7 @@ namespace NauticalRenderer.Data.Map
                         0);
                     break;
                 case RestrictedAreaRestriction.UNKNOWN:
-                    LineRenderer.DrawDashedLine(sb, points, Color.Black, new []{ 0.002f, 0.004f }, camera.GetMatrix());
+                    LineRenderer.DrawDashedLine(sb, points, Color.Black, new []{ 3f, 7f, 0, 0 }, camera.GetMatrix());
                     break;
             }
 

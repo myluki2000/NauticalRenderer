@@ -35,10 +35,18 @@ namespace NauticalRenderer.SlippyMap.Data
                         screenPos.Y - (float)(Math.Cos(s.EndAngle) * (s.Range * rangeMultiplier + 5))
                     );
 
-                    LineRenderer.DrawDashedLine(sb, new[] { screenPos, startAnglePoint }, Color.DimGray,
-                        new[] { 7f, 3f }, Matrix.Identity);
-                    LineRenderer.DrawDashedLine(sb, new[] { screenPos, endAnglePoint }, Color.DimGray,
-                        new[] { 7f, 3f }, Matrix.Identity);
+                    LineRenderer.DrawDashedLine(
+                        sb,
+                        new[] { screenPos, startAnglePoint },
+                        Color.DimGray,
+                        new[] { 7f, 3f, 0, 0 },
+                        Matrix.Identity);
+                    LineRenderer.DrawDashedLine(
+                        sb,
+                        new[] { screenPos, endAnglePoint },
+                        Color.DimGray,
+                        new[] { 7f, 3f, 0, 0 },
+                        Matrix.Identity);
                 }
                 else
                 {
@@ -46,8 +54,12 @@ namespace NauticalRenderer.SlippyMap.Data
                         screenPos.X + (float)(Math.Sin(s.Orientation) * (s.Range + 5)),
                         screenPos.Y - (float)(Math.Cos(s.Orientation) * (s.Range + 5))
                     );
-                    LineRenderer.DrawDashedLine(sb, new[] { screenPos, orientationAnglePoint }, Color.DimGray,
-                        new[] { 7f, 3f }, Matrix.Identity);
+                    LineRenderer.DrawDashedLine(
+                        sb,
+                        new[] { screenPos, orientationAnglePoint },
+                        Color.DimGray,
+                        new[] { 7f, 3f, 0, 0 },
+                        Matrix.Identity);
                 }
 
                 Utility.Utility.DrawArc(sb, screenPos, s.Range * rangeMultiplier, 5, s.StartAngle, s.EndAngle,
