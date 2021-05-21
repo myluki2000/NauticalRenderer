@@ -86,7 +86,11 @@ namespace NauticalRenderer.SlippyMap.Layers
                         icon = Icons.Harbours.Harbour;
                         break;
                 }
+                
                 Vector2 iconSize = new Vector2(25, 25);
+                if (camera.Scale.Y < 10000) iconSize = new Vector2(20, 20);
+
+
                 sb.Draw(icon,
                     new Rectangle(iconPos.ToPoint(), iconSize.ToPoint()),
                     null,
