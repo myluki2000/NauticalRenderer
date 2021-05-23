@@ -17,6 +17,7 @@ using NauticalRenderer.Utility;
 using OsmSharp;
 using OsmSharp.Complete;
 using OsmSharp.Streams;
+using OsmSharp.Tags;
 
 namespace NauticalRenderer.SlippyMap.Layers
 {
@@ -49,7 +50,7 @@ namespace NauticalRenderer.SlippyMap.Layers
                 string categoryString = x.Tags.GetValue("seamark:harbour:category",
                     x.Tags.Contains("leisure", "marina") ? "marina" : "other");
                 Enum.TryParse(categoryString.ToUpper(), out Harbour.HarbourCategory category);
-                return new Harbour(category, x);
+                return new Harbour(category, OsmHelpers.GetCoordinateOfOsmGeo(x), x.Tags);
             }).ToList();
         }
 
@@ -63,7 +64,7 @@ namespace NauticalRenderer.SlippyMap.Layers
 
             foreach (Harbour harbour in harbours)
             {
-                Vector2 iconPos = OsmHelpers.GetCoordinateOfOsmGeo(harbour.OsmData).Transform(camera.GetMatrix()).Rounded();
+                Vector2 iconPos = harbour.Coordinates.Transform(camera.GetMatrix()).Rounded();
 
                 // draw icon
                 Texture2D icon;
@@ -103,7 +104,7 @@ namespace NauticalRenderer.SlippyMap.Layers
                 // draw label on hover
                 if (new Rectangle((iconPos - iconSize / 2).ToPoint(), iconSize.ToPoint()).Contains(Mouse.GetState().Position))
                 {
-                    if(harbour.OsmData.Tags.TryGetValue("name", out string name))
+                    if(harbour.Tags.TryGetValue("name", out string name))
                         sb.DrawString(Fonts.Arial.Regular,
                             name,
                             iconPos,
@@ -118,7 +119,7 @@ namespace NauticalRenderer.SlippyMap.Layers
                         && lastMouseState.LeftButton == ButtonState.Pressed
                         && (Mouse.GetState().Position - mousePosAtMouseDown).LengthSquared() < 5)
                     {
-                        if (mapScreen.ShowOsmTagsWindow(name, harbour.OsmData.Tags)) break;
+                        if (mapScreen.ShowOsmTagsWindow(name, harbour.Tags)) break;
                     }
                     
                 }
@@ -130,12 +131,14 @@ namespace NauticalRenderer.SlippyMap.Layers
         struct Harbour
         {
             public HarbourCategory Category { get; }
-            public ICompleteOsmGeo OsmData { get; }
+            public Vector2 Coordinates { get; }
+            public TagsCollectionBase Tags { get; }
 
-            public Harbour(HarbourCategory category, ICompleteOsmGeo osmData)
+            public Harbour(HarbourCategory category, Vector2 coordinates, TagsCollectionBase tags)
             {
                 Category = category;
-                OsmData = osmData;
+                Coordinates = coordinates;
+                Tags = tags;
             }
 
             public enum HarbourCategory
