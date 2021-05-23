@@ -24,7 +24,11 @@ namespace NauticalRenderer.SlippyMap.Layers
         /// <inheritdoc />
         public override ILayerSettings LayerSettings { get; }
 
-        private readonly List<(int minZoom, LineText lineText)> lineTexts = new List<(int minZoom, LineText lineText)>(); 
+        private readonly List<LineText> lineTextsMotorwayTrunk = new List<LineText>(); 
+        private readonly List<LineText> lineTextsPrimary = new List<LineText>(); 
+        private readonly List<LineText> lineTextsSecondary = new List<LineText>(); 
+        private readonly List<LineText> lineTextsTertiary = new List<LineText>(); 
+        private readonly List<LineText> lineTextsOther = new List<LineText>(); 
 
         /// <inheritdoc />
         public override void LoadContent(MapPack mapPack)
@@ -62,24 +66,26 @@ namespace NauticalRenderer.SlippyMap.Layers
                     
                     if (geo.Tags.ContainsKey("name"))
                     {
-                        int minZoom = 200000;
                         switch (type)
                         {
                             case "motorway":
                             case "trunk":
-                                minZoom = 80000;
+                                lineTextsMotorwayTrunk.Add(new LineText(lineStrip, geo.Tags["name"], Myra.DefaultAssets.FontSmall, LineText.Alignment.CENTER));
                                 break;
                             case "primary":
-                                minZoom = 100000;
+                                lineTextsPrimary.Add(new LineText(lineStrip, geo.Tags["name"], Myra.DefaultAssets.FontSmall, LineText.Alignment.CENTER));
                                 break;
                             case "secondary":
-                                minZoom = 120000;
+                                lineTextsSecondary.Add(new LineText(lineStrip, geo.Tags["name"], Myra.DefaultAssets.FontSmall, LineText.Alignment.CENTER));
                                 break;
                             case "tertiary":
-                                minZoom = 150000;
+                                lineTextsTertiary.Add(new LineText(lineStrip, geo.Tags["name"], Myra.DefaultAssets.FontSmall, LineText.Alignment.CENTER));
+                                break;
+                            default:
+                                lineTextsOther.Add(new LineText(lineStrip, geo.Tags["name"], Myra.DefaultAssets.FontSmall, LineText.Alignment.CENTER));
                                 break;
                         }
-                        lineTexts.Add((minZoom, new LineText(lineStrip, geo.Tags["name"], Myra.DefaultAssets.FontSmall, LineText.Alignment.CENTER)));
+                        
                     }
                 }
             }
@@ -148,10 +154,33 @@ namespace NauticalRenderer.SlippyMap.Layers
 
 
             if(camera.Scale.Y > 80000)
-                foreach ((int minZoom, LineText lineText) in lineTexts)
+                foreach (LineText lineText in lineTextsMotorwayTrunk)
                 {
-                    if(camera.Scale.Y > minZoom)
                         lineText.Draw(sb, Color.Black, camera);
+                }
+
+            if (camera.Scale.Y > 100000)
+                foreach (LineText lineText in lineTextsPrimary)
+                {
+                    lineText.Draw(sb, Color.Black, camera);
+                }
+
+            if (camera.Scale.Y > 120000)
+                foreach (LineText lineText in lineTextsSecondary)
+                {
+                    lineText.Draw(sb, Color.Black, camera);
+                }
+
+            if (camera.Scale.Y > 150000)
+                foreach (LineText lineText in lineTextsTertiary)
+                {
+                    lineText.Draw(sb, Color.Black, camera);
+                }
+
+            if (camera.Scale.Y > 200000)
+                foreach (LineText lineText in lineTextsOther)
+                {
+                    lineText.Draw(sb, Color.Black, camera);
                 }
 
         }
