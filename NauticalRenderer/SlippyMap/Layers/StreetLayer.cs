@@ -18,8 +18,8 @@ namespace NauticalRenderer.SlippyMap.Layers
 {
     class StreetLayer : MapLayer
     {
-        private VertexPositionColor[] streets;
-        private VertexPositionColor[][] smallStreets;
+        private VertexBuffer vbfStreets;
+        private VertexBuffer[] vbfSmallStreets;
         private int minLon;
         /// <inheritdoc />
         public override ILayerSettings LayerSettings { get; }
@@ -86,7 +86,7 @@ namespace NauticalRenderer.SlippyMap.Layers
 
             minLon = (int)mapPack.BoundingPolygon.Min(x => x.X);
             int maxLon = (int) Math.Ceiling(mapPack.BoundingPolygon.Max(x => x.X));
-            smallStreets = new VertexPositionColor[maxLon - minLon][];
+            vbfSmallStreets = new VertexBuffer[maxLon - minLon];
             for (int lonI = 0; lonI < maxLon - minLon; lonI++)
             {
                 List<VertexPositionColor> points = new List<VertexPositionColor>();
@@ -103,16 +103,29 @@ namespace NauticalRenderer.SlippyMap.Layers
                     points.Add(p2);
                 }
 
-                smallStreets[lonI] = points.ToArray();
+                if (points.Count > 0)
+                {
+                    vbfSmallStreets[lonI] = new VertexBuffer(Globals.Graphics.GraphicsDevice, typeof(VertexPositionColor), points.Count, BufferUsage.WriteOnly);
+                    vbfSmallStreets[lonI].SetData(points.ToArray());
+                }
+                else
+                {
+                    vbfSmallStreets[lonI] = null;
+                }
             }
 
             
-            streets = streetsList.ToArray();
+            vbfStreets = new VertexBuffer(Globals.Graphics.GraphicsDevice, typeof(VertexPositionColor), streetsList.Count, BufferUsage.WriteOnly);
+            vbfStreets.SetData(streetsList.ToArray());
         }
 
         /// <inheritdoc />
         public override void Draw(SpriteBatch sb, SpriteBatch mapSb, Camera camera)
         {
+            Utility.Utility.basicEffect.View = camera.GetMatrix();
+            Utility.Utility.basicEffect.CurrentTechnique.Passes[0].Apply();
+
+            // draw small streets
             if (camera.Scale.Y > 10000)
             {
                 int screenLeftLon = (int)camera.DrawBounds.X;
@@ -120,11 +133,19 @@ namespace NauticalRenderer.SlippyMap.Layers
 
                 for (int i = screenLeftLon - minLon; i < screenRightLon - minLon; i++)
                 {
-                    LineRenderer.DrawLineList(mapSb, smallStreets[i], camera.GetMatrix());
+                    if (vbfSmallStreets[i] == null) continue;
+
+                    sb.GraphicsDevice.SetVertexBuffer(vbfSmallStreets[i]);
+                    sb.GraphicsDevice.DrawPrimitives(PrimitiveType.LineList, 0, vbfSmallStreets[i].VertexCount / 2);
                 }
             }
                 
-            LineRenderer.DrawLineList(mapSb, streets, camera.GetMatrix());
+            
+            // draw major streets
+            sb.GraphicsDevice.SetVertexBuffer(vbfStreets);
+            sb.GraphicsDevice.DrawPrimitives(PrimitiveType.LineList, 0, vbfStreets.VertexCount / 2);
+
+
 
             if(camera.Scale.Y > 80000)
                 foreach ((int minZoom, LineText lineText) in lineTexts)
