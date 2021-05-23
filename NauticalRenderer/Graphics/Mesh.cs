@@ -11,7 +11,7 @@ using NauticalRenderer.Utility;
 using NetTopologySuite.Index.Quadtree;
 using NetTopologySuite.Utilities;
 
-namespace NauticalRenderer.Data
+namespace NauticalRenderer.Graphics
 {
     public struct Mesh
     {

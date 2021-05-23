@@ -32,7 +32,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)SlippyMap\Layers\GpsLayer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SlippyMap\Layers\LanduseLayer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SlippyMap\Layers\MapGeoLayer.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Data\Mesh.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Graphics\Mesh.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Map\RestrictedArea.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SlippyMap\Data\Way.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SlippyMap\Layers\PlacenameLayer.cs" />
