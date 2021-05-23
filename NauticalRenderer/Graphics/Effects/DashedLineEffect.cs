@@ -6,7 +6,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 
-namespace NauticalRenderer.Effects
+namespace NauticalRenderer.Graphics.Effects
 {
     public class DashedLineEffect
     {

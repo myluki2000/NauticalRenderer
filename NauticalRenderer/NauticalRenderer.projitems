@@ -12,8 +12,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Data\LineStrip.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\MapPack\BaseMapData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\MapPack\MapPack.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Effects\DashedLineEffect.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Effects\SymbolInstancingEffect.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Graphics\Effects\DashedLineEffect.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Graphics\Effects\SymbolInstancingEffect.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Nmea\GpsManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Nmea\NmeaDeviceInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Nmea\NmeaDeviceManager.cs" />
@@ -76,5 +76,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Data\Map\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Graphics\" />
   </ItemGroup>
 </Project>
