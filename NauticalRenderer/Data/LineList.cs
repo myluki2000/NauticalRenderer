@@ -24,7 +24,7 @@ namespace NauticalRenderer.Data
             BoundingRectangle = OsmHelpers.GetBoundingRectOfPoints(vertices);
         }
 
-        public void Draw(SpriteBatch sb, Matrix viewMatrix)
+        public void Draw(SpriteBatch sb)
         {
             sb.GraphicsDevice.SetVertexBuffer(vbf);
             sb.GraphicsDevice.DrawPrimitives(PrimitiveType.LineList, 0, vbf.VertexCount - 1);

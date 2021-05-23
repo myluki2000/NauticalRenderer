@@ -31,7 +31,7 @@ namespace NauticalRenderer.SlippyMap.Layers
     class MapGeoLayer : MapLayer
     {
         public List<Vector2[]> Coastlines { get; private set; }
-        private List<Vector2[]> breakwaters;
+        private LineList breakwaters;
 
         private Vector2[] pierLines;
         private List<Mesh> pierMeshes = new List<Mesh>();
@@ -86,10 +86,9 @@ namespace NauticalRenderer.SlippyMap.Layers
                     mesh.Draw(mapSb, camera.GetMatrix());
             }
 
-            foreach (Vector2[] line in breakwaters)
-            {
-                LineRenderer.DrawLineStrip(mapSb, line, Color.DimGray, camera.GetMatrix());
-            }
+            Utility.Utility.basicEffect.View = camera.GetMatrix();
+            Utility.Utility.basicEffect.CurrentTechnique.Passes[0].Apply();
+            breakwaters.Draw(mapSb);
 
             if (camera.Scale.Y > 3000)
             {
@@ -128,7 +127,7 @@ namespace NauticalRenderer.SlippyMap.Layers
             IEnumerable<ICompleteOsmGeo> breakwaters = from osmGeo in source
                                                        where osmGeo.Tags.Contains("man_made", "breakwater")
                                                        select osmGeo;
-            this.breakwaters = OsmHelpers.WaysToListOfVector2Arr(breakwaters);
+            this.breakwaters = new LineList(Utility.Utility.LineStripsToLineList(OsmHelpers.WaysToListOfVector2Arr(breakwaters).ToArray()), Color.DimGray);
 
             List<MapLabel> pierLabels = new List<MapLabel>();
             List<LineText> pierLineTexts = new List<LineText>();

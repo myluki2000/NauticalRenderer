@@ -121,7 +121,7 @@ namespace NauticalRenderer.SlippyMap.Layers
             Utility.Utility.DashedLineEffect.WorldMatrix = camera.GetMatrix();
             Utility.Utility.DashedLineEffect.LineAndGapLengths = new[] { 10f, 10f, 1f, 10f };
             Utility.Utility.DashedLineEffect.Apply();
-            borders.Draw(mapSb, camera.GetMatrix());
+            borders.Draw(mapSb);
 
             // used so that only the first area that is found is marked when mouse is hovering over it
             bool mouseInPreviousArea = false;

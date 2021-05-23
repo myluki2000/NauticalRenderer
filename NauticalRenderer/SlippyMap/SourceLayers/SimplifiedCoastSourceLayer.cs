@@ -53,7 +53,7 @@ namespace NauticalRenderer.SlippyMap.SourceLayers
             foreach (LineList lineList in lineLists)
             {
                 if(lineList.BoundingRectangle.Intersects(camera.DrawBounds))
-                    lineList.Draw(mapSb, camera.GetMatrix());
+                    lineList.Draw(mapSb);
             }
         }
     }
