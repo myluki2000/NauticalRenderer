@@ -25,14 +25,14 @@ namespace NauticalRenderer.SlippyMap.Layers
         private readonly LandmarkLayerSettings landmarkLayerSettings = new LandmarkLayerSettings();
 
         private Landmark[] landmarks;
-        private List<ICompleteOsmGeo> lights;
+        private List<OsmLight> lights;
 
         private SectorLight[] sectorLights;
 
         /// <inheritdoc />
         public override void LoadContent(MapPack mapPack)
         {
-            lights = new List<ICompleteOsmGeo>();
+            lights = new List<OsmLight>();
 
             landmarks = (new PBFOsmStreamSource(mapPack.OpenFile("base.osm.pbf"))
                 .ToComplete()
@@ -46,7 +46,7 @@ namespace NauticalRenderer.SlippyMap.Layers
                         !o.Tags.ToList().Exists(x => x.Key.StartsWith("seamark:light")))
                         return true;
 
-                    lights.Add(o);
+                    lights.Add(new OsmLight(OsmHelpers.GetCoordinateOfOsmGeo(o), o.Tags));
                     return false;
                 })
                 .Select(x =>
@@ -70,7 +70,7 @@ namespace NauticalRenderer.SlippyMap.Layers
                 SectorLight sl = new SectorLight();
 
                 sl.Major = !x.Tags.Contains("seamark:type", "light_minor");
-                sl.Coordinates = OsmHelpers.GetCoordinateOfOsmGeo(x);
+                sl.Coordinates = x.Coordinates;
 
                 List<SectorLight.Sector> sectors = new List<SectorLight.Sector>();
                 int i = 1;
@@ -202,13 +202,11 @@ namespace NauticalRenderer.SlippyMap.Layers
                 }
             }
 
-            foreach (ICompleteOsmGeo o in lights)
+            foreach (OsmLight o in lights)
             {
-                Vector2 pos = OsmHelpers.GetCoordinateOfOsmGeo(o);
+                if (!camera.DrawBounds.Contains(o.Coordinates)) continue;
 
-                if (!camera.DrawBounds.Contains(pos)) continue;
-
-                pos = pos.Transform(camera.GetMatrix());
+                Vector2 pos = o.Coordinates.Transform(camera.GetMatrix());
 
                 bool minor = o.Tags.Contains("seamark:type", "light_minor");
                 if (minor && !landmarkLayerSettings.MinorLightsVisible ||
@@ -232,20 +230,18 @@ namespace NauticalRenderer.SlippyMap.Layers
             DrawSectorLights(sb, camera);
         }
 
-        private void DrawName(SpriteBatch sb, ICompleteOsmGeo o, Camera camera)
+        private void DrawName(SpriteBatch sb, OsmLight o, Camera camera)
         {
             if (!o.Tags.ContainsKey("seamark:name")) return;
-
-            Vector2 pos = OsmHelpers.GetCoordinateOfOsmGeo(o);
 
 
             sb.DrawString(Myra.DefaultAssets.FontSmall,
                 o.Tags["seamark:name"],
-                pos.Transform(camera.GetMatrix()).Rounded(),
+                o.Coordinates.Transform(camera.GetMatrix()).Rounded(),
                 Color.Black);
         }
 
-        private void DrawLight(SpriteBatch sb, ICompleteOsmGeo o, Camera camera)
+        private void DrawLight(SpriteBatch sb, OsmLight o, Camera camera)
         {
             Color color = Color.DarkViolet; // default color for multi-color lights
 
@@ -259,7 +255,7 @@ namespace NauticalRenderer.SlippyMap.Layers
             }
 
 
-            Vector2 pos = OsmHelpers.GetCoordinateOfOsmGeo(o).Transform(camera.GetMatrix());
+            Vector2 pos = o.Coordinates.Transform(camera.GetMatrix());
 
             sb.Draw(Icons.LightBlob, pos, null, color, MathHelper.ToRadians(135), new Vector2(Icons.LightBlob.Width / 2, Icons.LightBlob.Height), new Vector2(0.20f), SpriteEffects.None, 0f);
         }
@@ -300,6 +296,16 @@ namespace NauticalRenderer.SlippyMap.Layers
             public bool LandmarksVisible = true;
         }
 
-        
+        private struct OsmLight
+        {
+            public Vector2 Coordinates;
+            public TagsCollectionBase Tags;
+
+            public OsmLight(Vector2 coordinates, TagsCollectionBase tags)
+            {
+                Coordinates = coordinates;
+                Tags = tags;
+            }
+        }
     }
 }
