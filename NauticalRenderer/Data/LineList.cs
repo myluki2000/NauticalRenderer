@@ -26,12 +26,7 @@ namespace NauticalRenderer.Data
 
         public void Draw(SpriteBatch sb, Matrix viewMatrix)
         {
-            sb.GraphicsDevice.RasterizerState = RasterizerState.CullNone;
-            Utility.Utility.basicEffect.View = viewMatrix;
-            Utility.Utility.basicEffect.CurrentTechnique.Passes[0].Apply();
-
             sb.GraphicsDevice.SetVertexBuffer(vbf);
-
             sb.GraphicsDevice.DrawPrimitives(PrimitiveType.LineList, 0, vbf.VertexCount - 1);
         }
     }

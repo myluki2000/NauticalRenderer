@@ -45,6 +45,11 @@ namespace NauticalRenderer.SlippyMap.SourceLayers
         public override void Draw(Camera camera)
         {
             SpriteBatch mapSb = new SpriteBatch(Globals.Graphics.GraphicsDevice);
+
+            Utility.Utility.basicEffect.View = camera.GetMatrix();
+            Utility.Utility.basicEffect.CurrentTechnique.Passes[0].Apply();
+
+
             foreach (LineList lineList in lineLists)
             {
                 if(lineList.BoundingRectangle.Intersects(camera.DrawBounds))
