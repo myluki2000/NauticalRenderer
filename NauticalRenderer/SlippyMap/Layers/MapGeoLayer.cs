@@ -33,7 +33,7 @@ namespace NauticalRenderer.SlippyMap.Layers
         public List<Vector2[]> Coastlines { get; private set; }
         private LineList breakwaters;
 
-        private Vector2[] pierLines;
+        private LineList pierLines;
         private List<Mesh> pierMeshes = new List<Mesh>();
         private LineText[] pierLineTexts;
         private MapLabel[] pierLabels;
@@ -89,11 +89,7 @@ namespace NauticalRenderer.SlippyMap.Layers
             Utility.Utility.basicEffect.View = camera.GetMatrix();
             Utility.Utility.basicEffect.CurrentTechnique.Passes[0].Apply();
             breakwaters.Draw(mapSb);
-
-            if (camera.Scale.Y > 3000)
-            {
-                LineRenderer.DrawLineList(mapSb, pierLines, PIER_COLOR, camera.GetMatrix());
-            }
+            pierLines.Draw(mapSb);
 
             foreach (Mesh pierMesh in pierMeshes)
             {
@@ -160,7 +156,9 @@ namespace NauticalRenderer.SlippyMap.Layers
             this.pierLabels = pierLabels.ToArray();
             this.pierLineTexts = pierLineTexts.ToArray();
 
-            pierLines = Utility.Utility.LineStripsToLineList(piers.Select(x => OsmHelpers.WayToLineStrip(x)).ToArray());
+            pierLines = new LineList(
+                Utility.Utility.LineStripsToLineList(piers.Select(OsmHelpers.WayToLineStrip).ToArray()),
+                PIER_COLOR);
 
             IEnumerable<ICompleteOsmGeo> tidalFlats = from osmGeo in source
                                                       where (osmGeo.Type == OsmGeoType.Way || osmGeo.Type == OsmGeoType.Relation) &&
