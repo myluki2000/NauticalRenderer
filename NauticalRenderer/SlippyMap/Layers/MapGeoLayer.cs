@@ -11,6 +11,7 @@ using Microsoft.Xna.Framework.Input;
 using Myra;
 using NauticalRenderer.Data;
 using NauticalRenderer.Data.MapPack;
+using NauticalRenderer.Graphics;
 using NauticalRenderer.SlippyMap.Data;
 using NauticalRenderer.SlippyMap.UI;
 using NauticalRenderer.Utility;

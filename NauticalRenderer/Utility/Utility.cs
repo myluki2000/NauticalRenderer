@@ -5,7 +5,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NauticalRenderer.Data;
-using NauticalRenderer.Effects;
+using NauticalRenderer.Graphics.Effects;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.Utilities;
 using TriangleNet.Geometry;

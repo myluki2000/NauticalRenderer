@@ -13,7 +13,7 @@ namespace NauticalRenderer.SlippyMap.SourceLayers
 {
     class SimplifiedCoastSourceLayer : SourceLayer
     {
-        private LineStrip[] lineLists;
+        private LineList[] lineLists;
 
         /// <inheritdoc />
         public override void LoadContent()
@@ -34,10 +34,10 @@ namespace NauticalRenderer.SlippyMap.SourceLayers
 
             dataReader.Close();
 
-            lineLists = new LineStrip[polygons.Count];
+            lineLists = new LineList[polygons.Count];
             for (int i = 0; i < polygons.Count; i++)
             {
-                lineLists[i] = new LineStrip(polygons[i].points, Color.LightGray);
+                lineLists[i] = new LineList(Utility.Utility.LineStripToLineList(polygons[i].points), Color.LightGray);
             }
         }
 
@@ -45,7 +45,7 @@ namespace NauticalRenderer.SlippyMap.SourceLayers
         public override void Draw(Camera camera)
         {
             SpriteBatch mapSb = new SpriteBatch(Globals.Graphics.GraphicsDevice);
-            foreach (LineStrip lineList in lineLists)
+            foreach (LineList lineList in lineLists)
             {
                 if(lineList.BoundingRectangle.Intersects(camera.DrawBounds))
                     lineList.Draw(mapSb, camera.GetMatrix());

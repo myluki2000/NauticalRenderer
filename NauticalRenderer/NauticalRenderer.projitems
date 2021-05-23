@@ -9,7 +9,7 @@
     <Import_RootNamespace>NauticalRenderer</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)Data\LineStrip.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\LineList.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\MapPack\BaseMapData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\MapPack\MapPack.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Effects\DashedLineEffect.cs" />
