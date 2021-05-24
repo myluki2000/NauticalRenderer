@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using NauticalRenderer.Data;
+using NauticalRenderer.Graphics;
 using NauticalRenderer.Utility;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.IO;

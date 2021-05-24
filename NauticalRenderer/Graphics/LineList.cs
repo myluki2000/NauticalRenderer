@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NauticalRenderer.Utility;
 
-namespace NauticalRenderer.Data
+namespace NauticalRenderer.Graphics
 {
     struct LineList
     {
