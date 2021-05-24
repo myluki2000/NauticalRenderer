@@ -78,7 +78,7 @@ namespace NauticalRenderer
             Globals.Content = Content;
             Fonts.LoadContent(Content);
             Icons.LoadContent(Content);
-            Utility.Utility.DashedLineEffect = new DashedLineEffect(Globals.Content);
+            EffectPool.LoadContent(Content);
         }
 
         /// <summary>

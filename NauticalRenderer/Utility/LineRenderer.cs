@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using NauticalRenderer.Graphics;
 using Math = System.Math;
 using Vector2 = Microsoft.Xna.Framework.Vector2;
 using Vector3 = Microsoft.Xna.Framework.Vector3;
@@ -19,7 +20,7 @@ namespace NauticalRenderer.Utility
 
         public static void DrawLineStrip(SpriteBatch sb, Vector2[] points, Color color, Matrix viewMatrix)
         {
-            Utility.basicEffect.View = viewMatrix;
+            EffectPool.BasicEffect.View = viewMatrix;
 
             VertexPositionColor[] verts = new VertexPositionColor[points.Length];
             for (int i = 0; i < points.Length; i++)
@@ -27,7 +28,7 @@ namespace NauticalRenderer.Utility
                 verts[i] = new VertexPositionColor(new Vector3(points[i], 0), color);
             }
 
-            Utility.basicEffect.CurrentTechnique.Passes[0].Apply();
+            EffectPool.BasicEffect.CurrentTechnique.Passes[0].Apply();
             sb.GraphicsDevice.DrawUserPrimitives(PrimitiveType.LineStrip, verts, 0, verts.Length - 1);
         }
 
@@ -45,8 +46,8 @@ namespace NauticalRenderer.Utility
 
         public static void DrawLineList(SpriteBatch sb, VertexPositionColor[] verts, Matrix viewMatrix)
         {
-            Utility.basicEffect.View = viewMatrix;
-            Utility.basicEffect.CurrentTechnique.Passes[0].Apply();
+            EffectPool.BasicEffect.View = viewMatrix;
+            EffectPool.BasicEffect.CurrentTechnique.Passes[0].Apply();
             sb.GraphicsDevice.DrawUserPrimitives(PrimitiveType.LineList, verts, 0, verts.Length / 2);
         }
 
@@ -112,9 +113,9 @@ namespace NauticalRenderer.Utility
 
             if (verts.Length < 1) return;
 
-            Utility.DashedLineEffect.WorldMatrix = viewMatrix;
-            Utility.DashedLineEffect.LineAndGapLengths = lineAndGapLengths;
-            Utility.DashedLineEffect.Apply();
+            EffectPool.DashedLineEffect.WorldMatrix = viewMatrix;
+            EffectPool.DashedLineEffect.LineAndGapLengths = lineAndGapLengths;
+            EffectPool.DashedLineEffect.Apply();
             sb.GraphicsDevice.DrawUserPrimitives(PrimitiveType.LineStrip, verts, 0, verts.Length - 1);
         }
 

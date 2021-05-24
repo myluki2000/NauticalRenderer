@@ -46,8 +46,8 @@ namespace NauticalRenderer.SlippyMap.SourceLayers
         {
             SpriteBatch mapSb = new SpriteBatch(Globals.Graphics.GraphicsDevice);
 
-            Utility.Utility.basicEffect.View = camera.GetMatrix();
-            Utility.Utility.basicEffect.CurrentTechnique.Passes[0].Apply();
+            EffectPool.BasicEffect.View = camera.GetMatrix();
+            EffectPool.BasicEffect.CurrentTechnique.Passes[0].Apply();
 
 
             foreach (LineList lineList in lineLists)

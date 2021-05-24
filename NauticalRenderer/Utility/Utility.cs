@@ -5,6 +5,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NauticalRenderer.Data;
+using NauticalRenderer.Graphics;
 using NauticalRenderer.Graphics.Effects;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.Utilities;
@@ -19,22 +20,17 @@ namespace NauticalRenderer.Utility
     public static class Utility
     {
         private static readonly Texture2D dummyTexture = new Texture2D(Globals.Graphics.GraphicsDevice, 1, 1);
-        public static readonly BasicEffect basicEffect = new BasicEffect(Globals.Graphics.GraphicsDevice);
-        public static DashedLineEffect DashedLineEffect;
+        
 
         static Utility()
         {
             dummyTexture.SetData(new Color[] { Color.White });
 
-            basicEffect.VertexColorEnabled = true;
-            Globals.ViewportMatrixChanged += () => UpdateProjectionMatrix();
-            UpdateProjectionMatrix();
+            
+            
         }
 
-        private static void UpdateProjectionMatrix()
-        {
-            basicEffect.Projection = Globals.ViewportMatrix;
-        }
+        
 
         public static void DrawArc(SpriteBatch sb,
                                    Vector2 position,
@@ -47,7 +43,7 @@ namespace NauticalRenderer.Utility
                                    int resolution = 20)
         {
             if (viewMatrix == null) viewMatrix = Matrix.Identity;
-            basicEffect.View = (Matrix)viewMatrix;
+            EffectPool.BasicEffect.View = (Matrix)viewMatrix;
 
             if (startAngle > endAngle)
             {
@@ -95,7 +91,7 @@ namespace NauticalRenderer.Utility
 
             verts.Add(new VertexPositionColor(outerPos, color));
 
-            basicEffect.CurrentTechnique.Passes[0].Apply();
+            EffectPool.BasicEffect.CurrentTechnique.Passes[0].Apply();
             sb.GraphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleStrip, verts.ToArray(), 0, verts.Count - 2);
         }
 

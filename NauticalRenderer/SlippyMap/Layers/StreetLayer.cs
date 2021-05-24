@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NauticalRenderer.Data;
 using NauticalRenderer.Data.MapPack;
+using NauticalRenderer.Graphics;
 using NauticalRenderer.SlippyMap.UI;
 using NauticalRenderer.Utility;
 using OsmSharp;
@@ -128,8 +129,8 @@ namespace NauticalRenderer.SlippyMap.Layers
         /// <inheritdoc />
         public override void Draw(SpriteBatch sb, SpriteBatch mapSb, Camera camera)
         {
-            Utility.Utility.basicEffect.View = camera.GetMatrix();
-            Utility.Utility.basicEffect.CurrentTechnique.Passes[0].Apply();
+            EffectPool.BasicEffect.View = camera.GetMatrix();
+            EffectPool.BasicEffect.CurrentTechnique.Passes[0].Apply();
 
             // draw small streets
             if (camera.Scale.Y > 10000)

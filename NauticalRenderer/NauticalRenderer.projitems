@@ -9,6 +9,7 @@
     <Import_RootNamespace>NauticalRenderer</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Graphics\EffectPool.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\LineList.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\MapPack\BaseMapData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\MapPack\MapPack.cs" />
@@ -76,6 +77,5 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Data\Map\" />
-    <Folder Include="$(MSBuildThisFileDirectory)Graphics\" />
   </ItemGroup>
 </Project>

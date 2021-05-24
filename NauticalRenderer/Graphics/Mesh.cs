@@ -62,8 +62,8 @@ namespace NauticalRenderer.Graphics
         public void Draw(SpriteBatch sb, Matrix viewMatrix)
         {
             sb.GraphicsDevice.RasterizerState = RasterizerState.CullNone;
-            Utility.Utility.basicEffect.View = viewMatrix;
-            Utility.Utility.basicEffect.CurrentTechnique.Passes[0].Apply();
+            EffectPool.BasicEffect.View = viewMatrix;
+            EffectPool.BasicEffect.CurrentTechnique.Passes[0].Apply();
 
             sb.GraphicsDevice.SetVertexBuffer(vbf);
 
