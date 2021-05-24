@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Myra;
+using NauticalRenderer.Graphics;
 using NauticalRenderer.Graphics.Effects;
 using NauticalRenderer.Nmea;
 using NauticalRenderer.Screens;

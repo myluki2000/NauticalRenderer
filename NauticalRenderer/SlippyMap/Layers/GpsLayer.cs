@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NauticalRenderer.Data;
 using NauticalRenderer.Data.MapPack;
+using NauticalRenderer.Graphics;
 using NauticalRenderer.Nmea;
 using NauticalRenderer.Utility;
 using NmeaParser;

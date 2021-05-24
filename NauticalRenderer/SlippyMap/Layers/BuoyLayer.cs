@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NauticalRenderer.Data;
 using NauticalRenderer.Data.MapPack;
+using NauticalRenderer.Graphics;
 using NauticalRenderer.SlippyMap.Data;
 using NauticalRenderer.Utility;
 using NetTopologySuite.Utilities;

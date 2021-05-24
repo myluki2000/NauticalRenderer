@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using static NauticalRenderer.Globals;
 
-namespace NauticalRenderer.Utility
+namespace NauticalRenderer.Graphics
 {
     public static class Icons
     {

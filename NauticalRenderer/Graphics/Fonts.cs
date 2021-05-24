@@ -4,7 +4,7 @@ using System.Text;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace NauticalRenderer.Utility
+namespace NauticalRenderer.Graphics
 {
     public static class Fonts
     {

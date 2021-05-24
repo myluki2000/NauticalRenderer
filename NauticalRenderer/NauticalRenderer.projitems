@@ -48,8 +48,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)SlippyMap\Layers\ImportantAreaLayer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SlippyMap\Layers\StreetLayer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SlippyMap\SlippyMap.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Data\Fonts.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Data\Icons.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Graphics\Fonts.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Graphics\Icons.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SlippyMap\SourceLayers\SimplifiedCoastSourceLayer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SlippyMap\SourceLayers\SourceLayer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SlippyMap\UI\Label.cs" />
