@@ -21,16 +21,10 @@ namespace NauticalRenderer.Utility
     {
         private static readonly Texture2D dummyTexture = new Texture2D(Globals.Graphics.GraphicsDevice, 1, 1);
         
-
         static Utility()
         {
             dummyTexture.SetData(new Color[] { Color.White });
-
-            
-            
         }
-
-        
 
         public static void DrawArc(SpriteBatch sb,
                                    Vector2 position,
