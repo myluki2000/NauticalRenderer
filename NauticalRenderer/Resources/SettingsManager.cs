@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace NauticalRenderer
+namespace NauticalRenderer.Resources
 {
     public abstract class SettingsManager
     {

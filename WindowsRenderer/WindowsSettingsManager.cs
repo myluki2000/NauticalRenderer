@@ -4,6 +4,7 @@ using System.Configuration;
 using System.Text;
 using WindowsRenderer.Properties;
 using NauticalRenderer;
+using NauticalRenderer.Resources;
 
 namespace WindowsRenderer
 {

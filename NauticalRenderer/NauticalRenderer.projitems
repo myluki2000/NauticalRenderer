@@ -18,11 +18,11 @@
     <Compile Include="$(MSBuildThisFileDirectory)Nmea\GpsManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Nmea\NmeaDeviceInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Nmea\NmeaDeviceManager.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ResourceManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Resources\ResourceManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Screens\MapScreen.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Screens\Screen.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Screens\ScreenHandler.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)SettingsManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Resources\SettingsManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SlippyMap\Data\Buoy.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SlippyMap\Data\Landmark.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SlippyMap\Data\MapStyle.cs" />

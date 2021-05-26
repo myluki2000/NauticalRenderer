@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace NauticalRenderer
+namespace NauticalRenderer.Resources
 {
     public abstract class ResourceManager
     {
