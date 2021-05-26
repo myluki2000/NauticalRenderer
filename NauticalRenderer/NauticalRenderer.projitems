@@ -61,8 +61,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)SlippyMap\UI\OsmTagGrid.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\NmeaDeviceSelectionDialog.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utility\Alignment.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Utility\LineRenderer.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Utility\LineStyle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Graphics\LineRenderer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Graphics\LineStyle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SlippyMap\UI\LineText.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utility\OsmHelpers.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utility\RectangleF.cs" />

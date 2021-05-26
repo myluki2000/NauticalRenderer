@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 using NauticalRenderer.Graphics;
 using NauticalRenderer.Resources;
 
-namespace NauticalRenderer.Utility
+namespace NauticalRenderer.Graphics
 {
     public class LineStyle
     {
