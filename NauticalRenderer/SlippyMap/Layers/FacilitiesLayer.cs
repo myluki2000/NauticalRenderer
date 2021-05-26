@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 using NauticalRenderer.Data;
 using NauticalRenderer.Data.MapPack;
 using NauticalRenderer.Graphics;
+using NauticalRenderer.Resources;
 using NauticalRenderer.Utility;
 using OsmSharp.Streams;
 

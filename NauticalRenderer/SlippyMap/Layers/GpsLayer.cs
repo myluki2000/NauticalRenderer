@@ -8,6 +8,7 @@ using NauticalRenderer.Data;
 using NauticalRenderer.Data.MapPack;
 using NauticalRenderer.Graphics;
 using NauticalRenderer.Nmea;
+using NauticalRenderer.Resources;
 using NauticalRenderer.Utility;
 using NmeaParser;
 using NmeaParser.Messages;

@@ -8,6 +8,7 @@ using Myra;
 using NauticalRenderer.Graphics;
 using NauticalRenderer.Graphics.Effects;
 using NauticalRenderer.Nmea;
+using NauticalRenderer.Resources;
 using NauticalRenderer.Screens;
 using NauticalRenderer.SlippyMap;
 using NauticalRenderer.SlippyMap.SourceLayers;

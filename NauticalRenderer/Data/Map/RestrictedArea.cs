@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.Input;
 using Myra;
 using NauticalRenderer.Data;
 using NauticalRenderer.Graphics;
+using NauticalRenderer.Resources;
 using NauticalRenderer.SlippyMap;
 using NauticalRenderer.Utility;
 using OsmSharp.Tags;

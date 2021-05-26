@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 using NauticalRenderer.Graphics;
+using NauticalRenderer.Resources;
 
 namespace NauticalRenderer.Utility
 {

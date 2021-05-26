@@ -8,6 +8,7 @@ using NauticalRenderer.Data;
 using NauticalRenderer.Data.MapPack;
 using NauticalRenderer.Graphics;
 using NauticalRenderer.Graphics.Effects;
+using NauticalRenderer.Resources;
 using NauticalRenderer.Utility;
 using OsmSharp;
 using OsmSharp.Complete;
