@@ -29,7 +29,8 @@ namespace NauticalRenderer.SlippyMap.Layers
         private Vector2[][] separationLines;
         private List<(Vector2, string)> labels = new List<(Vector2, string)>();
 
-        private static readonly Color SEPARATION_SCHEME_COLOR = Color.Magenta * 0.5f;
+        private static readonly Color SEPARATION_LINE_COLOR = Color.Magenta * 0.5f;
+        private static readonly Color SEPARATION_ZONE_COLOR = Color.Magenta * 0.3f;
         private static readonly Color SEPARATION_SCHEME_TEXT_COLOR = new Color(96, 0, 96);
 
         public override void Draw(SpriteBatch sb, SpriteBatch mapSb, Camera camera)
@@ -44,14 +45,14 @@ namespace NauticalRenderer.SlippyMap.Layers
                 LineRenderer.DrawDashedLine(
                     mapSb,
                     boundary,
-                    SEPARATION_SCHEME_COLOR,
+                    SEPARATION_LINE_COLOR,
                     new []{ 6.25f, 3.75f, 0, 0 },
                     camera.GetMatrix());
             }
 
             foreach (Vector2[] line in separationLines)
             {
-                LineRenderer.DrawLineStrip(mapSb, line, SEPARATION_SCHEME_COLOR, camera.GetMatrix());
+                LineRenderer.DrawLineStrip(mapSb, line, SEPARATION_LINE_COLOR, camera.GetMatrix());
             }
 
             foreach (Vector2[] lane in separationLanes)
@@ -62,7 +63,7 @@ namespace NauticalRenderer.SlippyMap.Layers
                     Vector2 p2 = lane[(i + 1) % lane.Length].Transform(camera.GetMatrix());
 
 
-                    Utility.Utility.DrawBlockArrow(sb, Matrix.Identity, p1, p2, 0.0035f * camera.Scale.Y, SEPARATION_SCHEME_COLOR);
+                    Utility.Utility.DrawBlockArrow(sb, Matrix.Identity, p1, p2, 0.0035f * camera.Scale.Y, SEPARATION_LINE_COLOR);
                 }
             }
 
@@ -113,7 +114,7 @@ namespace NauticalRenderer.SlippyMap.Layers
                 });
 
             separationZones = geos[0]
-                .Select(x => new Mesh(Utility.Utility.Triangulate(OsmHelpers.WayToLineStrip(x)), SEPARATION_SCHEME_COLOR))
+                .Select(x => new Mesh(Utility.Utility.Triangulate(OsmHelpers.WayToLineStrip(x)), SEPARATION_ZONE_COLOR))
                 .ToArray();
 
             separationBoundaries = geos[1]
