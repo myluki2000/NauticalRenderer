@@ -13,6 +13,7 @@ using Microsoft.Xna.Framework.Input;
 using NauticalRenderer.Data.Map;
 using NauticalRenderer.Data.MapPack;
 using NauticalRenderer.Graphics;
+using NauticalRenderer.Input;
 using NauticalRenderer.Screens;
 using NauticalRenderer.SlippyMap.Data;
 using NauticalRenderer.Utility;
@@ -31,7 +32,7 @@ namespace NauticalRenderer.SlippyMap.Layers
         private VertexPositionTexture[] seacablesVerts;
 
         private Effect squigglyLineEffect;
-        private MapScreen mapScreen;
+        private readonly MapScreen mapScreen;
 
         /// <inheritdoc />
         public ImportantAreaLayer(MapScreen mapScreen)
@@ -112,8 +113,7 @@ namespace NauticalRenderer.SlippyMap.Layers
 
             seacablesVerts = seacablesVertsList.ToArray();
         }
-
-        private MouseState lastMouseState;
+        
         /// <inheritdoc />
         public override void Draw(SpriteBatch sb, SpriteBatch mapSb, Camera camera)
         {
@@ -122,30 +122,28 @@ namespace NauticalRenderer.SlippyMap.Layers
             EffectPool.DashedLineEffect.Apply();
             borders.Draw(mapSb);
 
-            // used so that only the first area that is found is marked when mouse is hovering over it
-            bool mouseInPreviousArea = false;
-            
             foreach (RestrictedArea restrictedArea in restrictedAreas)
             {
+                // don't render out of view areas
                 if (!restrictedArea.BoundingRectangle.Intersects(camera.DrawBounds)) continue;
 
-                if (mouseInPreviousArea)
+                if (restrictedArea.IsArea
+                    && restrictedArea.Contains(camera.MousePosition)
+                    && MouseHelper.HasUnhandledHover
+                    && !mapScreen.Desktop.IsMouseOverGUI)
                 {
-                    restrictedArea.Draw(sb, mapSb, camera, false);
+                    restrictedArea.Draw(sb, mapSb, camera, true);
+                    MouseHelper.HoverWasHandled();
+
+                    if (MouseHelper.HasUnhandledLeftClick)
+                    {
+                        mapScreen.ShowOsmTagsWindow(restrictedArea.Label, restrictedArea.Tags);
+                        MouseHelper.LeftClickWasHandled();
+                    }
                 }
                 else
                 {
-                    bool mouseInside = restrictedArea.IsArea && restrictedArea.Contains(camera.MousePosition);
-                    restrictedArea.Draw(sb, mapSb, camera, mouseInside);
-                    if (mouseInside)
-                    {
-                        mouseInPreviousArea = true;
-                        if (Mouse.GetState().LeftButton == ButtonState.Released &&
-                            lastMouseState.LeftButton == ButtonState.Pressed)
-                        {
-                            mapScreen.ShowOsmTagsWindow(restrictedArea.Label, restrictedArea.Tags);
-                        }
-                    }
+                    restrictedArea.Draw(sb, mapSb, camera);
                 }
             }
 
@@ -162,8 +160,6 @@ namespace NauticalRenderer.SlippyMap.Layers
                 pass.Apply();
                 mapSb.GraphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleList, seacablesVerts, 0, seacablesVerts.Length / 3);
             }
-
-            lastMouseState = Mouse.GetState();
         }
     }
 }

@@ -54,6 +54,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)SlippyMap\SourceLayers\SimplifiedCoastSourceLayer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SlippyMap\SourceLayers\SourceLayer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SlippyMap\UI\Label.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Input\MouseHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\Settings\Panels\GpsSettingsPanel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\Settings\Panels\NmeaSettingsPanel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\Settings\Panels\SettingsPanel.cs" />
@@ -78,5 +79,6 @@
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Data\Map\" />
     <Folder Include="$(MSBuildThisFileDirectory)Resources\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Input\" />
   </ItemGroup>
 </Project>

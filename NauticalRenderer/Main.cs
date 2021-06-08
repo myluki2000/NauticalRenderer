@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Input;
 using Myra;
 using NauticalRenderer.Graphics;
 using NauticalRenderer.Graphics.Effects;
+using NauticalRenderer.Input;
 using NauticalRenderer.Nmea;
 using NauticalRenderer.Resources;
 using NauticalRenderer.Screens;
@@ -98,6 +99,8 @@ namespace NauticalRenderer
                 Exit();
             }
 #endif
+            MouseHelper.Update(gameTime);
+
             
             ScreenHandler.Update(gameTime);
             

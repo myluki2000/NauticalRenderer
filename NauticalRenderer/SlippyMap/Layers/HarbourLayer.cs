@@ -12,9 +12,9 @@ using Myra.Graphics2D.UI;
 using NauticalRenderer.Data;
 using NauticalRenderer.Data.MapPack;
 using NauticalRenderer.Graphics;
+using NauticalRenderer.Input;
 using NauticalRenderer.Resources;
 using NauticalRenderer.Screens;
-using NauticalRenderer.SlippyMap.UI;
 using NauticalRenderer.Utility;
 using OsmSharp;
 using OsmSharp.Complete;
@@ -25,7 +25,7 @@ namespace NauticalRenderer.SlippyMap.Layers
 {
     class HarbourLayer : MapLayer
     {
-        private MapScreen mapScreen;
+        private readonly MapScreen mapScreen;
         
         private List<Harbour> harbours;
 
@@ -56,14 +56,9 @@ namespace NauticalRenderer.SlippyMap.Layers
             }).ToList();
         }
 
-        private MouseState lastMouseState;
-        private Point mousePosAtMouseDown;
         /// <inheritdoc />
         public override void Draw(SpriteBatch sb, SpriteBatch mapSb, Camera camera)
         {
-            if (Mouse.GetState().LeftButton == ButtonState.Pressed && lastMouseState.LeftButton == ButtonState.Released)
-                mousePosAtMouseDown = Mouse.GetState().Position;
-
             foreach (Harbour harbour in harbours)
             {
                 Vector2 iconPos = harbour.Coordinates.Transform(camera.GetMatrix()).Rounded();
@@ -117,17 +112,17 @@ namespace NauticalRenderer.SlippyMap.Layers
                             SpriteEffects.None,
                             0f);
 
-                    if (Mouse.GetState().LeftButton == ButtonState.Released
-                        && lastMouseState.LeftButton == ButtonState.Pressed
-                        && (Mouse.GetState().Position - mousePosAtMouseDown).LengthSquared() < 5)
+                    if (MouseHelper.HasUnhandledLeftClick && !mapScreen.Desktop.IsMouseOverGUI)
                     {
-                        if (mapScreen.ShowOsmTagsWindow(name, harbour.Tags)) break;
+                        if (!mapScreen.ShowOsmTagsWindow(name, harbour.Tags)) continue; // window was not opened
+
+                        // window was opened
+                        MouseHelper.LeftClickWasHandled();
+                        break;
+
                     }
-                    
                 }
             }
-
-            lastMouseState = Mouse.GetState();
         }
 
         struct Harbour
