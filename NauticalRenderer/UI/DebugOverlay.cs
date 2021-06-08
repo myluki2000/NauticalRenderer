@@ -41,13 +41,19 @@ namespace NauticalRenderer.UI
             s.Append("Draw Calls: ");
             s.Append(metrics.DrawCount);
             s.Append("\n");
-
+            
             s.Append("Primitive Count: ");
             s.Append(metrics.PrimitiveCount);
             s.Append("\n");
 
             s.Append("Sprite Count: ");
             s.Append(metrics.SpriteCount);
+            s.Append("\n");
+
+            s.Append("Shader Changes (Vertex/Pixel): ");
+            s.Append(metrics.VertexShaderCount);
+            s.Append("/");
+            s.Append(metrics.PixelShaderCount);
 
 
             Vector2 size = Fonts.Arial.Regular.MeasureString(s.ToString());
