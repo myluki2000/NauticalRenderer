@@ -203,7 +203,7 @@ namespace NauticalRenderer.SlippyMap.Layers
                     }
                 }
             }
-
+            
             foreach (OsmLight o in lights)
             {
                 if (!camera.DrawBounds.Contains(o.Coordinates)) continue;

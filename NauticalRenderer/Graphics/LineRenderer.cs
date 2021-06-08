@@ -56,7 +56,7 @@ namespace NauticalRenderer.Graphics
             float[] lineAndGapLengths)
         {
             List<VertexPositionColor> drawPoints = new List<VertexPositionColor>();
-            
+
             float passedDistance = 0;
             for (int i = 0; i < points.Length - 1; i++)
             {
@@ -100,7 +100,7 @@ namespace NauticalRenderer.Graphics
             return drawPoints.ToArray();
         }
 
-        public static void DrawDashedLine(SpriteBatch sb, Vector2[] points, Color color, float[] lineAndGapLengths, Matrix viewMatrix)
+        public static void DrawDashedLine(SpriteBatch sb, Vector2[] points, Color color, float[] lineAndGapLengths, Matrix viewMatrix, PrimitiveType primitiveType = PrimitiveType.LineStrip)
         {
             VertexPositionColor[] verts = new VertexPositionColor[points.Length];
             verts[0] = new VertexPositionColor(new Vector3(points[0], 0), color);
@@ -114,7 +114,7 @@ namespace NauticalRenderer.Graphics
             EffectPool.DashedLineEffect.WorldMatrix = viewMatrix;
             EffectPool.DashedLineEffect.LineAndGapLengths = lineAndGapLengths;
             EffectPool.DashedLineEffect.Apply();
-            sb.GraphicsDevice.DrawUserPrimitives(PrimitiveType.LineStrip, verts, 0, verts.Length - 1);
+            sb.GraphicsDevice.DrawUserPrimitives(primitiveType, verts, 0, (primitiveType == PrimitiveType.LineStrip) ? (verts.Length - 1) : (verts.Length / 2));
         }
 
         public static void DrawStyledLine(SpriteBatch sb, Vector2[] points, Color color, LineStyle lineStyle, Matrix viewMatrix)
