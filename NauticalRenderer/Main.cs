@@ -13,6 +13,7 @@ using NauticalRenderer.Resources;
 using NauticalRenderer.Screens;
 using NauticalRenderer.SlippyMap;
 using NauticalRenderer.SlippyMap.SourceLayers;
+using NauticalRenderer.UI;
 using NauticalRenderer.Utility;
 
 #endregion
@@ -24,8 +25,6 @@ namespace NauticalRenderer
     /// </summary>
     public class Main : Game
     {
-        private readonly Stopwatch frametimeWatch = new Stopwatch();
-
         public Main(ResourceManager resourceManager, SettingsManager settingsManager)
         {
             Globals.Graphics = new GraphicsDeviceManager(this);
@@ -67,6 +66,10 @@ namespace NauticalRenderer
             Globals.Graphics.GraphicsDevice.PresentationParameters.MultiSampleCount = 32;
             Globals.Graphics.ApplyChanges();
 
+#if DEBUG
+            DebugOverlay.Initialize();
+#endif
+
             MyraEnvironment.Game = this;
             ScreenHandler.CurrentScreen = new MapScreen();
         }
@@ -100,10 +103,13 @@ namespace NauticalRenderer
             }
 #endif
             MouseHelper.Update(gameTime);
+            KeyboardHelper.Update(gameTime);
 
-            
             ScreenHandler.Update(gameTime);
-            
+
+
+            if (KeyboardHelper.WasReleased(Keys.F3))
+                DebugOverlay.IsVisible = !DebugOverlay.IsVisible;
 
             base.Update(gameTime);
         }
@@ -114,15 +120,14 @@ namespace NauticalRenderer
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            frametimeWatch.Reset();
-            frametimeWatch.Start();
+            DebugOverlay.StartFrameTimeMeasure();
 
             ScreenHandler.Draw();
 
-
+            DebugOverlay.StopFrameTimeMeasure();
+            DebugOverlay.Draw();
+            
             base.Draw(gameTime);
-
-            Window.Title = "Frame Time: " + frametimeWatch.ElapsedMilliseconds + "ms";
         }
 
 

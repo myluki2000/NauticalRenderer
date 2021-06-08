@@ -56,9 +56,7 @@ namespace NauticalRenderer.Graphics
             float[] lineAndGapLengths)
         {
             List<VertexPositionColor> drawPoints = new List<VertexPositionColor>();
-
-            float segmentLength = lineAndGapLengths.Sum();
-
+            
             float passedDistance = 0;
             for (int i = 0; i < points.Length - 1; i++)
             {

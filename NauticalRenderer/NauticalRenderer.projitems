@@ -15,6 +15,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Data\MapPack\MapPack.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Effects\DashedLineEffect.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Effects\SymbolInstancingEffect.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Input\KeyboardHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Nmea\GpsManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Nmea\NmeaDeviceInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Nmea\NmeaDeviceManager.cs" />
@@ -55,6 +56,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)SlippyMap\SourceLayers\SourceLayer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SlippyMap\UI\Label.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\MouseHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UI\DebugOverlay.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\Settings\Panels\GpsSettingsPanel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\Settings\Panels\NmeaSettingsPanel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\Settings\Panels\SettingsPanel.cs" />
@@ -79,6 +81,5 @@
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Data\Map\" />
     <Folder Include="$(MSBuildThisFileDirectory)Resources\" />
-    <Folder Include="$(MSBuildThisFileDirectory)Input\" />
   </ItemGroup>
 </Project>

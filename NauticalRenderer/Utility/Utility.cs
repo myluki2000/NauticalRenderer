@@ -36,7 +36,7 @@ namespace NauticalRenderer.Utility
                                    Matrix? viewMatrix = null,
                                    int resolution = 20)
         {
-            if (viewMatrix == null) viewMatrix = Matrix.Identity;
+            viewMatrix ??= Matrix.Identity;
             EffectPool.BasicEffect.View = (Matrix)viewMatrix;
 
             if (startAngle > endAngle)
