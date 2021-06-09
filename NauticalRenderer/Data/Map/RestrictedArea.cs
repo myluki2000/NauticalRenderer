@@ -97,7 +97,7 @@ namespace NauticalRenderer.Data.Map
                         SpriteEffects.None,
                         0);
                     break;
-                case RestrictedAreaRestriction.UNKNOWN:
+                default:
                     LineRenderer.DrawDashedLine(sb, points, Color.Black, new []{ 3f, 7f, 0, 0 }, camera.GetMatrix());
                     break;
             }
@@ -131,10 +131,10 @@ namespace NauticalRenderer.Data.Map
             UNKNOWN,
             NO_FISHING,
             RESTRICTED_FISHING,
-            NO_ENTRY,
             RESTRICTED_ENTRY,
             NO_ANCHORING_NO_FISHING,
-            NO_ANCHORING
+            NO_ANCHORING,
+            NO_ENTRY,
         }
     }
 }

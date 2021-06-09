@@ -118,11 +118,15 @@ namespace NauticalRenderer.SlippyMap.Layers
         /// <inheritdoc />
         public override void Draw(SpriteBatch sb, SpriteBatch mapSb, Camera camera)
         {
-            DashedLineEffect.WorldMatrix = camera.GetMatrix();
-            DashedLineEffect.LineAndGapLengths = new[] { 10f, 10f, 1f, 10f };
-            DashedLineEffect.Apply();
-            borders.Draw(mapSb);
+            DrawBorders(sb, mapSb, camera);
 
+            DrawRestrictedAreas(sb, mapSb, camera);
+
+            DrawSeacables(sb, mapSb, camera);
+        }
+
+        private void DrawRestrictedAreas(SpriteBatch sb, SpriteBatch mapSb, Camera camera)
+        {
             foreach (RestrictedArea restrictedArea in restrictedAreas)
             {
                 // don't render out of view areas
@@ -147,20 +151,31 @@ namespace NauticalRenderer.SlippyMap.Layers
                     restrictedArea.Draw(sb, mapSb, camera);
                 }
             }
+        }
 
+        private void DrawSeacables(SpriteBatch sb, SpriteBatch mapSb, Camera camera)
+        {
             squigglyLineEffect.Parameters["WorldViewProjection"].SetValue(camera.GetMatrix() * Matrix.CreateOrthographicOffCenter(
-                                                                              0,
-                                                                              Globals.Graphics.GraphicsDevice.Viewport.Width,
-                                                                              Globals.Graphics.GraphicsDevice.Viewport.Height,
-                                                                              0,
-                                                                              0,
-                                                                              1));
+                0,
+                Globals.Graphics.GraphicsDevice.Viewport.Width,
+                Globals.Graphics.GraphicsDevice.Viewport.Height,
+                0,
+                0,
+                1));
 
             foreach (EffectPass pass in squigglyLineEffect.CurrentTechnique.Passes)
             {
                 pass.Apply();
                 mapSb.GraphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleList, seacablesVerts, 0, seacablesVerts.Length / 3);
             }
+        }
+
+        private void DrawBorders(SpriteBatch sb, SpriteBatch mapSb, Camera camera)
+        {
+            DashedLineEffect.WorldMatrix = camera.GetMatrix();
+            DashedLineEffect.LineAndGapLengths = new[] { 10f, 10f, 1f, 10f };
+            DashedLineEffect.Apply();
+            borders.Draw(mapSb);
         }
     }
 }
