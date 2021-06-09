@@ -84,6 +84,8 @@ namespace NauticalRenderer.SlippyMap.Layers
         /// <inheritdoc />
         public override void Draw(SpriteBatch sb, SpriteBatch mapSb, Camera camera)
         {
+            if (!harbourLayerSettings.HarboursVisible) return;
+
             float iconSize = 26;
             if (camera.Scale.Y < 10000) iconSize = 20;
 

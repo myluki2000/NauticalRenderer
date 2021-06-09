@@ -23,8 +23,11 @@ namespace NauticalRenderer.SlippyMap.Layers
         private VertexBuffer vbfStreets;
         private (int firstIndexDashed, VertexBuffer vertexBuffer)[] vbfSmallStreets;
         private int minLon;
+
         /// <inheritdoc />
-        public override ILayerSettings LayerSettings { get; }
+        public override ILayerSettings LayerSettings => layerSettings;
+
+        private StreetLayerSettings layerSettings = new();
 
         private readonly List<LineText> lineTextsMotorwayTrunk = new List<LineText>(); 
         private readonly List<LineText> lineTextsPrimary = new List<LineText>(); 
@@ -48,7 +51,7 @@ namespace NauticalRenderer.SlippyMap.Layers
                 if(!way.Tags.TryGetValue("highway", out string type)) continue;
                 Color color = GetColorForHighwayType(type) * 0.7f;
 
-                if (type == "track" || type == "path" || type == "footway")
+                if (type is "path" or "footway" or "track" or "cycleway")
                 {
                     dashedSmallStreetsList.AddRange(Utility.Utility.LineStripToLineList(OsmHelpers.WayToLineStrip(way))
                         .Select(x => new VertexPositionColor(new Vector3(x, 0), color)));
@@ -57,13 +60,9 @@ namespace NauticalRenderer.SlippyMap.Layers
                 {
                     List<VertexPositionColor> list = streetsList;
 
-                    if (type == "residential" 
-                        || type == "service" 
-                        || type == "living_street"
-                        || type == "tertiary_link"
-                        || type == "secondary_link"
-                        || type == "primary_link"
-                        || type == "unclassified") list = smallStreetsList;
+                    if (type is "residential" or "service" or "living_street" or "tertiary_link" or "secondary_link"
+                        or "primary_link" or "cycleway" or "unclassified")
+                        list = smallStreetsList;
 
                     Vector2[] lineStrip = way.Nodes.Select(OsmHelpers.GetCoordinateOfOsmGeo).ToArray();
                     list.AddRange(Utility.Utility.LineStripToLineList(lineStrip).Select(x => new VertexPositionColor(new Vector3(x, 0), color)));
@@ -153,7 +152,7 @@ namespace NauticalRenderer.SlippyMap.Layers
             EffectPool.BasicEffect.View = camera.GetMatrix();
 
             // draw small streets
-            if (camera.Scale.Y > 10000)
+            if (layerSettings.MinorStreetsVisible && camera.Scale.Y > 10000)
             {
                 int screenLeftLon = (int)camera.DrawBounds.X;
                 int screenRightLon = (int) Math.Ceiling(camera.DrawBounds.Right);
@@ -182,39 +181,44 @@ namespace NauticalRenderer.SlippyMap.Layers
             }
 
             // draw major streets
-            EffectPool.BasicEffect.CurrentTechnique.Passes[0].Apply();
-            sb.GraphicsDevice.SetVertexBuffer(vbfStreets);
-            sb.GraphicsDevice.DrawPrimitives(PrimitiveType.LineList, 0, vbfStreets.VertexCount / 2);
+            if (layerSettings.MajorStreetsVisible)
+            {
+                EffectPool.BasicEffect.CurrentTechnique.Passes[0].Apply();
+                sb.GraphicsDevice.SetVertexBuffer(vbfStreets);
+                sb.GraphicsDevice.DrawPrimitives(PrimitiveType.LineList, 0, vbfStreets.VertexCount / 2);
 
-            if (camera.Scale.Y > 80000)
-                foreach (LineText lineText in lineTextsMotorwayTrunk)
-                {
+                if (camera.Scale.Y > 80000)
+                    foreach (LineText lineText in lineTextsMotorwayTrunk)
+                    {
                         lineText.Draw(sb, Color.Black, camera);
-                }
+                    }
 
-            if (camera.Scale.Y > 100000)
-                foreach (LineText lineText in lineTextsPrimary)
-                {
-                    lineText.Draw(sb, Color.Black, camera);
-                }
+                if (camera.Scale.Y > 100000)
+                    foreach (LineText lineText in lineTextsPrimary)
+                    {
+                        lineText.Draw(sb, Color.Black, camera);
+                    }
 
-            if (camera.Scale.Y > 120000)
-                foreach (LineText lineText in lineTextsSecondary)
-                {
-                    lineText.Draw(sb, Color.Black, camera);
-                }
+                if (camera.Scale.Y > 120000)
+                    foreach (LineText lineText in lineTextsSecondary)
+                    {
+                        lineText.Draw(sb, Color.Black, camera);
+                    }
 
-            if (camera.Scale.Y > 150000)
-                foreach (LineText lineText in lineTextsTertiary)
-                {
-                    lineText.Draw(sb, Color.Black, camera);
-                }
+                if (camera.Scale.Y > 150000)
+                    foreach (LineText lineText in lineTextsTertiary)
+                    {
+                        lineText.Draw(sb, Color.Black, camera);
+                    }
+            }
 
-            if (camera.Scale.Y > 200000)
+            if (layerSettings.MinorStreetsVisible && camera.Scale.Y > 200000)
+            {
                 foreach (LineText lineText in lineTextsOther)
                 {
                     lineText.Draw(sb, Color.Black, camera);
                 }
+            }
 
         }
 
@@ -242,9 +246,17 @@ namespace NauticalRenderer.SlippyMap.Layers
                 case "path":
                 case "footway":
                     return Color.Red;
+                case "cycleway":
+                    return Color.LightBlue;
                 default:
                     return Color.Gray;
             }
+        }
+
+        public class StreetLayerSettings : ILayerSettings
+        {
+            public bool MinorStreetsVisible = true;
+            public bool MajorStreetsVisible = true;
         }
     }
 }
