@@ -13,6 +13,7 @@ using Microsoft.Xna.Framework.Input;
 using NauticalRenderer.Data.Map;
 using NauticalRenderer.Data.MapPack;
 using NauticalRenderer.Graphics;
+using NauticalRenderer.Graphics.Effects;
 using NauticalRenderer.Input;
 using NauticalRenderer.Screens;
 using NauticalRenderer.SlippyMap.Data;
@@ -117,9 +118,9 @@ namespace NauticalRenderer.SlippyMap.Layers
         /// <inheritdoc />
         public override void Draw(SpriteBatch sb, SpriteBatch mapSb, Camera camera)
         {
-            EffectPool.DashedLineEffect.WorldMatrix = camera.GetMatrix();
-            EffectPool.DashedLineEffect.LineAndGapLengths = new[] { 10f, 10f, 1f, 10f };
-            EffectPool.DashedLineEffect.Apply();
+            DashedLineEffect.WorldMatrix = camera.GetMatrix();
+            DashedLineEffect.LineAndGapLengths = new[] { 10f, 10f, 1f, 10f };
+            DashedLineEffect.Apply();
             borders.Draw(mapSb);
 
             foreach (RestrictedArea restrictedArea in restrictedAreas)

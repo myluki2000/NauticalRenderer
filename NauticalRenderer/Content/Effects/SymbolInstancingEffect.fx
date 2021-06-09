@@ -14,6 +14,7 @@ DECLARE_TEXTURE(Texture, 0);
 matrix WorldMatrix;
 matrix ViewportMatrix;
 float Size;
+int AtlasWidth;
 
 
 struct VertexShaderInput
@@ -33,7 +34,7 @@ VertexShaderOutput MainVS(in VertexShaderInput input, float2 instanceTransform :
     VertexShaderOutput output = (VertexShaderOutput) 0;
 
     output.Position = mul(round(mul(float4(instanceTransform.x, instanceTransform.y, 0, 1), WorldMatrix) + float4(input.Position * Size, 0)), ViewportMatrix);
-    output.TexCoord = atlasCoord + input.TexCoord / 4;
+    output.TexCoord = atlasCoord + input.TexCoord / AtlasWidth;
 
     return output;
 }

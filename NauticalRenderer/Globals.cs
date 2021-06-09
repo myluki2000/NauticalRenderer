@@ -39,6 +39,8 @@ namespace NauticalRenderer
             ViewportMatrixChanged?.Invoke();
         }
 
+        private static GameWindow _gameWindow;
+
         #region Texture Coordinates
 
         public static readonly Rectangle TEXINDEX_0_0 = new Rectangle(0, 0, 512, 512);
@@ -57,8 +59,7 @@ namespace NauticalRenderer
         public static readonly Rectangle TEXINDEX_1_3 = new Rectangle(512, 1536, 512, 512);
         public static readonly Rectangle TEXINDEX_2_3 = new Rectangle(1024, 1536, 512, 512);
         public static readonly Rectangle TEXINDEX_3_3 = new Rectangle(1536, 1536, 512, 512);
-        private static GameWindow _gameWindow;
-
+        
         #endregion
     }
 }

@@ -171,7 +171,7 @@ namespace NauticalRenderer.Utility
         {
             return v.X * w.Y - v.Y * w.X;
         }
-        public static string GetValue(this TagsCollectionBase dict, string key, string defaultValue = null)
+        public static string GetValueOrDefault(this TagsCollectionBase dict, string key, string defaultValue = null)
         {
             return dict.TryGetValue(key, out string value) ? value : defaultValue;
         }

@@ -8,13 +8,14 @@ using Microsoft.Xna.Framework.Content;
 
 namespace NauticalRenderer.Graphics.Effects
 {
-    public class DashedLineEffect
+    public static class DashedLineEffect
     {
-        private readonly Effect effect;
-        private readonly EffectParameter lineAndGapLengthsParam;
-        private readonly EffectParameter worldMatrixParam;
+        private static Effect effect;
+        private static EffectParameter lineAndGapLengthsParam;
+        private static EffectParameter worldMatrixParam;
+        private static EffectParameter viewportMatrixParam;
 
-        public float[] LineAndGapLengths
+        public static float[] LineAndGapLengths
         {
             get => lineAndGapLengthsParam.GetValueSingleArray();
             set
@@ -24,23 +25,24 @@ namespace NauticalRenderer.Graphics.Effects
             }
         }
 
-        public Matrix WorldMatrix
+        public static Matrix WorldMatrix
         {
             get => worldMatrixParam.GetValueMatrix();
             set => worldMatrixParam.SetValue(value);
         }
 
-        public DashedLineEffect(ContentManager content)
+        public static void Initialize(ContentManager content)
         {
             effect = content.Load<Effect>("Effects/DashedLineEffect");
             lineAndGapLengthsParam = effect.Parameters["lineAndGapLengths"];
             worldMatrixParam = effect.Parameters["WorldMatrix"];
+            viewportMatrixParam = effect.Parameters["ViewportMatrix"];
 
-            Globals.ViewportMatrixChanged += () => effect.Parameters["ViewportMatrix"].SetValue(Globals.ViewportMatrix);
-            effect.Parameters["ViewportMatrix"].SetValue(Globals.ViewportMatrix);
+            Globals.ViewportMatrixChanged += () => viewportMatrixParam.SetValue(Globals.ViewportMatrix);
+            viewportMatrixParam.SetValue(Globals.ViewportMatrix);
         }
 
-        public void Apply()
+        public static void Apply()
         {
             effect.CurrentTechnique.Passes[0].Apply();
         }

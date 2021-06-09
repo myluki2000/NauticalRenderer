@@ -47,17 +47,15 @@ namespace NauticalRenderer.Resources
 
         public static class Harbours
         {
-            public static Texture2D Fishing { get; private set; }
-            public static Texture2D Harbour { get; private set; }
-            public static Texture2D Marina { get; private set; }
-            public static Texture2D MarinaNoFacilities { get; private set; }
+            public static Texture2D Texture { get; private set; }
+            public static Rectangle Fishing => TEXINDEX_1_0;
+            public static Rectangle Harbour => TEXINDEX_0_0;
+            public static Rectangle Marina => TEXINDEX_0_1;
+            public static Rectangle MarinaNoFacilities => TEXINDEX_1_1;
 
             public static void LoadContent(ContentManager content)
             {
-                Fishing = content.Load<Texture2D>("Icons/Harbours/fishing_harbour");
-                Harbour = content.Load<Texture2D>("Icons/Harbours/harbour");
-                Marina = content.Load<Texture2D>("Icons/Harbours/marina");
-                MarinaNoFacilities = content.Load<Texture2D>("Icons/Harbours/marina_no_facilities");
+                Texture = content.Load<Texture2D>("Icons/harbours");
             }
         }
 

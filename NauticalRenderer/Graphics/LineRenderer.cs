@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using NauticalRenderer.Graphics.Effects;
 using NauticalRenderer.Utility;
 using Math = System.Math;
 using Vector2 = Microsoft.Xna.Framework.Vector2;
@@ -111,9 +112,9 @@ namespace NauticalRenderer.Graphics
 
             if (verts.Length < 1) return;
 
-            EffectPool.DashedLineEffect.WorldMatrix = viewMatrix;
-            EffectPool.DashedLineEffect.LineAndGapLengths = lineAndGapLengths;
-            EffectPool.DashedLineEffect.Apply();
+            DashedLineEffect.WorldMatrix = viewMatrix;
+            DashedLineEffect.LineAndGapLengths = lineAndGapLengths;
+            DashedLineEffect.Apply();
             sb.GraphicsDevice.DrawUserPrimitives(primitiveType, verts, 0, (primitiveType == PrimitiveType.LineStrip) ? (verts.Length - 1) : (verts.Length / 2));
         }
 

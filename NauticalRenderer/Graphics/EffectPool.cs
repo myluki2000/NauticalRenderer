@@ -11,14 +11,13 @@ namespace NauticalRenderer.Graphics
     public static class EffectPool
     {
         public static BasicEffect BasicEffect { get; } = new BasicEffect(Globals.Graphics.GraphicsDevice);
-        public static DashedLineEffect DashedLineEffect { get; private set; }
 
         public static void LoadContent(ContentManager content)
         {
-            DashedLineEffect = new DashedLineEffect(content);
+            SymbolInstancingEffect.Initialize(content);
+            DashedLineEffect.Initialize(content);
 
             BasicEffect.VertexColorEnabled = true;
-
             Globals.ViewportMatrixChanged += () => BasicEffect.Projection = Globals.ViewportMatrix;
             BasicEffect.Projection = Globals.ViewportMatrix;
         }

@@ -18,7 +18,7 @@ namespace NauticalRenderer.SlippyMap.Layers
 {
     class DangerSymbolsLayer : MapLayer
     {
-        private SymbolInstancingEffect symbolEffect;
+        private SymbolInstancingEffectData effectData;
 
         /// <inheritdoc />
         public override ILayerSettings LayerSettings { get; }
@@ -28,15 +28,12 @@ namespace NauticalRenderer.SlippyMap.Layers
         /// <inheritdoc />
         public override void LoadContent(MapPack mapPack)
         {
-            symbolEffect = new SymbolInstancingEffect(Globals.Content);
-            symbolEffect.Size = 24f;
-            symbolEffect.Texture = Icons.DangerSymbols.Texture;
-
             IEnumerable<ICompleteOsmGeo> dangerSpots = new PBFOsmStreamSource(mapPack.OpenFile("base.osm.pbf")).ToComplete()
                 .Where(x => x.Tags.Contains("seamark:type", "rock") || x.Tags.ContainsKey("seamark:rock:water_level")
                             || x.Tags.Contains("seamark:type", "wreck") || x.Tags.ContainsKey("seamark:wreck:category"));
 
-            symbolEffect.SetInstanceData(dangerSpots.Select(x =>
+            effectData = new();
+            effectData.SetInstanceData(dangerSpots.Select(x =>
             {
                 Vector2 atlasCoords = new Vector2(0, 0);
                 if (x.Tags.TryGetValue("seamark:rock:water_level", out string value))
@@ -71,8 +68,8 @@ namespace NauticalRenderer.SlippyMap.Layers
                 }
 
                 atlasCoords.X /= Icons.DangerSymbols.Texture.Width;
-                SymbolInstancingEffect.InstanceInfo instance =
-                    new SymbolInstancingEffect.InstanceInfo(OsmHelpers.GetCoordinateOfOsmGeo(x), atlasCoords);
+                SymbolInstancingEffectData.InstanceInfo instance =
+                    new SymbolInstancingEffectData.InstanceInfo(OsmHelpers.GetCoordinateOfOsmGeo(x), atlasCoords);
                 return instance;
             }).ToArray());
         }
@@ -82,8 +79,11 @@ namespace NauticalRenderer.SlippyMap.Layers
         {
             if (camera.Scale.Y > 3000)
             {
-                symbolEffect.WorldMatrix = camera.GetMatrix();
-                symbolEffect.Draw();
+                SymbolInstancingEffect.Size = 24f;
+                SymbolInstancingEffect.Texture = Icons.DangerSymbols.Texture;
+                SymbolInstancingEffect.WorldMatrix = camera.GetMatrix();
+                SymbolInstancingEffect.AtlasWidth = 4;
+                effectData.Draw();
             }
         }
     }

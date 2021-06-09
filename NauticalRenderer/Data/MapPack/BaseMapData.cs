@@ -30,7 +30,7 @@ namespace NauticalRenderer.Data.MapPack
                     {
                         RestrictedAreas.Add(new RestrictedArea
                         (
-                            way.Tags.GetValue("name"),
+                            way.Tags.GetValueOrDefault("name"),
                             way.Nodes.Select(y => new Vector2((float)y.Longitude, -(float)y.Latitude)).ToArray(),
                             way.Tags.TryGetValue("seamark:restricted_area:category", out string value)
                                 ? Enum.TryParse(value, true, out RestrictedArea.RestrictedAreaCategory cat) ? cat :

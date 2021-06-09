@@ -12,6 +12,7 @@ using Myra.Graphics2D.UI;
 using NauticalRenderer.Data;
 using NauticalRenderer.Data.MapPack;
 using NauticalRenderer.Graphics;
+using NauticalRenderer.Graphics.Effects;
 using NauticalRenderer.Input;
 using NauticalRenderer.Resources;
 using NauticalRenderer.Screens;
@@ -26,12 +27,14 @@ namespace NauticalRenderer.SlippyMap.Layers
     class HarbourLayer : MapLayer
     {
         private readonly MapScreen mapScreen;
-        
-        private List<Harbour> harbours;
+
+        private readonly List<Harbour> harbours = new();
 
         /// <inheritdoc />
         public override ILayerSettings LayerSettings => harbourLayerSettings;
         private readonly HarbourLayerSettings harbourLayerSettings = new HarbourLayerSettings();
+
+        private SymbolInstancingEffectData effectData;
 
         /// <inheritdoc />
         public HarbourLayer(MapScreen mapScreen)
@@ -42,66 +45,68 @@ namespace NauticalRenderer.SlippyMap.Layers
         /// <inheritdoc />
         public override void LoadContent(MapPack mapPack)
         {
+            harbours.Clear();
+
             IEnumerable<ICompleteOsmGeo> harboursOsm =
                 (from osmGeo in new PBFOsmStreamSource(mapPack.OpenFile("base.osm.pbf")).ToComplete()
                  where osmGeo.Tags.Contains("leisure", "marina") || osmGeo.Tags.Contains("seamark:type", "harbour") || osmGeo.Tags.ContainsKey("seamark:harbour:category")
                  select osmGeo);
 
-            harbours = harboursOsm.Select(x =>
+            foreach (ICompleteOsmGeo geo in harboursOsm)
             {
-                string categoryString = x.Tags.GetValue("seamark:harbour:category",
-                    x.Tags.Contains("leisure", "marina") ? "marina" : "other");
-                Enum.TryParse(categoryString.ToUpper(), out Harbour.HarbourCategory category);
-                return new Harbour(category, OsmHelpers.GetCoordinateOfOsmGeo(x), x.Tags);
-            }).ToList();
+                string categoryString = geo.Tags.GetValueOrDefault("seamark:harbour:category",
+                    geo.Tags.Contains("leisure", "marina") ? "marina" : "other");
+                if (!Enum.TryParse(categoryString, true, out Harbour.HarbourCategory category))
+                    category = Harbour.HarbourCategory.OTHER;
+
+                Harbour h = new(category, OsmHelpers.GetCoordinateOfOsmGeo(geo), geo.Tags);
+                harbours.Add(h);
+
+            }
+
+            effectData = new();
+            effectData.SetInstanceData(harbours.Select(x =>
+            {
+                Vector2 atlasCoords = x.Category switch
+                {
+                    Harbour.HarbourCategory.FISHING => Icons.Harbours.Fishing.Location.ToVector2(),
+                    Harbour.HarbourCategory.MARINA => Icons.Harbours.Marina.Location.ToVector2(),
+                    Harbour.HarbourCategory.MARINA_NO_FACILITIES => Icons.Harbours.MarinaNoFacilities.Location.ToVector2(),
+                    _ => Icons.Harbours.Harbour.Location.ToVector2()
+                };
+
+                atlasCoords /= Icons.Harbours.Texture.Width;
+
+                return new SymbolInstancingEffectData.InstanceInfo(x.Coordinates, atlasCoords);
+            }).ToArray());
         }
 
         /// <inheritdoc />
         public override void Draw(SpriteBatch sb, SpriteBatch mapSb, Camera camera)
         {
+            float iconSize = 26;
+            if (camera.Scale.Y < 10000) iconSize = 20;
+
+            SymbolInstancingEffect.Size = iconSize;
+            SymbolInstancingEffect.WorldMatrix = camera.GetMatrix();
+            SymbolInstancingEffect.Texture = Icons.Harbours.Texture;
+            SymbolInstancingEffect.AtlasWidth = 2;
+            effectData.Draw();
+
             foreach (Harbour harbour in harbours)
             {
                 Vector2 iconPos = harbour.Coordinates.Transform(camera.GetMatrix()).Rounded();
 
-                // draw icon
-                Texture2D icon;
-                switch (harbour.Category)
-                {
-                    case Harbour.HarbourCategory.FISHING:
-                        if (!harbourLayerSettings.FishingHarboursVisible) continue;
-                        icon = Icons.Harbours.Fishing;
-                        break;
-                    case Harbour.HarbourCategory.MARINA:
-                        if (!harbourLayerSettings.MarinasVisible) continue;
-                        icon = Icons.Harbours.Marina;
-                        break;
-                    case Harbour.HarbourCategory.MARINA_NO_FACILITIES:
-                        if (!harbourLayerSettings.MarinasVisible) continue;
-                        icon = Icons.Harbours.MarinaNoFacilities;
-                        break;
-                    default:
-                        if (!harbourLayerSettings.HarboursVisible) continue;
-                        icon = Icons.Harbours.Harbour;
-                        break;
-                }
-                
-                Vector2 iconSize = new Vector2(25, 25);
-                if (camera.Scale.Y < 10000) iconSize = new Vector2(20, 20);
-
-
-                sb.Draw(icon,
-                    new Rectangle(iconPos.ToPoint(), iconSize.ToPoint()),
-                    null,
-                    Color.White,
-                    0,
-                    new Vector2(icon.Width / 2, icon.Height / 2), 
-                    SpriteEffects.None,
-                    0);
+                RectangleF boundingRect = new(
+                    iconPos.X - iconSize / 2,
+                    iconPos.Y - iconSize / 2,
+                    iconSize,
+                    iconSize);
 
                 // draw label on hover
-                if (new Rectangle((iconPos - iconSize / 2).ToPoint(), iconSize.ToPoint()).Contains(Mouse.GetState().Position))
+                if (boundingRect.Contains(Mouse.GetState().Position.ToVector2()))
                 {
-                    if(harbour.Tags.TryGetValue("name", out string name))
+                    if (harbour.Tags.TryGetValue("name", out string name))
                         sb.DrawString(Fonts.Arial.Regular,
                             name,
                             iconPos,
@@ -150,8 +155,6 @@ namespace NauticalRenderer.SlippyMap.Layers
         public class HarbourLayerSettings : ILayerSettings
         {
             public bool HarboursVisible = true;
-            public bool FishingHarboursVisible = true;
-            public bool MarinasVisible = true;
         }
     }
 }
