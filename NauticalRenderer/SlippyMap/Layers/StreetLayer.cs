@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.Graphics;
 using NauticalRenderer.Data;
 using NauticalRenderer.Data.MapPack;
 using NauticalRenderer.Graphics;
+using NauticalRenderer.Graphics.Effects;
 using NauticalRenderer.SlippyMap.UI;
 using NauticalRenderer.Utility;
 using OsmSharp;
@@ -20,7 +21,7 @@ namespace NauticalRenderer.SlippyMap.Layers
     class StreetLayer : MapLayer
     {
         private VertexBuffer vbfStreets;
-        private VertexBuffer[] vbfSmallStreets;
+        private (int firstIndexDashed, VertexBuffer vertexBuffer)[] vbfSmallStreets;
         private int minLon;
         /// <inheritdoc />
         public override ILayerSettings LayerSettings { get; }
@@ -36,8 +37,9 @@ namespace NauticalRenderer.SlippyMap.Layers
         {
             OsmCompleteStreamSource source = new PBFOsmStreamSource(mapPack.OpenFile("streets.osm.pbf")).ToComplete();
 
-            List<VertexPositionColor> streetsList = new List<VertexPositionColor>();
-            List<VertexPositionColor> smallStreetsList = new List<VertexPositionColor>();
+            List<VertexPositionColor> streetsList = new();
+            List<VertexPositionColor> smallStreetsList = new();
+            List<VertexPositionColor> dashedSmallStreetsList = new();
 
             foreach (ICompleteOsmGeo geo in source)
             {
@@ -48,7 +50,8 @@ namespace NauticalRenderer.SlippyMap.Layers
 
                 if (type == "track" || type == "path" || type == "footway")
                 {
-                    smallStreetsList.AddRange(LineRenderer.GenerateDashedLineVerts(OsmHelpers.WayToLineStrip(way), color, new []{0.0001f, 0.0001f}));
+                    dashedSmallStreetsList.AddRange(Utility.Utility.LineStripToLineList(OsmHelpers.WayToLineStrip(way))
+                        .Select(x => new VertexPositionColor(new Vector3(x, 0), color)));
                 }
                 else
                 {
@@ -93,10 +96,10 @@ namespace NauticalRenderer.SlippyMap.Layers
 
             minLon = (int)mapPack.BoundingPolygon.Min(x => x.X);
             int maxLon = (int) Math.Ceiling(mapPack.BoundingPolygon.Max(x => x.X));
-            vbfSmallStreets = new VertexBuffer[maxLon - minLon];
+            vbfSmallStreets = new (int firstIndexDashed, VertexBuffer vertexBuffer)[maxLon - minLon];
             for (int lonI = 0; lonI < maxLon - minLon; lonI++)
             {
-                List<VertexPositionColor> points = new List<VertexPositionColor>();
+                List<VertexPositionColor> points = new();
                 for (int i = 0; i < smallStreetsList.Count - 1; i += 2)
                 {
                     VertexPositionColor p1 = smallStreetsList[i];
@@ -110,14 +113,30 @@ namespace NauticalRenderer.SlippyMap.Layers
                     points.Add(p2);
                 }
 
+                vbfSmallStreets[lonI].firstIndexDashed = points.Count;
+
+                // add dashed streets after that
+                for (int i = 0; i < dashedSmallStreetsList.Count - 1; i += 2)
+                {
+                    VertexPositionColor p1 = dashedSmallStreetsList[i];
+                    VertexPositionColor p2 = dashedSmallStreetsList[i + 1];
+
+                    // if both points lie outside the bounds and on the same side the line does not intersect the area
+                    if (p1.Position.X < minLon + lonI && p2.Position.X < minLon + lonI
+                        || p1.Position.X > minLon + lonI + 1 && p2.Position.X > minLon + lonI + 1) continue;
+
+                    points.Add(p1);
+                    points.Add(p2);
+                }
+
                 if (points.Count > 0)
                 {
-                    vbfSmallStreets[lonI] = new VertexBuffer(Globals.Graphics.GraphicsDevice, typeof(VertexPositionColor), points.Count, BufferUsage.WriteOnly);
-                    vbfSmallStreets[lonI].SetData(points.ToArray());
+                    vbfSmallStreets[lonI].vertexBuffer = new VertexBuffer(Globals.Graphics.GraphicsDevice, typeof(VertexPositionColor), points.Count, BufferUsage.WriteOnly);
+                    vbfSmallStreets[lonI].vertexBuffer.SetData(points.ToArray());
                 }
                 else
                 {
-                    vbfSmallStreets[lonI] = null;
+                    vbfSmallStreets[lonI].vertexBuffer = null;
                 }
             }
 
@@ -129,8 +148,9 @@ namespace NauticalRenderer.SlippyMap.Layers
         /// <inheritdoc />
         public override void Draw(SpriteBatch sb, SpriteBatch mapSb, Camera camera)
         {
+            DashedLineEffect.WorldMatrix = camera.GetMatrix();
+            DashedLineEffect.LineAndGapLengths = new[] { 5f, 5f, 0f, 0f };
             EffectPool.BasicEffect.View = camera.GetMatrix();
-            EffectPool.BasicEffect.CurrentTechnique.Passes[0].Apply();
 
             // draw small streets
             if (camera.Scale.Y > 10000)
@@ -140,21 +160,33 @@ namespace NauticalRenderer.SlippyMap.Layers
 
                 for (int i = screenLeftLon - minLon; i < screenRightLon - minLon; i++)
                 {
-                    if (vbfSmallStreets[i] == null) continue;
+                    if (vbfSmallStreets[i].vertexBuffer == null) continue;
 
-                    sb.GraphicsDevice.SetVertexBuffer(vbfSmallStreets[i]);
-                    sb.GraphicsDevice.DrawPrimitives(PrimitiveType.LineList, 0, vbfSmallStreets[i].VertexCount / 2);
+                    sb.GraphicsDevice.SetVertexBuffer(vbfSmallStreets[i].vertexBuffer);
+
+
+                    if (camera.Scale.Y > 30000)
+                    {
+                        // draw dashed lines
+                        DashedLineEffect.Apply();
+                        sb.GraphicsDevice.DrawPrimitives(PrimitiveType.LineList,
+                            vbfSmallStreets[i].firstIndexDashed,
+                            (vbfSmallStreets[i].vertexBuffer.VertexCount - vbfSmallStreets[i].firstIndexDashed) / 2);
+                    }
+
+                    // draw lines
+                    EffectPool.BasicEffect.CurrentTechnique.Passes[0].Apply();
+                    if (vbfSmallStreets[i].firstIndexDashed != 0)
+                        sb.GraphicsDevice.DrawPrimitives(PrimitiveType.LineList, 0, vbfSmallStreets[i].firstIndexDashed / 2);
                 }
             }
-                
-            
+
             // draw major streets
+            EffectPool.BasicEffect.CurrentTechnique.Passes[0].Apply();
             sb.GraphicsDevice.SetVertexBuffer(vbfStreets);
             sb.GraphicsDevice.DrawPrimitives(PrimitiveType.LineList, 0, vbfStreets.VertexCount / 2);
 
-
-
-            if(camera.Scale.Y > 80000)
+            if (camera.Scale.Y > 80000)
                 foreach (LineText lineText in lineTextsMotorwayTrunk)
                 {
                         lineText.Draw(sb, Color.Black, camera);

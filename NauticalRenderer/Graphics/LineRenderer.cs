@@ -52,55 +52,6 @@ namespace NauticalRenderer.Graphics
             sb.GraphicsDevice.DrawUserPrimitives(PrimitiveType.LineList, verts, 0, verts.Length / 2);
         }
 
-        public static VertexPositionColor[] GenerateDashedLineVerts(Vector2[] points,
-            Color color,
-            float[] lineAndGapLengths)
-        {
-            List<VertexPositionColor> drawPoints = new List<VertexPositionColor>();
-
-            float passedDistance = 0;
-            for (int i = 0; i < points.Length - 1; i++)
-            {
-                Vector2 startPoint = points[i];
-                Vector2 endPoint = points[i + 1];
-                Vector2 normal = endPoint - startPoint;
-                float length = normal.Length();
-                normal.Normalize();
-
-                float internalPassedDistance = passedDistance;
-                int segmentIndex = 0;
-                while (lineAndGapLengths[segmentIndex] < internalPassedDistance)
-                {
-                    internalPassedDistance -= lineAndGapLengths[segmentIndex];
-                    segmentIndex = ++segmentIndex % lineAndGapLengths.Length;
-                }
-
-                float lengthToGo = length;
-                float thisSegmentPartLength = lineAndGapLengths[segmentIndex] - internalPassedDistance;
-                while (lengthToGo > 0)
-                {
-                    if (segmentIndex % 2 == 0)
-                    {
-                        drawPoints.Add(
-                            new VertexPositionColor(new Vector3(startPoint + normal * (length - lengthToGo), 0),
-                                color));
-                        drawPoints.Add(new VertexPositionColor(
-                            new Vector3(
-                                startPoint + normal *
-                                (length - lengthToGo + Math.Min(lengthToGo, thisSegmentPartLength)), 0), color));
-                    }
-
-                    lengthToGo -= thisSegmentPartLength;
-                    segmentIndex = ++segmentIndex % lineAndGapLengths.Length;
-                    thisSegmentPartLength = lineAndGapLengths[segmentIndex];
-                }
-
-                passedDistance += length;
-            }
-
-            return drawPoints.ToArray();
-        }
-
         public static void DrawDashedLine(SpriteBatch sb, Vector2[] points, Color color, float[] lineAndGapLengths, Matrix viewMatrix, PrimitiveType primitiveType = PrimitiveType.LineStrip)
         {
             VertexPositionColor[] verts = new VertexPositionColor[points.Length];
