@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<translations>
+  <translation>
+    <name>Remove unnecessary tags</name>
+    <description>.</description>
+    <match mode="or">
+      <tag k="source" v=".*" />
+      <tag k="is_in" v=".*" />
+      <tag k="manufacturer" v=".*" />
+      <tag k="model" v=".*" />
+      <tag k="operator" v=".*" />
+      <tag k="rotor:.*" v=".*" />
+      <tag k="generator:.*" v=".*" />
+      <tag k="voltage" v=".*" />
+      <tag k="start_date" v=".*" />  
+      <tag k="frequency" v=".*" />
+    </match>
+    <output>
+      <copy-unmatched />
+    </output>
+  </translation>
+  <translation>
+    <name>Fix no_entry</name>
+    <description>.</description>
+    <match mode="and">
+      <tag k=".*" match_id="no_entry" v="entry_prohibited" />
+    </match>
+    <output>
+      <copy-unmatched />
+      <tag from_match="no_entry" k="{0}" v="no_entry" />
+    </output>
+  </translation>
+</translations>
