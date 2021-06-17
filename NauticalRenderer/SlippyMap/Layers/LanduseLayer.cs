@@ -17,7 +17,9 @@ namespace NauticalRenderer.SlippyMap.Layers
     class LanduseLayer : MapLayer
     {
         /// <inheritdoc />
-        public override ILayerSettings LayerSettings { get; }
+        public override ILayerSettings LayerSettings => landuseLayerSettings;
+
+        private LanduseLayerSettings landuseLayerSettings = new();
 
         private Mesh forestsMesh;
         private Mesh buildingsMesh;
@@ -57,8 +59,15 @@ namespace NauticalRenderer.SlippyMap.Layers
         /// <inheritdoc />
         public override void Draw(SpriteBatch sb, SpriteBatch mapSb, Camera camera)
         {
+            if (!landuseLayerSettings.LandusesVisible) return;
+
             forestsMesh.Draw(sb, camera.GetMatrix());
             buildingsMesh.Draw(sb, camera.GetMatrix());
+        }
+
+        private class LanduseLayerSettings : ILayerSettings
+        {
+            public bool LandusesVisible = true;
         }
     }
 }

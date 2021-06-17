@@ -154,7 +154,7 @@ namespace NauticalRenderer.SlippyMap.Layers
             }
         }
 
-        public class HarbourLayerSettings : ILayerSettings
+        private class HarbourLayerSettings : ILayerSettings
         {
             public bool HarboursVisible = true;
         }
