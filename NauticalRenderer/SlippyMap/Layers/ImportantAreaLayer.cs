@@ -36,13 +36,15 @@ namespace NauticalRenderer.SlippyMap.Layers
         private readonly MapScreen mapScreen;
 
         /// <inheritdoc />
+        public override ILayerSettings LayerSettings => importantAreaLayerSettings;
+
+        private readonly ImportantAreaLayerSettings importantAreaLayerSettings = new();
+
+        /// <inheritdoc />
         public ImportantAreaLayer(MapScreen mapScreen)
         {
             this.mapScreen = mapScreen;
         }
-
-        /// <inheritdoc />
-        public override ILayerSettings LayerSettings { get; }
 
         /// <inheritdoc />
         public override void LoadContent(MapPack mapPack)
@@ -83,7 +85,7 @@ namespace NauticalRenderer.SlippyMap.Layers
                 .Where(osmGeo => osmGeo.Tags.Contains("seamark:type", "cable_submarine"))
                 .OfType<CompleteWay>()
                 .Select(x => x.Nodes
-                    .Select(n => new Vector2((float) n.Longitude, -(float) n.Latitude))
+                    .Select(n => new Vector2((float)n.Longitude, -(float)n.Latitude))
                     .ToArray())
                 .ToList();
 
@@ -97,7 +99,7 @@ namespace NauticalRenderer.SlippyMap.Layers
 
                     Vector2 halfWidthVector = (end - start);
                     float length = (float)Math.Ceiling((halfWidthVector.Length() * 1000) / MathHelper.TwoPi) * MathHelper.TwoPi;
-                    
+
                     halfWidthVector = halfWidthVector.PerpendicularClockwise();
                     halfWidthVector.Normalize();
                     halfWidthVector *= 0.001f;
@@ -114,15 +116,18 @@ namespace NauticalRenderer.SlippyMap.Layers
 
             seacablesVerts = seacablesVertsList.ToArray();
         }
-        
+
         /// <inheritdoc />
         public override void Draw(SpriteBatch sb, SpriteBatch mapSb, Camera camera)
         {
-            DrawBorders(sb, mapSb, camera);
+            if (importantAreaLayerSettings.DrawCountryBorders)
+                DrawBorders(sb, mapSb, camera);
 
-            DrawRestrictedAreas(sb, mapSb, camera);
+            if (importantAreaLayerSettings.DrawRestrictedAreas)
+                DrawRestrictedAreas(sb, mapSb, camera);
 
-            DrawSeacables(sb, mapSb, camera);
+            if (importantAreaLayerSettings.DrawSeacables)
+                DrawSeacables(sb, mapSb, camera);
         }
 
         private void DrawRestrictedAreas(SpriteBatch sb, SpriteBatch mapSb, Camera camera)
@@ -176,6 +181,13 @@ namespace NauticalRenderer.SlippyMap.Layers
             DashedLineEffect.LineAndGapLengths = new[] { 10f, 10f, 1f, 10f };
             DashedLineEffect.Apply();
             borders.Draw(mapSb);
+        }
+
+        private class ImportantAreaLayerSettings : ILayerSettings
+        {
+            public bool DrawCountryBorders = true;
+            public bool DrawRestrictedAreas = true;
+            public bool DrawSeacables = true;
         }
     }
 }

@@ -19,7 +19,7 @@ namespace NauticalRenderer.SlippyMap.Layers
         /// <inheritdoc />
         public override ILayerSettings LayerSettings => landuseLayerSettings;
 
-        private LanduseLayerSettings landuseLayerSettings = new();
+        private readonly LanduseLayerSettings landuseLayerSettings = new();
 
         private Mesh forestsMesh;
         private Mesh buildingsMesh;
