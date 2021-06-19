@@ -177,6 +177,7 @@ namespace NauticalRenderer.SlippyMap.Layers
 
         private void DrawBorders(SpriteBatch sb, SpriteBatch mapSb, Camera camera)
         {
+            DashedLineEffect.BackgroundColor = Color.Transparent.ToVector4();
             DashedLineEffect.WorldMatrix = camera.GetMatrix();
             DashedLineEffect.LineAndGapLengths = new[] { 10f, 10f, 1f, 10f };
             DashedLineEffect.Apply();

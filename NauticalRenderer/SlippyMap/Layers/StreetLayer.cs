@@ -21,6 +21,7 @@ namespace NauticalRenderer.SlippyMap.Layers
     class StreetLayer : MapLayer
     {
         private VertexBuffer vbfStreets;
+        private VertexBuffer vbfRailways;
         private (int firstIndexDashed, VertexBuffer vertexBuffer)[] vbfSmallStreets;
         private int minLon;
 
@@ -43,55 +44,77 @@ namespace NauticalRenderer.SlippyMap.Layers
             List<VertexPositionColor> streetsList = new();
             List<VertexPositionColor> smallStreetsList = new();
             List<VertexPositionColor> dashedSmallStreetsList = new();
+            List<VertexPositionColor> railwaysList = new();
 
             foreach (ICompleteOsmGeo geo in source)
             {
                 if(!(geo is CompleteWay way)) continue;
 
-                if(!way.Tags.TryGetValue("highway", out string type)) continue;
-                Color color = GetColorForHighwayType(type) * 0.7f;
-
-                if (type is "path" or "footway" or "track" or "cycleway")
+                if (way.Tags.TryGetValue("highway", out string type))
                 {
-                    dashedSmallStreetsList.AddRange(Utility.Utility.LineStripToLineList(OsmHelpers.WayToLineStrip(way))
-                        .Select(x => new VertexPositionColor(new Vector3(x, 0), color)));
-                }
-                else
-                {
-                    List<VertexPositionColor> list = streetsList;
+                    Color color = GetColorForHighwayType(type) * 0.7f;
 
-                    if (type is "residential" or "service" or "living_street" or "tertiary_link" or "secondary_link"
-                        or "primary_link" or "cycleway" or "unclassified")
-                        list = smallStreetsList;
-
-                    Vector2[] lineStrip = way.Nodes.Select(OsmHelpers.GetCoordinateOfOsmGeo).ToArray();
-                    list.AddRange(Utility.Utility.LineStripToLineList(lineStrip).Select(x => new VertexPositionColor(new Vector3(x, 0), color)));
-                    
-                    if (geo.Tags.ContainsKey("name"))
+                    if (type is "path" or "footway" or "track" or "cycleway")
                     {
-                        switch (type)
+                        dashedSmallStreetsList.AddRange(Utility.Utility
+                            .LineStripToLineList(OsmHelpers.WayToLineStrip(way))
+                            .Select(x => new VertexPositionColor(new Vector3(x, 0), color)));
+                    }
+                    else
+                    {
+                        List<VertexPositionColor> list = streetsList;
+
+                        if (type is "residential" or "service" or "living_street" or "tertiary_link" or "secondary_link"
+                            or "primary_link" or "cycleway" or "unclassified")
+                            list = smallStreetsList;
+
+                        Vector2[] lineStrip = way.Nodes.Select(OsmHelpers.GetCoordinateOfOsmGeo).ToArray();
+                        list.AddRange(Utility.Utility.LineStripToLineList(lineStrip)
+                            .Select(x => new VertexPositionColor(new Vector3(x, 0), color)));
+
+                        if (geo.Tags.ContainsKey("name"))
                         {
-                            case "motorway":
-                            case "trunk":
-                                lineTextsMotorwayTrunk.Add(new LineText(lineStrip, geo.Tags["name"], Myra.DefaultAssets.FontSmall, LineText.Alignment.CENTER));
-                                break;
-                            case "primary":
-                                lineTextsPrimary.Add(new LineText(lineStrip, geo.Tags["name"], Myra.DefaultAssets.FontSmall, LineText.Alignment.CENTER));
-                                break;
-                            case "secondary":
-                                lineTextsSecondary.Add(new LineText(lineStrip, geo.Tags["name"], Myra.DefaultAssets.FontSmall, LineText.Alignment.CENTER));
-                                break;
-                            case "tertiary":
-                                lineTextsTertiary.Add(new LineText(lineStrip, geo.Tags["name"], Myra.DefaultAssets.FontSmall, LineText.Alignment.CENTER));
-                                break;
-                            default:
-                                lineTextsOther.Add(new LineText(lineStrip, geo.Tags["name"], Myra.DefaultAssets.FontSmall, LineText.Alignment.CENTER));
-                                break;
+                            switch (type)
+                            {
+                                case "motorway":
+                                case "trunk":
+                                    lineTextsMotorwayTrunk.Add(new LineText(lineStrip, geo.Tags["name"],
+                                        Myra.DefaultAssets.FontSmall, LineText.Alignment.CENTER));
+                                    break;
+                                case "primary":
+                                    lineTextsPrimary.Add(new LineText(lineStrip, geo.Tags["name"],
+                                        Myra.DefaultAssets.FontSmall, LineText.Alignment.CENTER));
+                                    break;
+                                case "secondary":
+                                    lineTextsSecondary.Add(new LineText(lineStrip, geo.Tags["name"],
+                                        Myra.DefaultAssets.FontSmall, LineText.Alignment.CENTER));
+                                    break;
+                                case "tertiary":
+                                    lineTextsTertiary.Add(new LineText(lineStrip, geo.Tags["name"],
+                                        Myra.DefaultAssets.FontSmall, LineText.Alignment.CENTER));
+                                    break;
+                                default:
+                                    lineTextsOther.Add(new LineText(lineStrip, geo.Tags["name"],
+                                        Myra.DefaultAssets.FontSmall, LineText.Alignment.CENTER));
+                                    break;
+                            }
                         }
-                        
                     }
                 }
+
+                if (way.Tags.ContainsKey("railway"))
+                {
+                    railwaysList.AddRange(Utility.Utility
+                        .LineStripToLineList(OsmHelpers.WayToLineStrip(way))
+                        .Select(x => new VertexPositionColor(new Vector3(x, 0), Color.DarkSlateGray)));
+                }
             }
+
+            vbfRailways = new VertexBuffer(Globals.Graphics.GraphicsDevice, typeof(VertexPositionColor),
+                railwaysList.Count, BufferUsage.WriteOnly);
+            vbfRailways.SetData(railwaysList.ToArray());
+
+
 
             minLon = (int)mapPack.BoundingPolygon.Min(x => x.X);
             int maxLon = (int) Math.Ceiling(mapPack.BoundingPolygon.Max(x => x.X));
@@ -151,7 +174,15 @@ namespace NauticalRenderer.SlippyMap.Layers
             DashedLineEffect.LineAndGapLengths = new[] { 5f, 5f, 0f, 0f };
             EffectPool.BasicEffect.View = camera.GetMatrix();
 
+            // draw railways
+            DashedLineEffect.BackgroundColor = Color.WhiteSmoke.ToVector4();
+            sb.GraphicsDevice.SetVertexBuffer(vbfRailways);
+            DashedLineEffect.Apply();
+            sb.GraphicsDevice.DrawPrimitives(PrimitiveType.LineList, 0, vbfRailways.VertexCount / 2);
+
+
             // draw small streets
+            DashedLineEffect.BackgroundColor = Color.Transparent.ToVector4();
             if (layerSettings.MinorStreetsVisible && camera.Scale.Y > 10000)
             {
                 int screenLeftLon = (int)camera.DrawBounds.X;
@@ -212,6 +243,7 @@ namespace NauticalRenderer.SlippyMap.Layers
                     }
             }
 
+            // draw street names for other streets
             if (layerSettings.MinorStreetsVisible && camera.Scale.Y > 200000)
             {
                 foreach (LineText lineText in lineTextsOther)
@@ -219,7 +251,6 @@ namespace NauticalRenderer.SlippyMap.Layers
                     lineText.Draw(sb, Color.Black, camera);
                 }
             }
-
         }
 
         private static Color GetColorForHighwayType(string type)

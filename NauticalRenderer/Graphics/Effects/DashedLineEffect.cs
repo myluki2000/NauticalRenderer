@@ -14,6 +14,7 @@ namespace NauticalRenderer.Graphics.Effects
         private static EffectParameter lineAndGapLengthsParam;
         private static EffectParameter worldMatrixParam;
         private static EffectParameter viewportMatrixParam;
+        private static EffectParameter backgroundColorParam;
 
         public static float[] LineAndGapLengths
         {
@@ -31,12 +32,19 @@ namespace NauticalRenderer.Graphics.Effects
             set => worldMatrixParam.SetValue(value);
         }
 
+        public static Vector4 BackgroundColor
+        {
+            get => backgroundColorParam.GetValueVector4();
+            set => backgroundColorParam.SetValue(value);
+        }
+
         public static void Initialize(ContentManager content)
         {
             effect = content.Load<Effect>("Effects/DashedLineEffect");
-            lineAndGapLengthsParam = effect.Parameters["lineAndGapLengths"];
+            lineAndGapLengthsParam = effect.Parameters["LineAndGapLengths"];
             worldMatrixParam = effect.Parameters["WorldMatrix"];
             viewportMatrixParam = effect.Parameters["ViewportMatrix"];
+            backgroundColorParam = effect.Parameters["BackgroundColor"];
 
             Globals.ViewportMatrixChanged += () => viewportMatrixParam.SetValue(Globals.ViewportMatrix);
             viewportMatrixParam.SetValue(Globals.ViewportMatrix);

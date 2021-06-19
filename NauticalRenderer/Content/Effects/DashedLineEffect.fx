@@ -9,12 +9,14 @@
 
 matrix WorldMatrix;
 matrix ViewportMatrix;
-float lineAndGapLengths[4];
+float LineAndGapLengths[4];
+float4 BackgroundColor;
 
 struct VertexShaderInput
 {
 	float4 Position : POSITION0;
 	float4 Color : COLOR0;
+    
 };
 
 struct VertexShaderOutput
@@ -37,15 +39,15 @@ VertexShaderOutput MainVS(in VertexShaderInput input)
 
 float4 MainPS(VertexShaderOutput input) : COLOR
 {
-    float segmentLength = lineAndGapLengths[0] + lineAndGapLengths[1] + lineAndGapLengths[2] + lineAndGapLengths[3];
+    float segmentLength = LineAndGapLengths[0] + LineAndGapLengths[1] + LineAndGapLengths[2] + LineAndGapLengths[3];
     float distMod = length(input.VertexPosition - input.Position.xy) % segmentLength;
-    bool hasLine =  distMod < lineAndGapLengths[0]
-					|| ((distMod > (lineAndGapLengths[0] + lineAndGapLengths[1]) && (distMod < segmentLength - lineAndGapLengths[3])));
+    bool hasLine =  distMod < LineAndGapLengths[0]
+					|| ((distMod > (LineAndGapLengths[0] + LineAndGapLengths[1]) && (distMod < segmentLength - LineAndGapLengths[3])));
 	
-    float4 color = float4(input.Color.r * hasLine,
-						  input.Color.g * hasLine,
-						  input.Color.b * hasLine,
-						  hasLine);
+    float4 color = float4(input.Color.r * hasLine + BackgroundColor.r * !hasLine,
+						  input.Color.g * hasLine + BackgroundColor.g * !hasLine,
+						  input.Color.b * hasLine + BackgroundColor.b * !hasLine,
+						  input.Color.a * hasLine + BackgroundColor.a * !hasLine);
 	
     return color;
 }

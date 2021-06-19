@@ -52,7 +52,13 @@ namespace NauticalRenderer.Graphics
             sb.GraphicsDevice.DrawUserPrimitives(PrimitiveType.LineList, verts, 0, verts.Length / 2);
         }
 
-        public static void DrawDashedLine(SpriteBatch sb, Vector2[] points, Color color, float[] lineAndGapLengths, Matrix viewMatrix, PrimitiveType primitiveType = PrimitiveType.LineStrip)
+        public static void DrawDashedLine(SpriteBatch sb, Vector2[] points, Color color, float[] lineAndGapLengths,
+            Matrix viewMatrix, PrimitiveType primitiveType = PrimitiveType.LineStrip)
+        {
+            DrawDashedLine(sb, points, color, Color.Transparent, lineAndGapLengths, viewMatrix, primitiveType);
+        }
+
+        public static void DrawDashedLine(SpriteBatch sb, Vector2[] points, Color color, Color backgroundColor, float[] lineAndGapLengths, Matrix viewMatrix, PrimitiveType primitiveType = PrimitiveType.LineStrip)
         {
             VertexPositionColor[] verts = new VertexPositionColor[points.Length];
             verts[0] = new VertexPositionColor(new Vector3(points[0], 0), color);
@@ -63,6 +69,7 @@ namespace NauticalRenderer.Graphics
 
             if (verts.Length < 1) return;
 
+            DashedLineEffect.BackgroundColor = backgroundColor.ToVector4();
             DashedLineEffect.WorldMatrix = viewMatrix;
             DashedLineEffect.LineAndGapLengths = lineAndGapLengths;
             DashedLineEffect.Apply();
