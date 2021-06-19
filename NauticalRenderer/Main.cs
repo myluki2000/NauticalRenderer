@@ -27,6 +27,7 @@ namespace NauticalRenderer
     {
         public Main(ResourceManager resourceManager, SettingsManager settingsManager)
         {
+            Globals.Main = this;
             Globals.Graphics = new GraphicsDeviceManager(this);
             Globals.GameWindow = Window;
             Globals.ResourceManager = resourceManager;

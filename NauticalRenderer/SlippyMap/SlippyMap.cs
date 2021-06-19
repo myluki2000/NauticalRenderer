@@ -13,6 +13,7 @@ using NauticalRenderer.Screens;
 using NauticalRenderer.SlippyMap.Layers;
 using NauticalRenderer.SlippyMap.SourceLayers;
 using OsmSharp.Streams;
+using SharpDX.Direct3D9;
 using SpriteBatch = Microsoft.Xna.Framework.Graphics.SpriteBatch;
 
 namespace NauticalRenderer.SlippyMap
@@ -132,6 +133,23 @@ namespace NauticalRenderer.SlippyMap
         private Vector2 mouseInertia;
         private void HandleMouseInput(GameTime gameTime)
         {
+            if (Globals.Main.IsActive)
+            {
+                // if the game is reactivated set the last mouse state to the current one so map doesn't get dragged aroudn
+                // if the mouse is pressed set mouseIsDragging to true so that we can start dragging the map with the first click
+                if (lastMouseState == default)
+                {
+                    lastMouseState = Mouse.GetState();
+                    if (lastMouseState.LeftButton == ButtonState.Pressed)
+                        mouseIsDragging = true;
+                }
+            }
+            else
+            {
+                lastMouseState = default;
+                return;
+            }
+
             if (mapScreen.Desktop.IsMouseOverGUI) return;
 
             MouseState mouseState = Mouse.GetState();

@@ -9,6 +9,7 @@ namespace NauticalRenderer
 {
     static class Globals
     {
+        public static Main Main;
         public static GraphicsDeviceManager Graphics;
         public static ContentManager Content;
         public static ResourceManager ResourceManager;
