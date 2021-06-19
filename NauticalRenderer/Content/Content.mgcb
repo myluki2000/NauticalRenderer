@@ -40,9 +40,6 @@
 #begin Fonts/Arial-Regular.xnb
 /copy:Fonts/Arial-Regular.xnb
 
-#begin German-Baltic-Coast-And-South-Denmark.mappack
-/copy:German-Baltic-Coast-And-South-Denmark.mappack
-
 #begin German-North-Sea.mappack
 /copy:German-North-Sea.mappack
 
