@@ -14,7 +14,7 @@
 --tt transform.xml \
 \
 --read-pbf-fast $1 \
---tf accept-relations water=* wetland=tidalflat admin_level=2 boundary=protected_area \
+--tf accept-relations natural=water wetland=tidalflat admin_level=2 boundary=protected_area \
 --tf reject-relations water=pond,stream,ditch,fishpond,stream_pool,basin,reservoir,fish_pass,reflecting_pool,moat,wastewater "seamark:type"=ferry_route \
 --used-way \
 --used-node \
