@@ -175,10 +175,13 @@ namespace NauticalRenderer.SlippyMap.Layers
             EffectPool.BasicEffect.View = camera.GetMatrix();
 
             // draw railways
-            DashedLineEffect.BackgroundColor = Color.WhiteSmoke.ToVector4();
-            sb.GraphicsDevice.SetVertexBuffer(vbfRailways);
-            DashedLineEffect.Apply();
-            sb.GraphicsDevice.DrawPrimitives(PrimitiveType.LineList, 0, vbfRailways.VertexCount / 2);
+            if (layerSettings.RailwaysVisible)
+            {
+                DashedLineEffect.BackgroundColor = Color.WhiteSmoke.ToVector4();
+                sb.GraphicsDevice.SetVertexBuffer(vbfRailways);
+                DashedLineEffect.Apply();
+                sb.GraphicsDevice.DrawPrimitives(PrimitiveType.LineList, 0, vbfRailways.VertexCount / 2);
+            }
 
 
             // draw small streets
@@ -288,6 +291,7 @@ namespace NauticalRenderer.SlippyMap.Layers
         {
             public bool MinorStreetsVisible = true;
             public bool MajorStreetsVisible = true;
+            public bool RailwaysVisible = true;
         }
     }
 }

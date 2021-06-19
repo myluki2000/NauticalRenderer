@@ -120,13 +120,13 @@ namespace NauticalRenderer.SlippyMap.Layers
         /// <inheritdoc />
         public override void Draw(SpriteBatch sb, SpriteBatch mapSb, Camera camera)
         {
-            if (importantAreaLayerSettings.DrawCountryBorders)
+            if (importantAreaLayerSettings.CountryBordersVisible)
                 DrawBorders(sb, mapSb, camera);
 
-            if (importantAreaLayerSettings.DrawRestrictedAreas)
+            if (importantAreaLayerSettings.RestrictedAreasVisible)
                 DrawRestrictedAreas(sb, mapSb, camera);
 
-            if (importantAreaLayerSettings.DrawSeacables)
+            if (importantAreaLayerSettings.SeacablesVisible)
                 DrawSeacables(sb, mapSb, camera);
         }
 
@@ -186,9 +186,9 @@ namespace NauticalRenderer.SlippyMap.Layers
 
         private class ImportantAreaLayerSettings : ILayerSettings
         {
-            public bool DrawCountryBorders = true;
-            public bool DrawRestrictedAreas = true;
-            public bool DrawSeacables = true;
+            public bool CountryBordersVisible = true;
+            public bool RestrictedAreasVisible = true;
+            public bool SeacablesVisible = true;
         }
     }
 }
